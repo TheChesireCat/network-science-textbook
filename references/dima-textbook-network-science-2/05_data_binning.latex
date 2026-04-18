@@ -1,0 +1,193 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 05\_data\_binning.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\section*{Chapter 5}
+
+\section*{Data binning}
+
+\subsection*{5.1 Introduction}
+
+It matters what we are binning:
+
+\begin{enumerate}
+    \item Functions $f(x)$ (examples: $c(k)$, $k_{nn}(k)$):
+    Data: $(x_j, y_j = f(x_i))$, $j = 1, ..., n$.
+    
+    \item Distributions $P(x)$ (example: $P(k)$) :
+    Data: $x_j \sim P(x)$, $j = 1, ..., n$.
+    Assumption: $\{x_j\}_{j=1}^n$ is a collection of i.i.d. samples from $P(x)$.
+\end{enumerate}
+
+\textbf{Problem:} Bin this data in bins (of different sizes).
+
+\subsection*{5.2 Notations}
+
+\textbf{Let:}
+
+\begin{itemize}
+    \item $\mathcal{B} \in \mathbb{N}$ --- number of bins;
+    
+    \item $\mathcal{B}_i = [b_i, b_{i+1})$ --- bin number $i$, $i = 1, 2, ..., \mathcal{B} - 1$, where $b_i$ is the left boundary of $\mathcal{B}_i$;
+    
+    \item $\mathcal{B}_\mathcal{B} = [b_\mathcal{B}, b_{\mathcal{B}+1}]$ --- bin number $\mathcal{B}$:
+    
+    \begin{center}
+    \begin{tikzpicture}
+        \draw[very thick] (0,0) -- (8,0);
+        \foreach \x/\label in {1/b_1, 3/b_2, 5/b_3, 7/b_N} {
+            \fill (\x,0) circle (2pt);
+            \node[below] at (\x,-0.1) {$\label$};
+        }
+        \node[above, color=blue] at (2,0.2) {$\mathcal{B}_1$};
+        \node[above, color=blue] at (4,0.2) {$\mathcal{B}_2$};
+        \node[above, color=blue] at (6,0.2) {$\mathcal{B}_3$};
+    \end{tikzpicture}
+    \end{center}
+    
+    \textit{[Note: The figure shows a horizontal line with marked points at positions $b_1$, $b_2$, $b_3$, and $b_N$, with bins $\mathcal{B}_1$, $\mathcal{B}_2$, and $\mathcal{B}_3$ labeled above the intervals between consecutive boundary points.]}
+    
+    \item $b_1 = \min_j x_j$, $b_{\mathcal{B}+1} = \max_j x_j$;
+    
+    \item $L_i = |\mathcal{B}_i| = b_{i+1} - b_i$ --- size of $\mathcal{B}_i$;
+    
+    \item $j_i = \{j : x_j \in \mathcal{B}_i\}$ --- indices of data points falling in $\mathcal{B}_i$;
+    
+    \item $S_i = |j_i|$ --- number of such data points;
+    
+    \item $\mathcal{D} = b_{\mathcal{B}+1} - b_1$ --- range of data;
+    
+    \item $X_i$ --- binned $x_j$;
+    
+    \item $Y_i$ --- binned $y_j$ or $P(x_j)$.
+\end{itemize}
+
+Note: $(X_i, Y_i)$ is what's plotted.
+
+\vfill
+
+\begin{center}
+16
+\end{center}
+
+\newpage
+
+% ===== Page 2 =====
+\section{Determining $X_i$}
+
+\subsection{Linear binning}
+
+\begin{itemize}
+    \item $L_i = \mathcal{D}/\mathcal{B} = L, \ i = 1, 2, ..., \mathcal{B}$;
+    \item $b_i = b_1 + (i-1)L$.
+\end{itemize}
+
+Options for $X_i$:
+\begin{itemize}
+    \item $X_i = b_i$ (most frequent),
+    \item $X_i = (b_i + b_{i+1})/2$ (less frequent),
+    \item $X_i = b_{i+1}$ (least frequent).
+\end{itemize}
+
+\subsection{Logarithmic binning}
+
+\begin{itemize}
+    \item $q_1 = \log b_1$ (assumption: $b_1 > 0$);
+    \item $q_{\mathcal{B}+1} = \log b_{\mathcal{B}+1}$;
+    \item $\mathcal{D}_q = q_{\mathcal{B}+1} - q_1$;
+    \item $L_q = \mathcal{D}_q/\mathcal{B}$;
+    \item $q_i = q_1 + (i-1)L_q, \ i = 1, ..., \mathcal{B}$;
+    \item $b_i = e^{q_i}$ (note: bin sizes grow exponentially!).
+\end{itemize}
+
+Options for $X_i$:
+\begin{itemize}
+    \item $X_i = b_i$ (most frequent),
+    \item $X_i = b_{i+1}$ (least frequent),
+    \item $Q_i = \frac{1}{2}(q_i + q_{i+1}), \ X_i = e^{Q_i} = \sqrt{b_i b_{i+1}}$ (good for power-law data).
+\end{itemize}
+
+\section{Determining $Y_i$}
+
+\begin{itemize}
+    \item \textbf{Functions:}
+    \begin{equation}
+    Y_i = \sum_j y_j \mathbb{1}\left\{j \in j_i\right\} / S_i,
+    \tag{5.1}
+    \end{equation}
+    
+    which is the average value of data $\{y_j\}$ in bin $B_i$.
+    
+    \item \textbf{Distributions:}
+    \begin{equation}
+    Y_i = \frac{S_i}{L_i n},
+    \tag{5.2}
+    \end{equation}
+    
+    because $\langle S_i \rangle = n\text{Prob}(X \in B_i) \approx nP(X_i)L_i = nY_iL_i$.
+    Note that the binned data is properly normalized: $\sum_i Y_i L_i = \frac{1}{n} \sum_i S_i = 1$.
+\end{itemize}
+
+\vfill
+\begin{center}
+17
+\end{center}
+
+\newpage
+
+% ===== Page 3 =====
+\subsection{Comments}
+
+\begin{itemize}
+\item What binning to use:
+\begin{itemize}
+\item[--] Linear or no binning for homogeneous data (``bell-shaped'', Gaussian, binomial, Poisson);
+\item[--] Logarithmic for heterogeneous data (power laws).
+\end{itemize}
+
+\item Number of bins:
+\begin{itemize}
+\item[--] Is usually such that all bins are statistically significant;
+\item[--] In most real-world power-law networks $\mathcal{B} \in [15, 25]$;
+\item[--] If unsure, set $\mathcal{B} = 20$.
+\end{itemize}
+
+\item If asked to average over many (random) graphs from the same ensemble, collect all the data $(x_j, (y_j))$ from \textit{all} the generated graphs \textit{as if it was one huge graph}. That is:
+\begin{itemize}
+\item[--] concatenate data in the following format: $(i, k_i, c_i, k_{nn,i})$ --- RIGHT;
+\item[--] NOT in the following format: $(k, n(k), c(k), k_{nn}(k))$ --- WRONG!
+\end{itemize}
+
+\item The correct Python implementations of the described binning procedures are available
+\begin{itemize}
+\item[--] for functions in \texttt{scipy.stats.binned\_statistic()} with the \texttt{statistic} parameter set to \texttt{'mean'} (the default);
+\item[--] for distributions in \texttt{numpy.histogram()} with the \texttt{density} parameter set to \texttt{True}.
+\end{itemize}
+
+\end{itemize}
+
+\vspace{2cm}
+
+\begin{center}
+18
+\end{center}
+
+\end{document}

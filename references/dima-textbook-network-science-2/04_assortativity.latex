@@ -1,0 +1,177 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 04\_assortativity.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\section*{Chapter 4}
+
+\section*{Assortativity}
+
+\section*{4.1 Notations}
+
+Let $P(k, k')$ be the joint degree distribution (JDD), i.e., the probability that a random edge connects nodes of degrees $k$ and $k'$ in a (random) graph $G$.
+
+Observe that in a given fixed graph $G$,
+\begin{equation}
+P(k, k') = \frac{m(k, k')}{2m},
+\tag{4.1}
+\end{equation}
+where $m$ is number of edges in $G$,
+\begin{equation}
+m(k, k') = (1 + \delta_{k,k'})n(k, k'),
+\tag{4.2}
+\end{equation}
+where $n(k, k') = n(k', k)$ is the number of edges between nodes of degrees $k$ and $k'$ in $G$, and $\delta_{k,k'}$ is the Kronecker delta:
+\[
+\delta_{k,k'} = \mathbb{1}\left\{k = k'\right\}.
+\]
+Let $m(k) = kn(k)$ be the number of stubs (a.k.a. half-edges or edge ends) attached to nodes of degree $k$ (note that $(k, k)$-edges are counted twice).
+
+Observe that $\sum_{k'} m(k, k') = m(k)$. It follows that
+\[
+\sum_{k'} P(k, k') = \frac{\sum_{k'} m(k, k')}{2m} = \frac{m(k)}{2m} = \frac{kn(k)}{2m} = \frac{knP(k)}{k} = \frac{\bar{k}P(k)}{k} \Longrightarrow
+\]
+\begin{equation}
+\boxed{P(k) = \frac{\bar{k}}{k} \sum_{k'} P(k, k'),}
+\tag{4.3}
+\end{equation}
+implying that the joint degree distribution defines the degree distribution.
+
+Observe that the probability that a random edge attached to a degree-$k$ node (note the conditioning!) goes to a degree-$k'$ node is
+\begin{equation}
+P(k'|k) = \frac{m(k, k')}{m(k)} = \frac{2mP(k, k')}{kn(k)} = \frac{2mP(k, k')}{knP(k)} = \frac{\bar{k}P(k, k')}{kP(k)} = \frac{P(k, k')}{\sum_{k''} P(k, k'')} = P(k'|k). \tag{4.4}
+\end{equation}
+
+Therefore, the average degree of neighbors of nodes of degree $k$ is
+\begin{equation}
+\boxed{k_{nn}(k) = \sum_{k'} k' P(k'|k) = \frac{\sum_{k'} k' P(k, k')}{\sum_{k''} P(k, k'')}.}
+\tag{4.5}
+\end{equation}
+
+\vspace{2em}
+\hfill 13
+
+\newpage
+
+% ===== Page 2 =====
+\textbf{Recall:}
+
+\begin{itemize}
+\item the covariance between two random variables $X$ and $Y$ is
+\begin{equation}
+\sigma(X,Y) = \langle(X - \langle X\rangle)(Y - \langle Y\rangle)\rangle = \langle XY\rangle - \langle X\rangle\langle Y\rangle;
+\tag{4.6}
+\end{equation}
+
+\item the Pearson correlation coefficient is
+\begin{equation}
+\rho(X,Y) = \frac{\sigma(X,Y)}{\sigma(X)\sigma(Y)},
+\tag{4.7}
+\end{equation}
+where $\sigma(X) = \sqrt{\sigma(X,X)}$ is the standard deviation of $X$;
+
+\item two random variables $X$ and $Y$ are said to be positively correlated, uncorrelated, or negatively correlated if $\rho \in (0,1]$, $\rho = 0$, or $\rho \in [-1,0)$, respectively.
+\end{itemize}
+
+\subsection*{4.2 \quad Definitions}
+
+\textbf{Definition 4.1.} The assortativity coefficient of graph $G$ is the Pearson correlation coefficient of its JDD:
+\begin{equation}
+\boxed{
+\rho_G = \rho(k,k') = \frac{\langle kk'\rangle - \left\langle \tilde{k}\right\rangle^2}{\left\langle k^2\right\rangle - \left\langle \tilde{k}\right\rangle^2} = \frac{\langle k\rangle^2 \langle kk'\rangle - \langle k^2\rangle^2}{\langle k\rangle \langle k^3\rangle - \langle k^2\rangle^2},
+}
+\tag{4.8}
+\end{equation}
+where
+\begin{equation}
+\tilde{P}(k) = \sum_{\tilde{k}} P(\tilde{k},k) = \frac{\tilde{k}}{k} P(\tilde{k}),
+\tag{4.9}
+\end{equation}
+\begin{equation}
+\langle k^s\rangle = \sum_{k} k^s P(k), \quad s = 1,2,3,
+\tag{4.10}
+\end{equation}
+\begin{equation}
+\langle kk'\rangle = \sum_{k,k'} kk' P(k,k').
+\tag{4.11}
+\end{equation}
+
+Note that if $k_{nn}(k)$ is an increasing, constant, or decreasing function, then $\rho_G > 0$, $\rho_G = 0$, or $\rho_G < 0$, respectively.
+
+\textbf{Definition 4.2.} Network $G$ is called \textit{assortative, uncorrelated,} or \textit{disassortative} if $\rho_G > 0$, $\rho_G = 0$, or $\rho_G < 0$, respectively.
+
+\vfill
+
+\begin{center}
+14
+\end{center}
+
+\newpage
+
+% ===== Page 3 =====
+\subsection{Comments}
+
+\begin{itemize}
+\item Hooray, we finally have a property, which is well-defined for any given (real) network!
+
+\item Yes, but NO!
+
+\item If $G$ is from sequence/model $G_n$ whose $P(k)$ in the limit have infinite second moment (e.g., configuration model or preferential attachment with $\gamma < 3$), then $\rho_G$ is NOT defined in the limit. (In general, if $\delta(X) = \delta(Y) = \infty$, then $\rho(X,Y) = 0$ if $\delta(X,Y) < \infty$, and $\rho(X,Y)$ is undefined if $\delta(X,Y) = \infty$.)
+
+\item One reason is the \underline{structural correlations}:
+\begin{itemize}
+\item Suppose we want uncorrelated network (e.g., the configuration model):
+\[
+m(k,k') = \frac{m(k)m(k')}{2m} \Leftrightarrow P(k,k') = \frac{kP(k)}{k} \cdot \frac{k'P(k')}{k} \text{ with } P(k) \sim k^{-\gamma}, \gamma < 3;
+\]
+
+\item $k_c = \langle k_{max} \rangle \sim n^{\frac{1}{\gamma-1}}$ is the natural cutoff (the expected value of the largest degree);
+
+\item $m(k,k')$ cannot be larger than $n(k)n(k')$:
+\[
+m(k,k') = \frac{m(k)m(k')}{2m} = \frac{kn(k)k'n(k')}{2m} \leq n(k)n(k') \Longrightarrow
+\]
+\[
+kk' \leq 2m = kn \Longrightarrow
+\]
+
+\item $k_s = \sqrt{kn} \sim \sqrt{n}$ is the structural cutoff;
+
+\item If $\gamma < 3$, then $k_s \ll k_c$, so the network cannot be uncorrelated: disassortative correlations are forced by structural constraints: no place for the required number of edges between nodes with degrees $kk' > kn$, so such edges must move elsewhere.
+\end{itemize}
+
+\item Yet worse---and in contrast with the argument above(!)---there is a theorem that if $\rho_{G_n}$ does converge, then $\rho_{G_\infty} \geq 0$ (Section 1.5 of Volume I of the textbook), implying that disassortative networks are strictly speaking impossible in the limit.
+\end{itemize}
+
+\textbf{In summary:}
+
+\begin{itemize}
+\item The (dis)assortativity definitions make sense for any given (real) network,
+
+\item But have major problems in the $n \to \infty$ limit.
+
+\item People just plot $k_{nn}(k)$ and enjoy the plots\ldots:)
+\end{itemize}
+
+\vspace{2cm}
+
+\hfill 15
+
+\end{document}

@@ -1,0 +1,488 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 06\_power\_laws.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\section*{Chapter 6}
+
+\section*{Power laws}
+
+\subsection*{6.1 Definitions}
+
+\textbf{Definition 6.1.} A function $l(k)$ is \textit{slowly varying} if
+\begin{equation}
+\lim_{k\to\infty} \frac{l(tk)}{l(k)} = 1 \tag{6.1}
+\end{equation}
+for any $(\forall)$ $t > 0$.
+
+\textbf{Examples:}
+
+\begin{itemize}
+\item Slowly varying $l(k)$:
+\begin{itemize}
+\item $l(k) = c > 0$,
+\item any $l(k)$ such that $\lim_{k\to\infty} l(k) = c > 0$,
+\item $l(k) = \log^{\alpha} k$, $\forall \alpha \in \mathbb{R}$.
+\end{itemize}
+
+\item Not slowly varying $l(k)$:
+\begin{itemize}
+\item $l(k) = k^{\alpha}$, $\forall \alpha \in \mathbb{R}\backslash\{0\}$,
+\item $l(k) = \sin k$.
+\end{itemize}
+\end{itemize}
+
+\textbf{Definition 6.2.} A function $f(k)$ is \textit{regularly varying} if $f(k) = l(k)k^{-\alpha}$, where $\alpha > 0$ and $l(k)$ is a slowly varying function.
+
+\textbf{Theorem 6.3} (Karamata theorem). \textit{If the PDF of a distribution is a regularly varying function, then so its CCDF.}
+
+The converse is not true in general (e.g., $P(x) = (\sin x)^2/x^3$).
+
+\textbf{Definition 6.4.} A probability distribution is \textit{regularly varying} if its CCDF is a regularly varying function.
+
+\textbf{Definition 6.5.} A probability distribution is a \textit{power law} if it is regularly varying.
+
+\textbf{Definition 6.6.} A probability distribution is a \textit{pure} (or ``clean'') power law if its slowly varying function $l(k)$ is constant.
+
+\textbf{Observation:} No empirical $P(k)$, in any given (real) network, is a power law!
+
+\textbf{Comments:}
+
+\begin{itemize}
+\item As with sparsity, small worldness, and strong clustering, it is impossible in principle to tell whether the degree distribution in any network is a power law.
+
+\item The difference with sparsity, small worldness, and clustering is that in those cases, the corresponding network properties $\bar{k}$, $d$, $\bar{c}$ are well-defined and easy to compute for any given network; with power laws, we do not have any $\gamma$ to begin with; it needs to be estimated first.
+
+\item All the ``good'' estimators below estimate $\gamma$ not directly, but via the extreme value index $\xi$.
+\end{itemize}
+
+\vspace{1em}
+\hfill 19
+
+\newpage
+
+% ===== Page 2 =====
+\section*{6.2 Elements of the extreme value theory}
+
+\textbf{Definition 6.7.} The extreme value $k_{\max}$ is the maximum value in a set of $n$ independent samples $k_i$ from a distribution $P(k)$: $k_{\max} = \max_i \{k_i\}$, where $k_i \sim P(k)$, $i = 1, 2, \ldots, n$.
+
+\textbf{Observe:}
+
+\begin{itemize}
+\item $k_{\max}$ is a random variable.
+
+\item For any $P(k)$, there exist $n$-dependent constants $c > 0$ and $d \in \mathbb{R}$, such that the $n \to \infty$ limit of $x = (k_{\max} - d)/c$ converges to a distribution $\mathcal{P}(x)$.
+\end{itemize}
+
+\textbf{Definition 6.8.} The distribution $\mathcal{P}(x)$ is called the \textit{extreme value distribution} (EVD).
+
+\textbf{Fact:} whatever the original distribution $P(k)$ is, its $\mathcal{P}(x)$ can only be either
+
+\begin{itemize}
+\item degenerate (delta function), or
+
+\item generalized EVD (GEVD).
+\end{itemize}
+
+\textbf{Definition 6.9.} The CDF of a GEVD is:
+\begin{equation}
+\mathcal{F}(x) = e^{-\lambda(x)}, \text{ where}
+\tag{6.2}
+\end{equation}
+\begin{equation}
+\lambda(x) = \begin{cases}
+(1 + \xi \nu(x))^{-1/\xi} & \text{if } \xi \neq 0, \\
+e^{-\nu(x)} & \text{otherwise,}
+\end{cases} \text{ where,}
+\tag{6.3}
+\end{equation}
+\begin{equation}
+\nu(x) = \frac{x - l}{s},
+\tag{6.4}
+\end{equation}
+
+where
+
+\begin{itemize}
+\item $l \in \mathbb{R}$ is the location parameter,
+
+\item $s > 0$ is the scale parameter, and
+
+\item $\xi \in \mathbb{R}$ is the \textit{extreme value index}.
+\end{itemize}
+
+The values of parameters $l, s, \xi$ depend on the specific form of distribution $P(k)$.
+
+\textbf{Definition 6.10.} The GEVD is also called:
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+The Weibull distribution & if $\xi < 0$ \\
+The Gumbel distribution & if $\xi = 0$ \\
+The Fréchet distribution & if $\xi > 0$. \\
+\hline
+\end{tabular}
+\end{center}
+
+Therefore, \textit{any} ``good-looking'' distribution $P(k)$ (whose EVD is not degenerate) belongs to one of the following three classes of the distributions, known as the \textit{maximum domains of attraction} (MDA) of an EVD:
+
+\begin{center}
+\begin{tabular}{|c|c|l|}
+\hline
+$\xi$ & MDA & Description of $\{P(k)\}$s \\
+\hline
+$\xi < 0$ & Weibull & Distributions with bounded support \\
+$\xi = 0$ & Gumbel & All other distributions \\
+$\xi > 0$ & Fréchet & Regularly varying distributions \\
+\hline
+\end{tabular}
+\end{center}
+
+Observe that the Fréchet MDA is exactly the space of \textit{all} power-law distributions!
+
+\textbf{Facts:}
+
+\begin{itemize}
+\item If $P(k)$ is a power-law distribution (i.e., if $P(k)$ belongs to the Fréchet MDA whose $\xi > 0$), then
+
+\quad $-$ its CCDF (and PDF) exponents $\alpha$ (and $\gamma$) are related to its extreme value index $\xi$ via
+
+\begin{equation}
+\boxed{\xi = \frac{1}{\alpha} = \frac{1}{\gamma - 1}}.
+\tag{6.5}
+\end{equation}
+\end{itemize}
+
+\vspace{1em}
+\begin{center}
+20
+\end{center}
+
+\newpage
+
+% ===== Page 3 =====
+\begin{itemize}
+    \item $l = 1$, $s = \xi$, $d = 0$, $c = F^{-1}(1 - 1/n)$ where $F^{-1}$ is the inverse CDF of $P(k)$, so
+    \begin{equation}
+    \mathcal{P}(x) = e^{-x^{-1/\xi}}, \text{ where } x \geq 0, \tag{6.6}
+    \end{equation}
+    \begin{equation}
+    \bar{x} = \int_0^\infty x \mathcal{P}(x) \, dx = \Gamma(1 - \xi) \text{ if } \xi < 1 \, (\gamma > 2). \tag{6.7}
+    \end{equation}
+\end{itemize}
+
+\begin{itemize}
+    \item If $P(k)$ is Pareto, i.e., the pure power law
+    \begin{equation}
+    P(k) = (\gamma - 1)k_{\min}^{\gamma-1}k^{-\gamma}, \text{ where } k \geq k_{\min} > 0, \text{ and } \gamma > 2, \tag{6.8}
+    \end{equation}
+    then
+    \begin{equation}
+    c = k_{\min}n^{\xi}, \tag{6.9}
+    \end{equation}
+    \begin{equation}
+    k_{\max} \approx \bar{x}c = \Gamma(1 - \xi)k_{\min}n^{\xi}. \tag{6.10}
+    \end{equation}
+\end{itemize}
+
+\subsection*{6.3 \quad Estimating $\gamma$}
+
+\textbf{How it works:}
+\begin{equation}
+\mathbf{k} = \begin{bmatrix} k_1 \\ k_2 \\ \vdots \\ k_n \end{bmatrix} \Rightarrow \boxed{\begin{array}{c} \text{Estimator} \\ X \end{array}} \Rightarrow \hat{\xi} \quad \left( = \frac{1}{\hat{\alpha}} = \frac{1}{\hat{\gamma} - 1} \text{ if } \xi > 0 \right), \text{ where} \tag{6.11}
+\end{equation}
+
+\begin{itemize}
+    \item $\mathbf{k}$ is the degree sequence in a (random) graph,
+    \item $X$ is an algorithm, a function, which can be deterministic or non-deterministic,
+    \item $\hat{\xi}$ is its output, $X$'s estimate of $\xi$ in $\mathbf{k}$.
+\end{itemize}
+
+Observe that if $\mathbf{k}$ is random (e.g., if it comes from a random graph), then $\hat{\xi}$ is also random, even if $X$ is deterministic.
+
+\textbf{Definition 6.11.} An estimator $X$ is \textit{consistent} (= ``good'') if $\hat{\xi} \to \xi$ as $n \to \infty$ under certain assumptions.
+
+\textbf{Comments:}
+
+\begin{itemize}
+    \item The most common assumption of many (most) good $X$'s is that $\{k_i\}_{i=1}^n$ are $n$ independent samples from a given distribution $P(k)$.
+    
+    \item Many good $X$'s are actually $X(\mathbf{k}, \kappa)$ where $\kappa$ is the number of largest $k_i$'s in $\mathbf{k}$ that $X$ actually works with (it ignores all other $k_i$'s); as a requirement for consistency, $\kappa \to \infty$, but $\kappa/n \to 0$.
+    
+    \item The convergence/consistency proofs usually hold for any such $\kappa$.
+    
+    \item But what $\kappa$ is optimal in terms of error minimization?
+    
+    \item For very few $X$'s, there exists an auxiliary algorithm $Y$ which computes $\kappa^* = Y(\mathbf{k})$ such that $X(\mathbf{k}, \kappa^*)$ is proven to be:
+    \begin{itemize}
+        \item consistent, i.e., $\kappa^* \to \infty$ and $\kappa^*/n \to 0$,
+        \item optimal, i.e., the estimation error is minimized $\Rightarrow$ the speed of convergence is maximized.
+    \end{itemize}
+    
+    \item The set of such $X$'s is:
+    \begin{itemize}
+        \item Hill estimator ($\approx$ MLE),
+        \item Moments estimator,
+        \item Kernel estimator,
+    \end{itemize}
+    where $Y$ is the double bootstrap method.
+    
+    \item This $Y$ is not deterministic, making $X(\mathbf{k}, Y(\mathbf{k}))$ non-deterministic even for non-random $\mathbf{k}$!
+\end{itemize}
+
+\vspace{1em}
+\hfill 21
+
+\newpage
+
+% ===== Page 4 =====
+\section*{6.4 Application of estimators to real data\ldots}
+
+\begin{itemize}
+\item \ldots produces $\hat{\gamma}$, which is akin to $\hat{k}, \hat{d}, \hat{c}$.
+
+\item This $\hat{\gamma}$ can be used \emph{only} for non-rigorous, intuitive considerations for many reasons, including:
+\begin{itemize}
+\item applied to any $\mathbf{k}$, $(X,Y)$ spits out some $\hat{\gamma}$,
+\item we never know if a real world $\mathbf{k}$ satisfies all the assumptions under which the consistency of $(X,Y)$ is proven,
+\item if $\mathbf{k}$ does not satisfy these assumptions, we do not know whether $(X,Y)$ is still consistent,
+\item even if $(X,Y)$ is still consistent, the speed of convergence is not known, so that we do not even know how close $\hat{\gamma}$ is \emph{expected} to be to $\gamma$ for any given $n$,
+\item examples of adversarial $\mathbf{k}$'s that deceive $(X,Y)$ for any finite $n$ are easy to construct, e.g., independent samples from:
+
+\begin{center}
+\begin{minipage}{0.4\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.8]
+\draw[->] (0,0) -- (3.5,0) node[right] {$x$};
+\draw[->] (0,0) -- (0,3) node[above] {$P(x)$};
+\draw[thick, cyan] (0.3,2) -- (2,2) -- (2.2,1.8) -- (2.5,0.3);
+\draw[dashed] (2,0) -- (2,2);
+\node at (2,-0.3) {$\epsilon n?$};
+\node[cyan] at (1.5,2.7) {Power law};
+\end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.8]
+\draw[->] (0,0) -- (3.5,0) node[right] {$x$};
+\draw[->] (0,0) -- (0,3) node[above] {$P(x)$};
+\draw[thick, cyan] (0.3,2.5) .. controls (1,2) and (1.5,1.5) .. (2.5,1.2) -- (2.7,1.2) -- (2.7,0.3);
+\draw[dashed] (2.7,0) -- (2.7,1.2);
+\node at (2.7,-0.3) {$\epsilon n?$};
+\node[cyan] at (1.8,2.7) {Not Power law};
+\end{tikzpicture}
+\end{minipage}
+\end{center}
+
+\textit{[Description of figures: Two side-by-side plots showing probability distributions $P(x)$ versus $x$. The left plot is labeled ``Power law'' and shows a flat plateau followed by a sharp power-law decay starting around $x = \epsilon n?$. The right plot is labeled ``Not Power law'' and shows a smooth curved decay (not following a power law) that transitions to a flat tail around $x = \epsilon n?$. Both illustrate adversarial distributions that can deceive power-law estimators for finite sample sizes.]}
+
+\end{itemize}
+
+\item Yet, the $(X,Y)$'s in the previous sections are the best things we currently have, in the sense that they are at least known to work well in the controlled settings of the lab environment, so if someone forces you to estimate the $\gamma$ in any real data, the best you can do is to use them.
+
+\end{itemize}
+
+\vspace{2cm}
+
+\hfill 22
+
+\newpage
+
+% ===== Page 5 =====
+\begin{center}
+IVAN VOITALOV \textit{et al.} \hfill PHYSICAL REVIEW RESEARCH \textbf{1}, 033034 (2019)
+\end{center}
+
+TABLE I. The tail exponent estimation results for the 35 real-world undirected networks collected from the KONECT database [56]. Each network name is followed by its KONECT code in braces. The estimators return estimates $\hat{\xi}$ of $\xi$ that are translated to $\hat{\gamma} = 1 + 1/\hat{\xi}$. If $\hat{\xi} \leqslant 0$, then $\hat{\gamma}$ is set to $\infty$. The estimates are colored according to the definitions in Sec.~V: (1) not power-law networks, at least one estimate is nonpositive $\hat{\xi} \leqslant 0$ (red); (2) hardly power-law networks, all the estimates are positive $\hat{\xi} > 0$ and at least one estimate is $\hat{\xi} \leqslant 1/4$ (yellow); (3) power-law networks with a divergent second moment, all the estimates are $\hat{\xi} > 1/2$ (green); and (4) other power-law networks, the rest of the cases (blue).
+
+\begin{center}
+\begin{tabular}{lrcccc}
+\hline
+Network name & $n$ & $\bar{k}$ & $\hat{\gamma}^{\text{Hill}}$ & $\hat{\gamma}^{\text{mom}}$ & $\hat{\gamma}^{\text{kcm}}$ \\
+\hline
+CAIDA (IN) & 26\,475 & 4.03 & \textcolor{blue}{2.1} & \textcolor{blue}{2.11} & \textcolor{blue}{2.11} \\
+Skitter (SK) & 1\,696\,415 & 13.08 & \textcolor{blue}{2.38} & \textcolor{blue}{2.36} & \textcolor{blue}{2.43} \\
+Actor collaborations (CL) & 382\,219 & 173.28 & \textcolor{yellow}{3.71} & \textcolor{yellow}{$6.7 \times 10^3$} & \textcolor{blue}{2.36} \\
+Amazon (CA) & 334\,863 & 5.53 & \textcolor{yellow}{3.99} & \textcolor{blue}{3.48} & \textcolor{blue}{3.44} \\
+arXiv (AP) & 18\,771 & 21.1 & \textcolor{yellow}{4.41} & \textcolor{green}{5.78} & \textcolor{green}{7.29} \\
+Bible names (MN) & 1773 & 10.3 & \textcolor{blue}{3.09} & \textcolor{blue}{3.36} & \textcolor{blue}{2.88} \\
+Brightkite (BK) & 58\,228 & 7.35 & \textcolor{blue}{3.51} & \textcolor{blue}{3.8} & \textcolor{blue}{2.96} \\
+Catster (Sc) & 149\,684 & 72.8 & \textcolor{blue}{2.09} & \textcolor{blue}{2.06} & \textcolor{blue}{1.98} \\
+Catster/Dogster (Scd) & 623\,748 & 50.33 & \textcolor{blue}{2.1} & \textcolor{blue}{2.11} & \textcolor{blue}{2.04} \\
+Chicago roads (CR) & 1467 & 1.77 & \textcolor{red}{77.92} & \textcolor{red}{$\infty$} & \textcolor{red}{$\infty$} \\
+DBLP (CD) & 317\,080 & 6.62 & \textcolor{green}{6.59} & \textcolor{green}{13.99} & \textcolor{blue}{3.06} \\
+Dogster (Sd) & 426\,816 & 40.03 & \textcolor{blue}{2.15} & \textcolor{blue}{2.15} & \textcolor{blue}{2.12} \\
+Douban (DB) & 154\,908 & 4.22 & \textcolor{yellow}{4.42} & \textcolor{green}{6.88} & \textcolor{blue}{1.86} \\
+U. Rovira I Virgili (A@) & 1133 & 9.62 & \textcolor{green}{6.49} & \textcolor{red}{$\infty$} & \textcolor{red}{$\infty$} \\
+Euro roads (ET) & 1174 & 2.41 & \textcolor{yellow}{4.73} & \textcolor{red}{44.48} & \textcolor{red}{29.57} \\
+Flickr (LF) & 1\,715\,254 & 18.13 & \textcolor{yellow}{3.94} & \textcolor{yellow}{4.29} & \textcolor{green}{5.02} \\
+Flickr (FI) & 105\,938 & 43.74 & \textcolor{green}{6.18} & \textcolor{blue}{1.79} & \textcolor{blue}{1.65} \\
+Flixster (FX) & 2\,523\,386 & 6.28 & \textcolor{red}{53.63} & \textcolor{blue}{1.93} & \textcolor{blue}{1.95} \\
+Gowalla (GW) & 196\,591 & 9.67 & \textcolor{blue}{2.8} & \textcolor{blue}{2.8} & \textcolor{blue}{2.86} \\
+Hamsterster (Shf) & 1858 & 13.49 & \textcolor{yellow}{4.45} & \textcolor{green}{8.09} & \textcolor{blue}{3.51} \\
+Hamsterster (Sh) & 2426 & 13.71 & \textcolor{yellow}{4.57} & \textcolor{red}{25.39} & \textcolor{green}{6.32} \\
+Hyves (HY) & 1\,402\,673 & 3.96 & \textcolor{blue}{2.98} & \textcolor{blue}{2.23} & \textcolor{blue}{1.99} \\
+LiveJournal (Lj) & 5\,203\,763 & 18.72 & \textcolor{yellow}{3.86} & \textcolor{yellow}{4.04} & \textcolor{blue}{3.15} \\
+Livemocha (LM) & 104\,103 & 42.13 & \textcolor{red}{9.13} & \textcolor{red}{$\infty$} & \textcolor{blue}{2.39} \\
+Orkut (OR) & 3\,072\,441 & 76.28 & \textcolor{blue}{3.58} & \textcolor{blue}{2.65} & \textcolor{blue}{3.35} \\
+Power grid (UG) & 4941 & 2.67 & \textcolor{green}{6.62} & \textcolor{green}{7.76} & \textcolor{red}{9.2} \\
+Proteins (Mp) & 1846 & 2.39 & \textcolor{blue}{3.09} & \textcolor{blue}{3.31} & \textcolor{blue}{3.87} \\
+Reactome (RC) & 6229 & 46.93 & \textcolor{yellow}{4.86} & \textcolor{red}{34.33} & \textcolor{red}{$\infty$} \\
+Roads (RO) & 1\,965\,206 & 2.82 & \textcolor{red}{18.86} & \textcolor{red}{$\infty$} & \textcolor{red}{$\infty$} \\
+Roads PA (RD) & 1\,088\,092 & 2.83 & \textcolor{red}{18.24} & \textcolor{red}{$\infty$} & \textcolor{red}{$\infty$} \\
+Roads TX (R1) & 1\,379\,917 & 2.79 & \textcolor{red}{21.83} & \textcolor{red}{$\infty$} & \textcolor{red}{$\infty$} \\
+Route views (AS) & 6474 & 3.88 & \textcolor{blue}{2.13} & \textcolor{blue}{2.16} & \textcolor{blue}{2.14} \\
+WordNet (WO) & 146\,005 & 9.00 & \textcolor{blue}{2.86} & \textcolor{blue}{2.68} & \textcolor{blue}{2.61} \\
+Youtube (CY) & 1\,134\,890 & 5.27 & \textcolor{blue}{2.48} & \textcolor{blue}{2.58} & \textcolor{blue}{2.17} \\
+Human PPI (MV) & 3023 & 4.07 & \textcolor{blue}{3.04} & \textcolor{blue}{3.4} & \textcolor{blue}{3.03} \\
+\hline
+\end{tabular}
+\end{center}
+
+\newpage
+
+% ===== Page 6 =====
+\begin{table}[h]
+\centering
+\caption{The tail exponent estimation results for the 49 real-world directed networks collected from the KONECT database \cite{56}. The style and notations are the same as in Table I. The estimators and coloring are applied to the in- and out-degree sequences separately. Since the operation of the estimators is undefined on zeros, the zero entries in the in- and out-degree sequences are removed, explaining the different lengths of the in- and out-degree sequences $n_{\text{in}}$ and $n_{\text{out}}$ for the same network, as well as the different values of the in and out average degrees $\bar{k}_{\text{in}}$ and $\bar{k}_{\text{out}}$.}
+\label{tab:directed}
+\small
+\begin{tabular}{lrrrrrrrrrr}
+\hline
+Network name & $n_{\text{in}}$ & $n_{\text{out}}$ & $\bar{k}_{\text{in}}$ & $\bar{k}_{\text{out}}$ & $\hat{\alpha}_{\mu}^{\text{Hill}}$ & $\hat{\alpha}_{\mu}^{\text{mom}}$ & $\hat{\alpha}_{\mu}^{\text{kern}}$ & $\hat{\alpha}_{\text{out}}^{\text{Hill}}$ & $\hat{\alpha}_{\text{out}}^{\text{mom}}$ & $\hat{\alpha}_{\text{out}}^{\text{kern}}$ \\
+\hline
+Adolescent health (ME) & 2441 & 2313 & 5.31 & 5.61 & 6.68 & $\infty$ & $\infty$ & 501.0 & $\infty$ & $\infty$ \\
+Advogato (AD) & 4422 & 4009 & 10.66 & 11.76 & 3.16 & 3.35 & 3.0 & 3.29 & 3.43 & 4.37 \\
+Air traffic control (TC) & 1210 & 1083 & 2.16 & 2.41 & 6.0 & $\infty$ & 7.58 & 4.28 & 23.22 & 8.3 \\
+Amazon (Am) & 403\,312 & 402\,439 & 8.4 & 8.42 & 3.04 & 3.58 & 3.14 & $1.2 \times 10^7$ & $\infty$ & $\infty$ \\
+arXiv (PHc) & 28\,226 & 32\,153 & 14.93 & 13.11 & 3.51 & 4.16 & 4.18 & 3.79 & 4.89 & 6.46 \\
+arXiv (THc) & 23\,176 & 25\,055 & 15.22 & 14.08 & 2.9 & 2.98 & 3.11 & 4.09 & 9.13 & 3.84 \\
+Baidu (BAi) & 1\,241\,374 & 1\,654\,404 & 14.33 & 10.75 & 2.47 & 2.51 & 2.57 & 4.58 & 5.92 & 5.57 \\
+Baidu (BAr) & 277\,991 & 394\,482 & 11.81 & 8.33 & 2.72 & 2.79 & 2.26 & 19.52 & 2.73 & 2.59 \\
+Berkley Stanford (BS) & 617\,094 & 680\,486 & 12.32 & 11.17 & 2.09 & 2.08 & 2.06 & 334.33 & 3.25 & 3.36 \\
+Blogs (Mg) & 990 & 1064 & 19.21 & 17.88 & 3.27 & 4.11 & 6.1 & 5.15 & 14.7 & 7.21 \\
+CiteSeer (CS) & 194\,959 & 336\,024 & 8.95 & 5.19 & 3.46 & 3.84 & 3.31 & 4.08 & 5.55 & 4.23 \\
+Cora (CC) & 13\,879 & 21\,201 & 6.59 & 4.32 & 3.03 & 3.2 & 2.95 & 5.1 & 4.94 & 6.68 \\
+DBLP (Pp) & 11\,564 & 3158 & 4.3 & 15.75 & 3.1 & 3.4 & 2.98 & 3.42 & 2.81 & 2.84 \\
+Edinburgh thesaurus (EA) & 22\,675 & 8210 & 13.75 & 37.98 & 6.13 & 3.94 & 4.97 & 30.41 & $\infty$ & $\infty$ \\
+Ego Google Plus (GP) & 23\,591 & 131 & 1.66 & 199.56 & 5.83 & 4.21 & 4.83 & 3.91 & 11.75 & $\infty$ \\
+Ego Twitter (TL) & 22\,964 & 938 & 1.44 & 35.29 & 4.46 & 3.4 & 3.79 & 7.45 & $\infty$ & 48.62 \\
+Epinions (ES) & 51\,957 & 60\,341 & 9.79 & 8.43 & 3.43 & 4.38 & 3.62 & 3.54 & 3.77 & 3.98 \\
+FOLDOC (FO) & 13\,309 & 13\,356 & 9.03 & 9.0 & 3.16 & 2.67 & 2.5 & 5.42 & 7.9 & 10.01 \\
+Gnutella (GN) & 62\,283 & 16\,387 & 2.37 & 9.02 & 5.85 & $\infty$ & 3.67 & 8.14 & 3.15 & 2.3 \\
+Google (GO) & 714\,545 & 739\,454 & 7.14 & 6.9 & 2.5 & 2.55 & 2.68 & 5.1 & 3.34 & 2.97 \\
+Google (GC) & 15\,762 & 12\,447 & 10.81 & 13.68 & 2.16 & 2.17 & 2.04 & 3.12 & 2.71 & 2.23 \\
+Hudong (HUi) & 798\,202 & 1\,725\,741 & 18.39 & 8.51 & 3.23 & 3.65 & 2.34 & 3.72 & 2.53 & 2.63 \\
+Hudong (HUr) & 991\,745 & 2\,232\,238 & 19.01 & 8.45 & 3.29 & 3.46 & 3.07 & 126.0 & 3.62 & 2.64 \\
+JDK dependencies (DJ) & 2375 & 6369 & 63.57 & 23.71 & 2.07 & 2.07 & 1.71 & 10.62 & 2.36 & 2.52 \\
+JUNG/JAVAX dependencies (Dj) & 2208 & 6055 & 62.82 & 22.91 & 2.0 & 2.07 & 1.71 & 10.62 & 2.4 & 2.54 \\
+Libimseii (LI) & 168\,791 & 135\,359 & 102.85 & 128.25 & 4.21 & 2.57 & 2.67 & 2.54 & 2.49 & 2.56 \\
+Linux (LX) & 12\,013 & 25\,619 & 17.77 & 8.33 & 1.97 & 1.96 & 2.03 & 4.42 & 11.75 & 3.39 \\
+Notre Dame (ND) & 325\,729 & 136\,934 & 4.51 & 10.73 & 2.05 & 2.57 & 1.99 & 2.55 & 2.73 & 2.26 \\
+Open flights (OF) & 3418 & 3409 & 19.8 & 19.85 & 6.38 & 3.63 & 1.84 & 6.21 & 4.72 & 1.84 \\
+Pokec (PL) & 1\,519\,452 & 1\,432\,693 & 20.15 & 21.37 & 4.97 & 6.95 & 7.76 & 4.1 & 4.94 & 6.52 \\
+Slashdot Zoo (SZ) & 65\,220 & 45\,598 & 7.9 & 11.3 & 2.99 & 3.34 & 4.02 & 29.57 & $\infty$ & $\infty$ \\
+Standford (SF) & 261\,588 & 281\,731 & 8.84 & 8.21 & 2.15 & 2.15 & 2.15 & 63.5 & 5.55 & 3.09 \\
+TREC WT10g (WT) & 1\,295\,841 & 1\,532\,051 & 6.22 & 5.26 & 2.98 & 3.67 & 2.53 & 2.19 & 2.17 & 2.27 \\
+Twitter ICWSM (Ws) & 465\,016 & 2502 & 1.8 & 333.65 & 2.54 & 2.57 & 2.64 & $1.6 \times 10^3$ & $\infty$ & $\infty$ \\
+Twitter MPI (TF) & 49\,395\,940 & 43\,983\,853 & 39.75 & 44.64 & 2.02 & 2.31 & 2.01 & 1.91 & 1.99 & 2.34 \\
+Twitter WWW (TW) & 35\,689\,148 & 40\,103\,281 & 41.14 & 36.61 & 1.93 & 2.01 & 2.43 & 2.04 & 2.03 & 1.98 \\
+US airports (AF) & 1504 & 1478 & 18.77 & 19.1 & 13.2 & $\infty$ & 2.46 & 14.89 & $\infty$ & 2.26 \\
+US patents (PC) & 3\,258\,983 & 2\,089\,345 & 5.07 & 7.91 & 4.28 & 4.6 & 4.52 & 3.43 & 4.6 & 3.82 \\
+Wikipedia links DE (Wde) & 2\,262\,745 & 3\,221\,527 & 36.06 & 25.33 & 2.42 & 2.4 & 2.15 & 5.17 & 4.25 & 3.22 \\
+Wikipedia links EN (Wen) & 7\,549\,312 & 12\,114\,964 & 50.08 & 31.21 & 2.78 & 2.79 & 2.03 & 4.94 & 8.58 & 5.9 \\
+Wikipedia links FR (Wfr) & 2\,127\,693 & 2\,993\,436 & 48.11 & 34.2 & 2.4 & 2.37 & 2.54 & 4.0 & 5.24 & 3.61 \\
+Wikipedia links IT (Wit) & 1\,488\,860 & 1\,855\,986 & 61.47 & 49.31 & 2.88 & 2.76 & 3.17 & 6.81 & 5.46 & 2.93 \\
+Wikipedia links JA (Wja) & 1\,253\,659 & 1\,609\,718 & 56.67 & 44.14 & 2.48 & 2.47 & 2.68 & 5.37 & 3.73 & 4.27 \\
+Wikipedia links PL (Wpl) & 1\,196\,546 & 1\,528\,795 & 48.04 & 37.6 & 2.59 & 2.59 & 2.95 & 3.82 & 4.46 & 4.12 \\
+Wikipedia links PT (Wpt) & 1\,137\,929 & 1\,591\,426 & 43.07 & 30.8 & 2.58 & 2.51 & 2.72 & 14.7 & 4.03 & 4.5 \\
+Wikipedia links RU (Wru) & 1\,834\,424 & 2\,852\,544 & 44.72 & 28.76 & 2.48 & 2.46 & 2.62 & 7.8 & 251.0 & 4.89 \\
+Yahoo ads (YD) & 194\,317 & 653\,260 & 15.09 & 4.49 & 2.2 & 2.18 & 2.23 & 4.02 & 3.98 & $\infty$ \\
+Human PPI (MF) & 2033 & 338 & 3.17 & 19.09 & 27.32 & $\infty$ & $\infty$ & 2.4 & 2.86 & 2.04 \\
+Human PPI (MS) & 1698 & 1597 & 3.63 & 3.86 & 4.62 & 2.44 & 2.57 & 6.75 & 2.42 & 2.63 \\
+\hline
+\end{tabular}
+\end{table}
+
+\newpage
+
+% ===== Page 7 =====
+\begin{table}[h]
+\caption{The tail exponent estimation results for the 31 real-world bipartite networks collected from the KONECT database~[56]. The style and notations are the same as in Table~II. The estimators and coloring are applied to the degree sequences of nodes of types 1 and 2 (domains 1 and 2) separately.}
+\label{tab:table3}
+\begin{tabular}{lcccccccccc}
+\hline
+Network name & $n_{d_1}$ & $n_{d_2}$ & $\bar{k}_{d_1}$ & $\bar{k}_{d_2}$ & $\hat{\gamma}_{d_1}^{\text{Hill}}$ & $\hat{\gamma}_{d_1}^{\text{mom}}$ & $\hat{\gamma}_{d_1}^{\text{kern}}$ & $\hat{\gamma}_{d_2}^{\text{Hill}}$ & $\hat{\gamma}_{d_2}^{\text{mom}}$ & $\hat{\gamma}_{d_2}^{\text{kern}}$ \\
+\hline
+Movies/Actors (AM) & 383\,640 & 127\,823 & 3.83 & 11.5 & 4.92 & 7.67 & 5.24 & 6.13 & 11.99 & 6.13 \\
+arXiv (AC) & 22\,015 & 16\,726 & 2.66 & 3.5 & 9.33 & 12.9 & 13.99 & 5.33 & 6.05 & 6.75 \\
+Book Crossing implicit (BX) & 340\,523 & 105\,278 & 3.38 & 10.92 & 3.54 & 2.6 & 2.31 & 3.08 & 3.37 & 1.88 \\
+Book Crossing ratings (Bx) & 185\,955 & 77\,802 & 2.33 & 5.57 & 2.35 & 2.39 & 2.43 & 2.83 & 2.82 & 2.86 \\
+Countries DBPedia (CN) & 2302 & 590\,112 & 276.77 & 1.08 & 1.43 & 1.44 & 1.93 & 9.77 & 3.03 & $\infty$ \\
+DBLP (PA) & 4\,000\,150 & 1\,425\,813 & 6.07 & 2.16 & 5.22 & 4.3 & 6.75 & 2.22 & 2.23 & 2.14 \\
+Discogs labels/artists (Dl) & 270\,771 & 1\,754\,823 & 53.24 & 8.21 & 2.08 & 2.15 & 1.93 & 3.12 & 3.11 & 3.29 \\
+Discogs genres/artists (Da) & 15 & 1\,754\,823 & $1.3 \times 10^6$ & 10.85 & 7.67 & 2.72 & 1.0 & 3.12 & 3.07 & 3.21 \\
+Discogs genres/labels (Dr) & 15 & 270\,771 & $2.8 \times 10^5$ & 15.32 & 1.9 & 2.56 & 7.76 & 2.2 & 2.2 & 2.17 \\
+Flickr (FG) & 103\,631 & 395\,979 & 82.46 & 21.58 & 2.66 & 3.7 & 2.85 & 5.22 & 6.52 & 6.29 \\
+Genres DBPedia (GE) & 7783 & 258\,769 & 59.55 & 1.79 & 2.16 & 2.57 & $\infty$ & 5.61 & 12.49 & $\infty$ \\
+Github (GH) & 120\,867 & 56\,519 & 3.64 & 7.79 & 2.08 & 2.07 & 2.07 & 2.77 & 4.07 & 3.31 \\
+Jester100 (J1) & 100 & 73\,421 & $4.1 \times 10^4$ & 56.34 & $4.3 \times 10^4$ & $\infty$ & $\infty$ & $5.1 \times 10^3$ & $\infty$ & $\infty$ \\
+Jester150 (J2) & 140 & 50\,692 & $1.2 \times 10^4$ & 34.1 & 3.26 & 3.32 & 5.46 & 251.0 & 3.29 & 2.73 \\
+LiveJournal (LG) & 7\,489\,073 & 3\,201\,203 & 15.0 & 35.08 & 1.78 & 1.8 & 1.8 & $1.0 \times 10^3$ & $\infty$ & 4.32 \\
+Locations DBPedia (LO) & 53\,407 & 172\,079 & 5.5 & 1.71 & 2.02 & 2.02 & 2.05 & 6.52 & 3.9 & 38.04 \\
+Movies DBPedia (ST) & 81\,085 & 76\,098 & 3.47 & 3.7 & 3.94 & 4.85 & 5.98 & 5.52 & 13.35 & 8.69 \\
+Occupations DBPedia (OC) & 101\,730 & 127\,571 & 2.47 & 1.97 & 1.73 & 1.74 & 1.73 & 6.56 & 19.18 & $1.0 \times 10^3$ \\
+Orkut (OG) & 8\,730\,857 & 2\,783\,196 & 37.46 & 117.5 & 1.88 & 1.89 & 1.89 & 53.63 & 2.4 & 2.63 \\
+Producers DBPedia (PR) & 138\,839 & 48\,833 & 1.49 & 4.24 & 3.69 & 3.89 & 4.13 & 4.09 & 4.58 & 2.12 \\
+Labels DBPedia (RL) & 18\,421 & 168\,268 & 12.66 & 1.39 & 2.05 & 2.08 & 2.09 & 5.95 & 5.18 & 6.05 \\
+Reuters (RE) & 283\,911 & 781\,265 & 213.34 & 77.53 & 6.38 & 1.55 & 1.56 & 6.46 & $\infty$ & $\infty$ \\
+TREC (TR) & 11\,173\,225 & 551\,787 & 71.28 & 151.56 & 1.61 & 1.63 & 1.6 & 3.93 & 8.87 & 2.94 \\
+TV tropes DBPedia (DBT) & 87\,678 & 64\,415 & 36.86 & 50.18 & 3.18 & 3.73 & 3.37 & 3.34 & 3.07 & 2.97 \\
+Teams DBPedia (TM) & 34\,461 & 901\,130 & 39.65 & 1.52 & 8.46 & 12.76 & 2.2 & 21.83 & $\infty$ & $\infty$ \\
+vi.sualize.us images/tags (Vti) & 495\,402 & 82\,035 & 4.64 & 28.02 & 3.15 & 3.34 & 2.97 & 1.81 & 1.85 & 1.86 \\
+vi.sualize.us tags/users (Vut) & 82\,035 & 17\,122 & 28.02 & 134.26 & 1.81 & 1.85 & 1.85 & 2.54 & 2.57 & 2.13 \\
+vi.sualize.us images/users (Vui) & 495\,402 & 17\,122 & 4.64 & 134.26 & 3.15 & 3.31 & 2.98 & 2.49 & 2.58 & 2.51 \\
+Web trackers (WT) & 12\,756\,244 & 27\,665\,730 & 11.02 & 5.08 & 2.03 & 2.03 & 2.04 & 2.62 & 2.1 & 2.05 \\
+Writers DBPedia (WR) & 46\,213 & 89\,355 & 3.12 & 1.62 & 3.77 & 4.1 & 4.06 & 5.88 & 7.62 & 15.08 \\
+Youtube (YG) & 30\,087 & 94\,238 & 9.75 & 3.11 & 2.31 & 2.36 & 2.45 & 2.79 & 2.87 & 2.56 \\
+\hline
+\end{tabular}
+\end{table}
+
+\newpage
+
+% ===== Page 8 =====
+\begin{figure}[t]
+\centering
+\textit{[Figure 3 consists of three heatmap-style tables labeled (a), (b), and (c), showing the breakdown of degree sequences for different network types.]}
+
+\textbf{(a) Undirected networks:} A horizontal bar chart divided into four segments labeled NPL, HPL, PL (unlabeled middle segment), and PL (rightmost green segment). The segments contain the numbers 7, 11, 7, and 10 respectively, representing the distribution of undirected networks across classification categories.
+
+\textbf{(b) In-degrees and Out-degrees:} A two-dimensional heatmap table with Out-degrees on the vertical axis (labeled NPL, HPL, PL from top to bottom with values 5, 5; 9, 2, 2; 27, 2, 3; 7, 0, 0; 6, 1, 0) and In-degrees on the horizontal axis (labeled NPL HPL and PL at top with values 20, 19). The table is a $5 \times 3$ grid showing the joint distribution of in-degree and out-degree classifications. Numbers in cells represent counts of networks: top row shows 20 and 19; second row shows 3 and 2; third row shows 10 and 12; fourth row shows 5 and 2; fifth row shows 2 and 3. Color shading ranges from dark purple (0.50) to white (0.00) representing the fraction of networks, with a color bar on the right showing the scale from 0.00 to 0.50. Marginal totals appear on the left and top edges.
+
+\textbf{(c) Domain 1 and Domain 2:} A two-dimensional heatmap table showing the joint classification for bipartite networks. The vertical axis is labeled ``Domain 2'' with categories NPL (value 2), NPL (value 6), HPL (value 11), PL (value 6), and PL (value 8). The horizontal axis is labeled ``Domain 1'' with categories NPL, HPL, and PL, with marginal values 9, 7, and 13. The $5 \times 3$ grid contains counts: first row shows 2, 0, 2; second row shows 4, 2, 5; third row shows 1, 3, 2; fourth row shows 2, 2, 4. Color shading follows the same scale as panel (b), from 0.00 to 0.50, with a color bar on the right.
+
+\caption{The breakdown of the degree sequences of the considered real-world networks into the three classes defined in Sec.~V: not power-law (NPL), hardly power-law (HPL), and power-law (PL), the latter containing the divergent second moment (DSM) subclass, shown in green. The full data appear in Tables I--III. The data are shown for (a) undirected, (b) directed, and (c) bipartite networks. The numbers in the boxes are the numbers of networks falling within the corresponding (sub)class. In directed networks, the in- and out-degree sequences are classified separately. Similarly, in bipartite networks, the degree sequences of nodes of types 1 and 2 (domains 1 and 2) are classified separately as well. The numbers of networks with all possible combinations of the two classifications are then shown in the squares, along with the marginals outside of the squares. The color shading in the squares shows the fraction of directed and bipartite networks in each category.}
+\label{fig:3}
+\end{figure}
+
+\end{document}

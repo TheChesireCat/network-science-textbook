@@ -1,0 +1,157 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 01\_sparsity.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\chapter{Sparsity}
+
+\section{Real networks}
+
+\begin{table}[h]
+\centering
+\caption{Basic statistics of network examples. Network types can be (D)irected and/or (W)eighted. When there is no label, the network is undirected and unweighted. For directed networks, we provide the average in-degree (which coincides with the average out-degree)}
+\begin{tabular}{lcccccc}
+\hline
+& & Nodes & Links & Density & Average \\
+Network & Type & $(n)$ & $(L)$ & $(d)$ & degree $(\langle k \rangle)$ \\
+\hline
+Facebook Northwestern Univ. & & 10,567 & 488,337 & 0.009 & 92.4 \\
+IMDB movies and stars & & 563,443 & 921,160 & 0.00006 & 3.3 \\
+IMDB co-stars & W & 252,999 & 1,015,187 & 0.00003 & 8.0 \\
+Twitter US politics & DW & 18,470 & 48,365 & 0.0001 & 2.6 \\
+Enron email & DW & 87,273 & 321,918 & 0.0004 & 3.7 \\
+Wikipedia math & D & 15,220 & 194,103 & 0.0008 & 12.8 \\
+Internet routers & & 190,914 & 607,610 & 0.0003 & 6.4 \\
+US air transportation & & 546 & 2,781 & 0.02 & 10.2 \\
+World air transportation & & 3,179 & 18,617 & 0.004 & 11.7 \\
+Yeast protein interactions & & 1,870 & 2,277 & 0.001 & 2.4 \\
+\textit{C. elegans} brain & DW & 297 & 2,345 & 0.03 & 7.9 \\
+Everglades ecological food web & DW & 69 & 916 & 0.2 & 13.3 \\
+\hline
+\end{tabular}
+\label{tab:network_examples}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\textit{[Figure description: A scatter plot showing network density versus an implicit index or ordering of networks. The horizontal axis ranges from 0 to 1, representing density values. The vertical axis is not explicitly labeled but appears to represent different networks or a continuous scale. There are two types of markers in the legend: orange triangles labeled ``Densities of real networks'' and orange circles labeled ``Random numbers in [0,1]''. The orange triangles (real network densities) are clustered very close to zero on the left side of the plot, all appearing at density values less than approximately 0.2, with most concentrated near 0. The orange circles (random numbers) are distributed uniformly across the entire horizontal range from 0 to 1. This visualization demonstrates that real-world networks are sparse, with densities much lower than random values uniformly distributed in [0,1].]}
+\end{figure}
+
+\vspace{1em}
+
+\noindent
+4
+
+\newpage
+
+% ===== Page 2 =====
+\textbf{Key Points:}
+
+\begin{itemize}
+\item No given (real) network is either sparse or dense; we rely only on intuition here.
+
+\item Sparsity is well defined only for network models with $n \to \infty$.
+
+\item And only for simple, unweighted, un\dots (definition: \emph{simplest}) graphs. Other networks (weighted, multilayer, temporal, etc.) should be casted as the simplest first.
+
+\item Given a network history (e.g., Internet's) we can be ``more sure'', but still not rigorous.
+
+\item Adversarial example: $G_{n,p}$ with $n = 10^{10}$, $p = 10^{-10^{10}}$:
+\begin{align*}
+P(G \text{ with } m \text{ edges}) &= p^m(1-p)^{\binom{n}{2}-m} \implies \\
+P(\text{empty graph}) &= (1-p)^{\binom{n}{2}} \approx 1 - \binom{n}{2}p \approx 1 - \frac{1}{2}10^{20-10^{10}} \approx 1
+\end{align*}
+But this graph is dense: $\bar{k} = p(n-1) \sim n$ if $p$ is constant.
+\end{itemize}
+
+\subsection{Notations}
+
+Let $n$ be the size of the network (number of nodes);
+
+$f_n$, $g_n$ two nonnegative functions of $n$ (example: $k_n$: average degree; $m_n$: number of links);
+
+$a \in [0, \infty]$ a constant (i.e., $0 \leq a \leq \infty$); $c \in (0, \infty)$ a constant (i.e., $0 < c < \infty$):
+
+\textbf{Notations:}
+
+\begin{align*}
+f_n \to a &\Leftrightarrow \lim_{n \to \infty} f_n = a \\
+f_n \ll g_n &\Leftrightarrow f_n/g_n \to 0 \\
+f_n \gg g_n &\Leftrightarrow f_n/g_n \to \infty \\
+f_n \sim g_n &\Leftrightarrow f_n/g_n \to c \\
+f_n \approx g_n &\Leftrightarrow f_n/g_n \to 1
+\end{align*}
+
+\textbf{Observe:} `$\ll$', `$\gg$', `$\approx$' also have informal meanings: $0.01 \ll 1$, $100 \gg 1$, $1.01 \approx 1$.
+
+The meaning used is usually clear from the context. If it is unclear, we will use quotes: $1.01$ ``$\approx$''$1$ vs. $n-1 \approx n$.
+
+\textbf{Examples:} $\frac{n/2-5}{n+100} \approx \frac{1}{2}$; $\log^{100} n \ll n^{0.01}$;
+
+$e^{0.01n} \gg n^{100}$; $5n \log n + 7n \sim n \log n$;
+
+$(n^2 - 2)(3 \log n - 5) + 10(n^2 - 3n) \approx 3n^2 \log n$.
+
+\vspace{2em}
+
+\hfill 5
+
+\newpage
+
+% ===== Page 3 =====
+\subsection{Definitions}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{Properties} & \multicolumn{2}{c|}{Definitions} \\
+\hline
+Graph density $d$ & Average degree $\bar{k}$ & Number of links $m$ & Literature & This course \\
+\hline
+$d_n \sim 1$ & $\bar{k}_n \sim n$ & $m_n \sim n^2$ & Dense & Dense \\
+\hline
+$d_n \ll 1$ & $\bar{k}_n \ll n$ & $m_n \ll n^2$ & Sparse (math) & \multirow{2}{*}{Sparse} \\
+\cline{1-4}
+& & & Not dense (phys) & \\
+& & & Dense (phys) & \\
+\hline
+$d_n \sim 1/n$ & $\bar{k}_n \sim 1$ & $m_n \sim n$ & Sparse (phys, math) & Sparse and also \\
+$d_n \ll 1/n$ & $\bar{k}_n \ll 1$ & $m_n \ll n$ & Ultrasparse & Ultrasparse \\
+& & & Truly sparse & \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{1em}
+
+\begin{figure}[h]
+\centering
+\textit{[The figure shows a Venn diagram-style illustration with two overlapping regions. The left region is labeled ``DENSE GRAPHS'' with the condition $\bar{k}_n \sim n$ written inside. The right region is labeled ``SPARSE GRAPHS'' with the condition $\bar{k}_n \ll n$ written inside. Within the sparse graphs region, there is a smaller nested region labeled ``ultrasparse graphs'' with the condition $\bar{k}_n \to c < \infty$ written inside. The regions are drawn with curved boundaries and shaded in gray, with the ultrasparse region appearing as a subset nested within the sparse graphs region.]}
+\end{figure}
+
+\textbf{Note:} ultrasparse graphs form a subset of sparse graphs.
+
+\textbf{Examples:} empty and complete graphs, chains, stars, trees, PA, ER, sparse but not ultrasparse\ldots
+
+\vspace{2em}
+
+\hfill 6
+
+\end{document}

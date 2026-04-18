@@ -1,0 +1,528 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 08\_unbiased\_models.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\chapter*{Chapter 8}
+\addcontentsline{toc}{chapter}{Chapter 8}
+
+\section*{Unbiased models}
+\addcontentsline{toc}{section}{Unbiased models}
+
+\subsection*{8.1 Motivating example}
+\addcontentsline{toc}{subsection}{8.1 Motivating example}
+
+The head of the secret service in a secret country calls you up in the middle of the night. ``My name is X, it's secret,'' he says, ``and I need your help investigating the network of Y's bodyguards. Alas,'' says X, ``I can't tell you who Y is either, as it's also a secret, and worse, very little is known about Y's bodyguards. The only information that we've got, after spending nearly a billion of taxpayers' money, is that there are $n$ bodyguards and $m$ connections among them. What would be the right model for such a network given all this top-secret information???'' asks X insistently.
+
+You're clearly in shock, and not yet fully awaken, so you say (let $m < n$): ``just connect one bodyguard, a `captain', to $m$ others, like this:''
+
+\begin{center}
+\begin{figure}[h]
+\centering
+\textit{[Figure: A network diagram showing a star-like structure. At the center is a node labeled ``captain'' in blue handwritten text with an arrow pointing to it. From this central node, multiple blue edges radiate outward connecting to approximately 8--9 peripheral nodes (shown as blue dots). The central captain node and all peripheral nodes are depicted as solid blue circles. The edges are drawn as blue lines forming a star topology where the captain is the hub and all other nodes are leaves connected only to the captain.]}
+\end{figure}
+\end{center}
+
+\noindent \textbf{Q}uestions: Is your model ``correct''? Why? What could ``correct'' mean here at all?
+
+\vfill
+
+\begin{center}
+33
+\end{center}
+
+\newpage
+
+% ===== Page 2 =====
+Answers: No, you were NOT given any information about any captain. He may simply not exist! There is no information that the network must be a star or have any hubs.
+
+The model is not ``sufficiently random''; it is \emph{biased} to have a captain for no reason. You have to make it ``more random'', e.g. by connecting $m$ pairs of bodyguards selected out of $\binom{n}{2}$ possibilities uniformly at random:
+
+\begin{center}
+% \includegraphics[width=0.3\textwidth]{network_diagram}
+
+\end{center}
+
+\noindent\textbf{Q}: Is this $\mathcal{G}_{n,m}$?
+
+\noindent\textbf{A}: It would be if nodes were labeled by $1, 2, ..., n$, but they are not! So it's ``unlabeled $\mathcal{G}_{n,m}$'', i.e. $\mathcal{U}_{n,m}$.
+
+\noindent\textbf{Q}: What answer Biden expects if $n = 3$ and $m = 2$:
+
+\begin{center}
+\begin{tabular}{ccc}
+$P\left(\bullet\text{---}\bullet\text{---}\bullet\right) = 1$ & \textit{ok} & 
+\begin{tabular}{l}
+$P\left(\begin{array}{c}\bullet\text{---}\bullet\text{---}\bullet\end{array}\right) = {}^1\!/\!_3$ \\[0.5em]
+$P\left(\begin{array}{c}\bullet\text{---}\bullet\text{---}\bullet\end{array}\right) = {}^1\!/\!_3$ \\[0.5em]
+$P\left(\begin{array}{c}\bullet\text{---}\bullet\text{---}\bullet\end{array}\right) = {}^1\!/\!_3$
+\end{tabular}
+\end{tabular}
+\end{center}
+
+\bigskip
+
+\noindent\textbf{Main questions answered in the rest of this chapter:}
+
+\begin{itemize}
+\item If X expects a randomly labeled answer for whatever reason then is $\mathcal{G}_{n,m}$ ``sufficiently random''? Is there anything ``more random''?
+
+\item If X needs an unlabeled answer, then what would that be? An unlabeled $\mathcal{G}_{n,m}$? What is it?
+\end{itemize}
+
+\vfill
+
+\begin{center}
+34
+\end{center}
+
+\newpage
+
+% ===== Page 3 =====
+\section*{8.2 The maximum entropy principle}
+
+\textbf{Key points:}
+
+\begin{itemize}
+    \item Entropy is a measure of randomness.
+    \item ``Maximally random'' = maximum entropy.
+\end{itemize}
+
+\noindent\textbf{Definition 8.1.} An \emph{unbiased network model} $P^*(G)$ w.r.t. a collection of network properties $\{f_s\}_{s=1}^S$ is a model that:
+
+\begin{enumerate}
+    \item reproduces these properties, and
+    \item is maximally random in all other respects:
+    \begin{equation*}
+    \boxed{
+    \begin{aligned}
+    &P^*(G) = \arg\max_{P} S[P] \text{ ``}\{f_s\}\text{-constraints''}\},\\
+    &\text{where } S[P] = -\sum_{G} P(G) \log P(G), \text{ and}\\
+    &\text{``}\{f_s\}\text{-constraints'' are made precise below.}
+    \end{aligned}
+    }
+    \end{equation*}
+\end{enumerate}
+
+\noindent\textbf{Meta-Theorem:} $P^*(G)$ ``encodes'' all the information about $\{f_s\}$, and does NOT ``encode'' any other (junk) information.
+
+\textbf{Key comments:}
+
+\begin{itemize}
+    \item $P^*(G)$ does not try to be a \emph{correct model} of any graph $G_0$!
+    \item $P^*(G)$ is the \emph{correct null model} of $G_0$, given all the information about $G_0$ contained in $\{f_s\}$!
+\end{itemize}
+
+\noindent\textbf{Specifying $\{f_s\}$-constraints}: let $s = 1, 2, \ldots, S$, and
+
+\begin{itemize}
+    \item $f_s : \mathcal{G} \to \mathbb{R}^D$ be a collection of $S$ properties (e.g., of $G_0$),
+    \item $f_s^* \in \mathbb{R}^D$ be their \emph{fixed} values (e.g., in $G_0$),
+    \item $\rho$ be a joint distribution of \emph{random} $f_s^*$ (e.g., in random $G_0$).
+\end{itemize}
+
+The ``$\{f_s\}$-constraints'' can be:
+
+\begin{itemize}
+    \item sharp, microcanonical:
+    \begin{equation}
+    f_s(G) = f_s^*,
+    \tag{8.1}
+    \end{equation}
+    
+    \item soft, canonical:
+    \begin{equation}
+    \bar{f}_s \equiv \sum_{G} P(G) f_s(G) = f_s^*,
+    \tag{8.2}
+    \end{equation}
+    
+    \item hypersoft, hypercanonical:
+    \begin{equation}
+    P(\{f_s^*\}) = \rho.
+    \tag{8.3}
+    \end{equation}
+\end{itemize}
+
+\vspace{2em}
+
+\begin{center}
+35
+\end{center}
+
+\newpage
+
+% ===== Page 4 =====
+\section*{8.3 Microcanonical ensemble}
+
+Note: ``ensemble'' means \emph{model} $(P(G))$.
+
+Observe: $\mathcal{G}(\{f_s^*\}_{s=1}^S) = \{G : f_s(G) = f_s^*, s = 1, 2, ..., S\}$ is a finite set, which can be empty, for any finite $n$.
+
+\textbf{Theorem 8.2:} \emph{The maximum-entropy distribution on a finite set is uniform, so}
+\begin{equation}
+P_{\text{mc}}^*(G) = \frac{\mathbb{1}\{G \in \mathcal{G}(\{f_s^*\})\}}{|\mathcal{G}(\{f_s^*\})|}.
+\tag{8.4}
+\end{equation}
+
+The rest of this section is a couple of examples.
+
+\subsection*{8.3.1 Labeled ER $\mathcal{G}(n, m)$}
+
+\begin{align*}
+S &= 1, \\
+f(G) &= m(G) = \sum_{i<j} G_{ij}, \\
+f^* &= m \in \{0, 1, ..., n'\}, \quad n' = \binom{n}{2}, \\
+|\mathcal{G}(n, m)| &= \binom{n'}{m} \\
+P_{\text{mc}}^*(G) &= \frac{\mathbb{1}\{m(G) = m\}}{\binom{n'}{m}}.
+\end{align*}
+
+\textbf{Note:}
+
+\begin{itemize}
+\item $\mathcal{G}(n, m)$ is the microcanonical maximum-entropy model of random labeled graphs with a given number of edges $m$,
+
+\item $\mathcal{G}(n, m)$ is the correct solution to X's problem, if they need randomly labeled graphs.
+\end{itemize}
+
+\subsection*{8.3.2 Unlabeled ER $\mathcal{U}(n, m)$}
+
+\begin{align*}
+S &= 1, \\
+f(U) &= m(U), \text{ where } U \text{ is an \emph{unlabeled} graph,} \\
+f^* &= m \in \{0, 1, ..., n'\}, \\
+|\mathcal{U}(n, m)| &\text{ is given by Eq. 4.1.8 in Harary and Palmer, \emph{Graphical Enumeration}, 1973,} \\
+P_{\text{mc}}^*(U) &= \frac{\mathbb{1}\{m(U) = m\}}{|\mathcal{U}(n, m)|}.
+\end{align*}
+
+\textbf{Note:}
+
+\begin{itemize}
+\item $\mathcal{U}(n, m)$ is the microcanonical maximum-entropy model of random unlabeled graphs with a given number of edges $m$,
+
+\item $\mathcal{U}(n, m)$ is the correct solution to X's problem if they need unlabeled graphs.
+\end{itemize}
+
+\vspace{2em}
+
+\hfill 36
+
+\newpage
+
+% ===== Page 5 =====
+\subsubsection*{8.3.3 \quad The difference between $\mathcal{G}(n,m)$ and $\mathcal{U}(n,m)$}
+
+\begin{figure}[h]
+\centering
+% \includegraphics[width=0.8\textwidth]{figure2}
+
+\caption{The labeled, delabeled, and unlabeled microcanonical Erdős-Rényi random graphs of size $n=4$ with $m=2$ edges. The probabilities of all labeled graphs $G$ are the same $P(G) = 1/15$ in $\mathcal{G}_{4,2}$, while the probabilities of the symmetric and asymmetric unlabeled graphs $U_s$ and $U_a$ are different in the delabeled and unlabeled models $\mathcal{D}_{4,m}$ and $\mathcal{U}_{4,m}$.}
+\end{figure}
+
+\noindent
+\textbf{Description of Figure 2:} The figure is divided into three horizontal sections, each representing a different model:
+
+\textbf{Top section (Labeled $\mathcal{G}_{4,2}$):} Shows a blue-shaded box containing all 15 possible labeled graphs on 4 vertices with 2 edges. The graphs are arranged in a grid pattern, with vertices labeled 1, 2, 3, 4 and edges shown as lines connecting pairs of vertices. Each graph shows the vertex labels explicitly. The probability is stated as $P(G) = 1/15$ for each labeled graph.
+
+\textbf{Middle section (Delabeled $\mathcal{D}_{4,2}$):} Shows a red-shaded box containing two unlabeled graph structures. The left structure $U_s$ represents a symmetric configuration (two disjoint edges) with probability $P(U_s) = 1/5$. The right structure $U_a$ represents an asymmetric configuration (two edges sharing a vertex) with probability $P(U_a) = 4/5$. A dashed horizontal line connects these two structures.
+
+\textbf{Bottom section (Unlabeled $\mathcal{U}_{4,2}$):} Shows a green-shaded box containing the same two unlabeled graph structures $U_s$ and $U_a$. However, in this model, both structures have equal probability: $P(U_s) = 1/2$ and $P(U_a) = 1/2$. A dashed horizontal line connects these two structures.
+
+The figure illustrates how the probability distributions differ between the delabeled model (which weights graphs by their automorphism group sizes) and the unlabeled model (which assigns uniform probability to each distinct unlabeled graph).
+
+\vspace{3cm}
+
+37
+
+\newpage
+
+% ===== Page 6 =====
+\section{Canonical ensemble}
+
+\textbf{Theorem 8.3.} \textit{The distribution that maximizes entropy under the canonical constraints (8.2) is}
+\begin{equation}
+P^*_{\text{can}}(G) = \tilde{P}^*(\{f_s(G)\}) = \frac{1}{Z} \exp\left(-\sum_{s=1}^{S} \lambda_s f_s(G)\right), \tag{8.5}
+\end{equation}
+\textit{where}
+\begin{equation}
+Z = \sum_{G} \exp\left(-\sum_{s} \lambda_s f_s(G)\right) \tag{8.6}
+\end{equation}
+\textit{is the normalization constant (a.k.a. the partition function), and the parameters $\lambda_s$ (a.k.a. the Lagrange multipliers) are the solution of the system of equations}
+\begin{equation}
+\bar{f}_s \stackrel{\text{HW}}{=} -\frac{\partial \log Z}{\partial \lambda_s} = f_s^*, \quad s = 1, 2, ..., S. \tag{8.7}
+\end{equation}
+
+\textbf{Theorem 8.4.} \textit{If ``things are nice'' (e.g., if free energy $\log Z$ is a convex function), which is often the case, then $P^*_{\text{can}}(G)$ is sharply peaked, thus satisfying the first assumption A.1 from the previous chapter.}
+
+\textbf{Note:} since $P^*_{\text{can}}(G) = \tilde{P}^*(\{f_s(G)\})$, the second assumption A.2 is also satisfied, so the definition of typical graphs 7.6 is applicable to canonical ensembles.
+
+\textbf{Definition 8.5.} Distributions in the form (8.5) are knows as:
+
+\begin{itemize}
+\item \textit{Gibbs} (or \textit{Boltzmann}) distributions in statistical physics;
+
+\item \textit{Exponential family distributions} in statistics in general, or as \textit{Exponential Random Graph Models (ERGMs)} in the context of random graph models in statistics;
+
+\item \textit{Gibbs measures} in probability.
+\end{itemize}
+
+\textbf{Note:} a Gibbs distribution or an ERGM is the maximum-entropy distribution/model with given expected values $f_s^*$ of sufficient statistics $f_s$.
+
+The rest of this section is a couple of examples.
+
+\subsection{Labeled ER $\mathcal{G}(n, p)$}
+
+\begin{align*}
+S &= 1, \\
+f(G) &= m(G), \\
+f^* &= m \in [0, n'], \quad n' = \binom{n}{2}, \\
+P^*_{\text{can}}(G) &= \frac{\exp(-\lambda m(G))}{Z}, \\
+Z &= \sum_{G \in \mathcal{G}_n} e^{-\lambda m(G)},
+\end{align*}
+
+where $\mathcal{G}_n$ is the set of all labeled graphs of size $n$.
+
+Note: $P^*_{\text{can}}[\lambda = 0](G) = 1/|\mathcal{G}_n|$.
+
+To relate $\lambda$ to a given $m$, we need to solve (8.7), for which we have to calculate $Z$. Let $q = e^{-\lambda}$, then
+\begin{equation}
+Z = \sum_{G \in \mathcal{G}_n} q^{m(G)} = \sum_{l=0}^{n'} \binom{n'}{l} q^l = (1 + q)^{n'}. \tag{8.8}
+\end{equation}
+
+So $\log Z = n' \log(1 + q)$, and (8.7) becomes
+\begin{equation}
+\bar{m} = -\frac{\partial \log Z}{\partial \lambda} = \frac{n'q}{1 + q} = m. \tag{8.9}
+\end{equation}
+
+\vspace{1em}
+\centerline{38}
+
+\newpage
+
+% ===== Page 7 =====
+Define now $d \equiv m/n'$. Since $m$ is the expected number of edges, $d$ is the expected graph density.
+The last equation reads then
+\begin{equation}
+\boxed{d = \frac{q}{1+q} = \frac{e^{-\lambda}}{1+e^{-\lambda}} = \frac{1}{e^{\lambda}+1}}\,.
+\tag{8.10}
+\end{equation}
+
+This equation is known as the \emph{Fermi-Dirac distribution function} in statistical physics. Inverting it
+for $q$,
+\begin{equation}
+q = \frac{d}{1-d}\,,
+\tag{8.11}
+\end{equation}
+so $1+q = 1/(1-d)$, and
+\begin{equation}
+Z = (1+q)^{n'} = \frac{1}{(1-d)^{n'}}\,.
+\tag{8.12}
+\end{equation}
+
+We know have everything in place to write down the explicit expression for $P_{\text{can}}^*(G)$:
+\begin{equation}
+P_{\text{can}}^*(G) = \frac{e^{-\lambda m(G)}}{Z} = \frac{q^{m(G)}}{(1+q)^{n'}} = \left(\frac{d}{1-d}\right)^{m(G)} (1-d)^{n'} = d^{m(G)}(1-d)^{n'-m(G)}\,,
+\tag{8.13}
+\end{equation}
+which is the probability of graph $G$ in $\mathcal{G}(n,p)$ with
+\begin{equation}
+p = d.
+\tag{8.14}
+\end{equation}
+
+\textbf{Note:}
+\begin{itemize}
+\item $\mathcal{G}(n,p)$ is the canonical maximum-entropy model of random labeled graphs with a given expected number of edges $m = pn'$.
+\end{itemize}
+
+\subsubsection*{8.4.2 \quad Unlabeled ER $\mathcal{U}(n,p)$}
+
+\begin{align*}
+S &= 1, \\
+f(U) &= m(U), \text{ where } U \text{ is an unlabeled graph,} \\
+f^* &= m \in [0, n'], \\
+P_{\text{can}}^*(U) &= \frac{\exp(-\lambda m(U))}{Z} \\
+Z &= \sum_{U \in \mathcal{U}_n} \exp(-\lambda m(U)),
+\end{align*}
+where $\mathcal{U}_n$ is the set of all unlabeled graphs of size $n$,
+\begin{align*}
+\bar{m} &= -\frac{\partial \log Z}{\partial \lambda} = m \equiv dn'. \\
+\text{Note: } & P_{\text{can}}[\lambda = 0](U) = 1/|\mathcal{U}_n|.
+\end{align*}
+
+Unfortunately, these expressions cannot be simplified as in the labeled case.
+
+For example, let $n = 3$, then:
+
+\begin{center}
+\begin{tikzpicture}[baseline=-0.5ex]
+\node at (0,0) {$\mathcal{U}_n =$};
+\node at (1.5,0) {\begin{tabular}{c} $\bullet$ \\ $\bullet$ \quad $\bullet$ \\ $m=0$ \\ $\mathcal{U}_0$ \end{tabular}};
+\node at (3,0) {\begin{tabular}{c} $\bullet$ \\ $\bullet$---$\bullet$ \\ $m=1$ \\ $\mathcal{U}_1$ \end{tabular}};
+\node at (4.5,0) {\begin{tabular}{c} $\bullet$ \\ $/$ $\backslash$ \\ $\bullet$ \quad $\bullet$ \\ $m=2$ \\ $\mathcal{U}_2$ \end{tabular}};
+\node at (6,0) {\begin{tabular}{c} $\bullet$ \\ $/$ $\backslash$ \\ $\bullet$---$\bullet$ \\ $m=3$ \\ $\mathcal{U}_3$ \end{tabular}};
+\end{tikzpicture}
+\end{center}
+
+so
+\begin{equation}
+Z = \exp(-\lambda \cdot 0) + \exp(-\lambda \cdot 1) + \exp(-\lambda \cdot 2) + \exp(-\lambda \cdot 3) \frac{q=e^{-\lambda}}{=} \sum_{i=0}^{3} q^i = \frac{1-q^4}{1-q} = \frac{1-e^{-4\lambda}}{1-e^{-\lambda}}\,,
+\tag{8.15}
+\end{equation}
+\begin{equation}
+d = \frac{m}{n'} = \frac{1}{3} \cdot \frac{\partial \log Z}{\partial \lambda} = \frac{1}{3}\left(1 - \tanh \lambda + \frac{1}{1+e^{\lambda}}\right)\;;
+\tag{8.16}
+\end{equation}
+
+\vspace{1em}
+\begin{center}
+39
+\end{center}
+
+\newpage
+
+% ===== Page 8 =====
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+% Axes
+\draw[thick,->] (-3,0) -- (3,0) node[right] {$\lambda$};
+\draw[thick,->] (0,-0.5) -- (0,2.5) node[above] {$\rho$};
+% Curve
+\draw[thick,cyan] (-2.5,1.8) .. controls (-1,2) and (0,1.8) .. (0.5,1.2) .. controls (1,0.8) and (1.5,0.5) .. (2.5,0.2);
+% Horizontal line at rho=1
+\draw[dashed] (-2.5,1.8) -- (0.5,1.8);
+% Mark at rho=1
+\node[left] at (0,1.8) {$1$};
+\end{tikzpicture}
+\end{figure}
+
+\noindent Note:
+
+\begin{itemize}
+\item $\mathcal{U}(n,p)$ is the canonical maximum-entropy model of random unlabeled graphs with a given expected number of edges $m = pn'$.
+
+\item $\mathcal{U}(n,p)$ has not been considered before 2022.
+\end{itemize}
+
+\vspace{20pt}
+
+40
+
+\newpage
+
+% ===== Page 9 =====
+\subsection*{8.4.3 The difference between $\mathcal{G}(n,p)$ and $\mathcal{U}(n,p)$}
+
+\begin{figure}[h]
+\centering
+% \includegraphics[width=0.8\textwidth]{fig4}
+
+\caption{The labeled, delabeled, and unlabeled canonical Erdős-Rényi random graphs of size $n = 3$ and average density $p = 1/2$. The probabilities of all graphs in the models are shown at the bottom of each row. The entropies of the three models are $S_L = 3$, $S_U = 2$, and $S_D \approx 1.81$ bits, reflecting the general inequality $S_D \leqslant S_U \leqslant S_L$.}
+\end{figure}
+
+\textit{[The figure shows a table with three rows labeled "Labeled $\mathcal{G}_{3,1/2}$: G:", "Delabeled $\mathcal{D}_{3,1/2}$: U:", and "Unlabeled $\mathcal{U}_{3,1/2}$: U:". Each row contains small graph diagrams showing different configurations of 3-node graphs. The labeled row shows 8 distinct graphs with $P(G) = 1/8$ for each. The delabeled row shows 4 configurations with probabilities $P(U) = 3/8$, $3/8$, and $1/8$. The unlabeled row shows 4 configurations with $P(U) = 1/4$ for each.]}
+
+\begin{figure}[h]
+\centering
+% \includegraphics[width=0.8\textwidth]{fig5}
+
+\caption{The degree distributions in the canonical labeled $\mathcal{G}_{n,p}$ and unlabeled $\mathcal{U}_{n,p}$ ER graphs of size $n = 5$. The solid and dashed curves show the exact solutions for the probability $P(k)$ that a random node in a random labeled $\mathcal{G}_{5,p}$ graph and, respectively, unlabeled $\mathcal{U}_{5,p}$ graph has degree $k$ for all values of degree $k = 0, 1, 2, 3, 4$ and density $p \in [0, 1]$.}
+\end{figure}
+
+\textit{[The figure shows a plot with x-axis "Parameter $p$" ranging from 0.0 to 1.0 and y-axis "Degree Distribution $P(k)$" ranging from 0.0 to 1.0. Multiple curves are shown for different degree values $P(0)$, $P(1)$, $P(2)$, $P(3)$, and $P(4)$, with solid and dashed lines representing labeled and unlabeled ER graphs respectively. The curves show how the probability of each degree varies with the parameter $p$. $P(0)$ decreases from 1.0 at $p=0$, $P(4)$ increases to 1.0 at $p=1$, and intermediate degrees $P(1)$, $P(2)$, $P(3)$ show bell-shaped distributions peaking at intermediate values of $p$.]}
+
+\begin{figure}[h]
+\centering
+% \includegraphics[width=0.7\textwidth]{fig6}
+
+\end{figure}
+
+\textit{[The figure shows a plot with title "$n = 10^9, k = 10$" and legend showing "Labeled ER" (blue dots) and "Unlabeled ER" (orange dots). The x-axis is labeled "degree $k$" ranging from 0 to 40, and the y-axis is labeled "degree distribution $P(k)$" ranging from 0.0 to 0.6. The labeled ER distribution shows a sharp peak around $k = 10$ with maximum value approximately 0.13, while the unlabeled ER distribution shows a broader, flatter distribution with maximum around 0.05 at approximately $k = 15$. Both distributions approach zero for $k > 30$.]}
+
+\vspace{1em}
+\hfill 41
+
+\newpage
+
+% ===== Page 10 =====
+\subsubsection{Connection between microcanonical and canonical ensembles}
+
+Observe that since properties $f_s$ are the sufficient statistics in the canonical ensemble, then graphs with the same values of properties $f_s$ are equiprobable in the ensemble, so that it is a probabilistic mixture (a weighted sum) of microcanonical ensembles (uniform distribution):
+\begin{equation}
+P_{\text{can}}(G|\{f_s^*\}) = P_{\text{mic}}(G|\{f_s(G) = \phi_s\})\text{Prob}(\{f_s(G) = \phi_s\}|\{f_s^*\}) = \frac{1}{|\mathcal{G}(\{\phi_s\})|} P_{\text{can}}(\{\phi_s\}|\{f_s^*\}),
+\tag{8.17}
+\end{equation}
+
+where, as before, $\mathcal{G}(\{\phi_s\})$ is the set of graphs whose values of properties $\{f_s\}$ are equal to $\{\phi_s\}$.
+
+For example:
+\begin{equation}
+P_{\mathcal{G}(n,p)}(G|m^*) = p^{m(G)}(1-p)^{n'-m(G)} = \underbrace{P_{\mathcal{G}(n,m)}(G|m(G) = m)}_{\frac{1}{\binom{n'}{m}}} \underbrace{\text{Prob}(m(G) = m|m^*)}_{\text{Bin}[n',p](m) = \binom{n'}{m}p^m(1-p)^{n'-m}} \quad ,
+\tag{8.18}
+\end{equation}
+
+where $p = m^*/n'$. Therefore, you can generate $G \sim \mathcal{G}(n,p)$ as follows:
+
+1. sample $m \sim \text{Bin}[n',p]$,
+
+2. sample $G \sim \mathcal{G}(n,m)$.
+
+\vspace{10cm}
+
+\hfill 42
+
+\newpage
+
+% ===== Page 11 =====
+\section{Hypercanonical ensemble}
+
+\textbf{Definition 8.6.} A \textit{hypercanonical ensemble} is the probabilistic mixture of canonical ensembles with random $\{f_s^*\} \sim \rho$.
+
+Therefore, to generate $G \sim P_{\text{hyp}}(\rho)$:
+
+1. sample $\{f_s^*\} \sim \rho(\{f_s^*\})$,
+
+2. sample $G \sim P_{\text{can}}(G|\{f_s^*\})$, either directly or:
+
+(a) sample $\{\phi_s\} \sim P_{\text{can}}(\{\phi_s\}|\{f_s^*\})$
+
+(b) sample $G \sim P_{\text{mic}}(G|\{\phi_s\})$
+
+\textbf{Example} (in HW2): HER $\mathcal{G}(n, \rho)$: ER $\mathcal{G}(n, p)$ with random $p \sim \rho(p)$:
+
+\begin{itemize}
+\item let $\kappa \sim \text{Pareto}[\text{mean} = k > 0, \text{exponent } \gamma > 2]$, and $p = \min(1, \kappa/n)$;
+
+\item show that in the $n \to \infty$ limit:
+\begin{itemize}
+\item in a given $G$ (``conditioned on $G$''), the degree distribution $P(k) = \text{Poisson}[\text{mean} = \kappa](k)$;
+\item in the $\mathcal{G}(n, \rho)$ model, $P(k)$ is a power law with exponent $\gamma$.
+\end{itemize}
+\end{itemize}
+
+This is the simplest unbiased model of random graphs with a power-law degree distribution, even though almost all graphs have Poisson degree distributions, albeit with random means.
+
+\textbf{Remember: degree distribution} $P(k) \neq$ \textbf{degree sequence distribution} $P(\{k_i\})$.
+
+\section{Summary}
+
+The canonical models considered in this chapter satisfy the basic niceness requirements: unbiasedness (maximum entropy) and the possibility to define typical graphs, thus providing a ``link'' between models and real data, and making statistical inference potentially useful.
+
+\end{document}

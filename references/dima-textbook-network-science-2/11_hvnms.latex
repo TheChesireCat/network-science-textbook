@@ -1,0 +1,152 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 11\_hvnms.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\section*{Chapter 11}
+
+\section*{Hidden variable network models (HVNMs)}
+
+\subsection*{11.1 Definition}
+
+\textbf{Notes:}
+\begin{itemize}
+\item Hidden variables $\mathbf{x} = \{x_i\}$ may abstract node attributes (metadata) in real networks.
+\item HVNMs are very general!
+\item \textbf{The rest of the models covered in the rest of the class are all HVNMs!}
+\end{itemize}
+
+\textbf{Definition 11.1.} The HVNM$(n, p, \rho)$ is the random graph $G = \{G_{ij}\}_{i<j=1}^n$ generated in two steps:
+
+1. $x_i \stackrel{\text{iid}}{\sim} \rho$, for $i = 1, 2, ..., n$, and then
+
+2. $G_{ij} \stackrel{\text{ind}}{\sim} \text{Bernoulli}[p_{ij}]$ for all pairs $i < j$, where $p_{ij} = p(x_i, x_j)$ is the \textit{connection probability}.
+
+\textbf{Notes:}
+\begin{itemize}
+\item Both $p$ and/or $\rho$ may (and usually do) depend on $n$.
+\item If they don't, the graphs are dense as we will see later.
+\item If $\rho(x)$ is ``nice,'' it can be mapped to $U(0,1)$:
+\begin{itemize}
+\item Let: $F(x) = \int_{-\infty}^x \rho(x')dx'$ be the CDF of $X$.
+\item Theorem: If $X \sim \rho(x)$, then $u = F(x) \sim U(0,1)$.
+\item Therefore, $x = F^{-1}(u) \sim \rho$ if $u \sim U(0,1)$ (inverse CDF sampling).
+\end{itemize}
+\item Therefore, HVNM$(n, p_\rho, \rho) = \text{HVNM}(n, p_u, U(0,1))$, where $p_u(u, u') = p_\rho(F^{-1}(u), F^{-1}(u'))$.
+\item The space of HVNMs is thus extremely vast, parametrized by connection probability functions $p : [0,1]^2 \mapsto [0,1]$.
+\end{itemize}
+
+\subsection*{11.2 Examples}
+
+\begin{itemize}
+\item The simplest HVNM example: $\mathcal{G}(n, p)$:
+\begin{itemize}
+\item $\rho = $ any distribution (e.g., $U(0,1)$);
+\item $p(x, x') = p$.
+\end{itemize}
+\item The simplest non-trivial HVNM example: HSCM$(n, \rho)$
+\begin{itemize}
+\item $\rho = \rho(k)$;
+\item $p(k, k') = 1/\left(\frac{kk'}{\bar{k}^2} + 1\right)$, where $\bar{k} = \int k\rho(k)\, dk$.
+\item Note that $p$ depends on $n$.
+\end{itemize}
+\end{itemize}
+
+\vspace{2em}
+\begin{center}
+57
+\end{center}
+
+\newpage
+
+% ===== Page 2 =====
+\section*{11.3 Frequently used expressions}
+
+\begin{enumerate}
+\item The expected number of edges:
+\begin{equation}
+\bar{m} = \binom{n}{2} \iint p(x,x') \, \rho(x) dx \, \rho(x') dx'. \tag{11.1}
+\end{equation}
+
+\item The expected average degree:
+\begin{equation}
+\bar{k} = (n-1) \iint p(x,x') \, \rho(x) dx \, \rho(x') dx'. \tag{11.2}
+\end{equation}
+
+\item The expected degree of a node with hidden variable $x$ (node at $x$):
+\begin{equation}
+\bar{k}(x) = (n-1) \int p(x,x') \, \rho(x') dx'. \tag{11.3}
+\end{equation}
+
+\item The expected number of triangles at a node at $x$:
+\begin{equation}
+\bar{t}(x) = \binom{n-1}{2} \iint p(x,x') p(x',x'') p(x'',x) \, \rho(x') dx' \, \rho(x'') dx''. \tag{11.4}
+\end{equation}
+
+\item The expected number of triangles:
+\begin{equation}
+\bar{t} = \frac{n}{3} \int \bar{t}(x) \, \rho(x) dx. \tag{11.5}
+\end{equation}
+
+\item The expected clustering of a node at $x$:
+\begin{equation}
+\bar{c}(x) = \iint p(x',x'') \, p(x') x) dx' \, \rho(x'') dx'', \quad \text{where} \tag{11.6}
+\end{equation}
+
+\item The distribution of the values of hidden variables $x'$ of nodes connected to a node at $x$:
+\begin{equation}
+\rho(x'|x) = (n-1) \rho(x') p(x',x) / \bar{k}(x). \tag{11.7}
+\end{equation}
+
+\item Combining the equations above:
+\begin{equation}
+\bar{c}(x) = 2 \frac{n-2}{n-1} \frac{\bar{t}(x)}{[\bar{k}(x)]^2} \approx \frac{2\bar{t}(x)}{[\bar{k}(x)]^2}. \tag{11.8}
+\end{equation}
+
+\item The expected average clustering excluding nodes of degrees 0 and 1:
+\begin{equation}
+\bar{c} = \int \bar{c}(x) \, \rho(x) dx. \tag{11.9}
+\end{equation}
+\end{enumerate}
+
+\section*{11.4 HVNMs versus ERGMs in general}
+
+\textbf{Theorem 11.2.} \textit{The generalized ER graph $\mathcal{G}(n, \{p_{ij}\})$, where $p_{ij} \in [0,1]$ is the probability of link $\{i,j\}$, is an ERGM with $\binom{n}{2}$ sufficient statistics $f_{ij}(G) = G_{ij}$, $i < j$ (property $f_{ij}$ is the indicator of the presence of edge $\{i,j\}$). Specifically,}
+\begin{equation}
+P(G) = \prod_{i<j} p_{ij}^{G_{ij}} (1-p_{ij})^{1-G_{ij}} = \frac{1}{Z} \exp(-\sum_{i<j} \lambda_{ij} G_{ij}), \quad \text{where} \tag{11.10}
+\end{equation}
+\begin{equation}
+Z = \prod_{i<j} (1 + e^{-\lambda_{ij}}), \tag{11.11}
+\end{equation}
+\begin{equation}
+p_{ij} = \frac{1}{e^{\lambda_{ij}} + 1}. \tag{11.12}
+\end{equation}
+
+Note that this is a ``very dull and degenerate'' ERGM (canonical ensemble), since the corresponding microcanonical ensemble consists of individual graphs:
+\begin{equation}
+P(G|\{G_{ij}\}) = \mathbb{1}\, \{G = \{G_{ij}\}\}. \tag{11.13}
+\end{equation}
+
+Regardless, a general HVNM is a hypercanonical probabilistic mixture of canonical $\mathcal{G}(n, \{p_{ij}\})$ with random $p_{ij} = p(x_i, x_j)$: $\{p_{ij}\}$ are random because $\{x_i\}$ are random.
+
+\vspace{1em}
+\hfill 58
+
+\end{document}

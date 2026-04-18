@@ -1,0 +1,375 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 14\_stochastic\_block\_models.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\chapter*{Chapter 14}
+
+\section*{Stochastic block models (SBMs)}
+
+\subsection*{14.1 Introduction}
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item The SBM is the simplest model of networks with ``community structure.''
+
+\item No one knows what ``community structure'' is.
+
+\item It is definitely not modularity: sparse ER and random $k$-regular graphs have nonzero modularity, while RHGs have maximum modularity $\to 1$.
+
+\item \textbf{The SBM versus SRGGs in a nutshell:}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+& SRGG & SBM \\
+\hline
+$\{x_i\}$ & Positions in space & Community memberships \\
+\hline
+& \begin{minipage}{0.35\textwidth}
+\vspace{0.1cm}
+\centering
+\textit{Description of a heatmap visualization showing a smooth gradient from blue (bottom-left) to red (top-right), representing probability $p(x,x')$ as a continuous function of spatial positions. The axes are labeled ``Prob.\ Growth'' on both dimensions, with an arrow indicating ``Prob.\ Growth'' pointing to the right.}
+\vspace{0.1cm}
+\end{minipage}
+& \begin{minipage}{0.35\textwidth}
+\vspace{0.1cm}
+\centering
+\textit{Description of a block matrix heatmap showing discrete blocks of blue and orange/red colors, representing probability $p(x,x')$ as a function of community memberships. The matrix has a checkerboard-like pattern with diagonal blocks in one color and off-diagonal blocks in another. The axes are labeled ``Prob.\ Growth'' on both dimensions, with an arrow indicating ``Prob.\ Growth'' pointing to the right.}
+\vspace{0.1cm}
+\end{minipage}
+\\
+$p(x,x')$ & & \\
+\hline
+\end{tabular}
+\end{center}
+
+\item The degree corrections on top of these homogeneous models are implemented in exactly the same way, via additional hidden variables $\{\lambda_i\}$ or $\{\kappa_i\}$, but the results are different.
+
+\item In real-world networks, the $x$-part of the graphon is most likely a fuzzy mixture like this:
+
+\begin{center}
+\textit{Description of a heatmap visualization showing a fuzzy, blurred mixture between the SRGG and SBM patterns. The image displays a gradient from blue to red with some block-like structure, but with smooth transitions rather than sharp boundaries, suggesting a combination of spatial and community-based connection probabilities.}
+\end{center}
+
+\item In contrast with LSMs, all the hypercanonical, canonical, and microcanonical versions make sense to consider since all the sufficient statistics are discrete.
+
+\end{itemize}
+
+\vspace{1cm}
+
+\hfill 78
+
+\newpage
+
+% ===== Page 2 =====
+\section*{14.2 Homogeneous SBM}
+
+\subsection*{14.2.1 Hypercanonical (hypersoft) SBM (HS-SBM)}
+
+\textbf{Definition 14.1.} HS-SBM$(n, p)$ is an HVNM$(n, p, \mathcal{U}(0, 1))$, where $p : [0, 1]^2 \to [0, 1]$ is a block graphon.
+
+\textbf{Definition 14.2.} Let $\{I_c\}_{c=1}^q$ be a partition of $I = [0, 1]$, and $p_{cc'} = p_{c'c} \in [0, 1]$, where $c, c' = 1, 2, ..., q$. Graphon $p(x, x')$ is a block graphon if
+\begin{equation}
+p(x, x') = \sum_{c,c'=1}^q p_{cc'} \mathbb{1}\left\{x \in I_c, x' \in I'_c\right\}.
+\tag{14.1}
+\end{equation}
+
+\textbf{Examples:}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$q = 1$ & $q = 2$ & $q = 2$ & $q = 2$ & $q = 3$ & \\
+\hline
+% \multirow{2}{*}{\begin{tabular}{c} $I_1$ \\ \includegraphics[width=1.5cm]{gray_square} \\ $I_1$ \end{tabular}} & 
+\textit{[Image file reference removed; semantic figure meaning is preserved in text description.]}
+\begin{tabular}{c} $I_1$ \\ $I_1$ \end{tabular} \begin{tabular}{|c|c|} \hline $\rho_{11}$ & $\rho_{12}$ \\ \hline $\rho_{21}$ & $\rho_{22} = 0$ \\ \hline \end{tabular} \begin{tabular}{c} $I_2$ \\ $I_2$ \end{tabular} &
+\begin{tabular}{c} $I_1$ \\ $I_1$ \end{tabular} \begin{tabular}{|c|c|} \hline $\rho_{11}$ & $\rho_{12} = 0$ \\ \hline $\rho_{21} = 0$ & $\rho_{22}$ \\ \hline \end{tabular} \begin{tabular}{c} $I_2$ \\ $I_2$ \end{tabular} &
+\begin{tabular}{c} $I_1$ \\ $I_1$ \end{tabular} \begin{tabular}{|c|c|} \hline $\rho_{11}$ & $\rho_{12}$ \\ \hline $\rho_{21}$ & $\rho_{22}$ \\ \hline \end{tabular} \begin{tabular}{c} $I_2$ \\ $I_2$ \end{tabular} &
+\begin{tabular}{c} $I_1$ \\ $I_1$ \\ $I_1$ \end{tabular} \begin{tabular}{|c|c|c|} \hline $\rho$ & $\rho'$ & $\rho$ \\ \hline $\rho'$ & $\rho$ & $\rho'$ \\ \hline $\rho$ & $\rho'$ & $\rho'$ \\ \hline \end{tabular} \begin{tabular}{c} $I_2$ \\ $I_2$ \\ $I_3$ \end{tabular} & $\rho > \rho'$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item The first example is ER $\mathcal{G}(n, p)$.
+\item The second example is two disjoint ERs $\mathcal{G}(|I_1|n, p_{11})$ and $\mathcal{G}(|I_2|n, p_{22})$.
+\item The third example is bipartite ER $\mathcal{G}(|I_1|n, |I_2|n, p_{12})$.
+\end{itemize}
+
+\textbf{Definition 14.3.} A community in the SBM is the node color $c = 1, 2, ..., q$. The community of node $i$ is $c_i = c : x_i \in I_c$.
+
+\textbf{Generation:}
+
+1. $x_i \stackrel{\text{iid}}{\sim} \mathcal{U}(0, 1), i = 1, 2, ..., n;$
+
+2. $G_{ij} = \text{Bel}[p_{c_i c_j}].$
+
+\textbf{Illustration:}
+
+\begin{center}
+\textit{[The illustration shows a block matrix diagram with three communities. The diagram depicts a $3 \times 3$ grid where:
+\begin{itemize}
+\item The top-left and bottom-right blocks are shaded dark gray, representing within-community connections with probability $\rho$.
+\item The off-diagonal blocks are lighter, representing between-community connections with probability $\rho'$.
+\item Nodes $x_1, x_2, x_3$ are marked on the axes.
+\item Blue arrows and dashed lines illustrate connections between nodes.
+\item Mathematical annotations show: $p_{23} = p(x_2, x_3) = p_{32} = p(x_3, x_2) = \rho > \rho'$, $p_{13} = p(x_1, x_3) = p_{31} = p(x_3, x_1) = \rho'$, and $p_{12} = p(x_1, x_2) = p_{21} = p(x_2, x_1) = \rho' < \rho$.]}
+\end{center}
+
+\begin{itemize}
+\item Node 1 is in community 1.
+\item Nodes 2 and 3 are in community 2.
+\item Nodes in the same community (nodes 2 and 3) are connected with probability $p$.
+\item Nodes in different communities (node pairs $(1,2)$ and $(1,3)$) are connected with probability $p'$.
+\end{itemize}
+
+\vspace{1em}
+\hfill 79
+
+\newpage
+
+% ===== Page 3 =====
+\textbf{Definition 14.4.} The size $n_c$ of community $c$ is the number of nodes in it, $n_c = \sum_{i=1}^n \mathbb{1}\left\{x_i \in I_c\right\}$.
+
+\textbf{Observe:}
+
+\begin{itemize}
+    \item the probability that node $i$ is in community $c$ is $\text{Prob}(x_i \in I_c) = |I_c| \equiv s_c$ for any $i, c$, so
+    
+    \item the distributions of community sizes are binomial, $P(n_c) = \text{Bin}[n, s_c](n_c)$, so
+    
+    \item the expected size of community $c$ is $\bar{n}_c = s_c n$, and
+    
+    \item the expected number of edges between or within communities $c$ and $c'$ is
+    \begin{equation}
+    \bar{m}_{cc'} = \bar{n}_c \bar{n}_{c'} = \binom{n}{2} \int_{\{I_c \times I_{c'}\} \cup \{I_{c'} \times I_c\}} p(x, x') \, dx \, dx' \approx \begin{cases}
+    \bar{p}_{cc'} \bar{n}_c \bar{n}_{c'} & \text{if } c \neq c', \\
+    \bar{p}_{cc} \binom{\bar{n}_c}{2} & \text{if } c = c',
+    \end{cases}
+    \tag{14.2}
+    \end{equation}
+    
+    \item the expected degree of a $c$-colored node is
+    \begin{equation}
+    \bar{k}(c) = (n - 1) \int p(x, x') \, dx' = (n - 1) \sum_{c'} s_{c'} \bar{p}_{cc'},
+    \tag{14.3}
+    \end{equation}
+    
+    \item the expected average degree is
+    \begin{equation}
+    \bar{k} = (n - 1) \int p(x, x') \, dx \, dx' = (n - 1) \sum_{c,c'} s_c s_{c'} \bar{p}_{cc'}.
+    \tag{14.4}
+    \end{equation}
+\end{itemize}
+
+\textbf{Growth with $n$:}
+
+\begin{itemize}
+    \item If $p(x, x')$ is fixed, it is a true graphon, so the SBM graphs are dense in this case.
+    
+    \item If one wants sparse SBM graphs, then the ``best'' approach is to let $\rho = \mathcal{U}(0, n)$ and to ``expand'' $p(x, x')$ projectively according to some rule.
+\end{itemize}
+
+\subsection*{14.2.2 Canonical (soft) SBM (S-SBM)}
+
+\textbf{Definition 14.5.} The S-SBM$(n, \mathbf{c}, \bar{p})$ is the HS-SBM$(n, p)$ with fixed $\mathbf{x} = \{x_i\}_{i=1}^n$, or equivalently, let $c = 1, 2, ..., q$ be a set of communities (colors), $\mathbf{c} = \{c_i\}_{i=1}^n$ be a vector of colors of nodes $i$, and $\bar{p} = \{\bar{p}_{cc'}\}_{c,c'=1}^q$, where $\bar{p}_{cc'} = p_{c'c} \in [0, 1]$, be a matrix of probability of connections between nodes belonging to communities $c$ and $c'$, then $G \sim \text{S-SBM}(n, \mathbf{c}, \bar{p}) = \{G_{ij} \stackrel{\text{ind}}{\sim} \text{Bel}[\bar{p}_{c_i c_j}]\}_{i,j=1}^n$.
+
+\textbf{Extremal examples:}
+
+\begin{itemize}
+    \item If $q = 1$, then S-SBM$(n, \mathbf{c}, \bar{p}) = \mathcal{G}(n, p)$ (ER).
+    
+    \item If $q = n$, then S-SBM$(n, \mathbf{c}, \bar{p}) = \mathcal{G}(n, \bar{p})$, where $\bar{p} = \{\bar{p}_{ij}\}_{i,j=1}^n$, $\bar{p}_{ij} = p_{ji} \in [0, 1]$, $p_{ii} = 0$, is a matrix of connection probabilities between nodes $i$ and $j$ (generalized ER: $G \sim \mathcal{G}(n, \bar{p}) \Longleftrightarrow G_{ij} \stackrel{\text{ind}}{\sim} \text{Bel}[p_{ij}]$, $i < j$).
+\end{itemize}
+
+\textbf{Sufficient statistics:}
+
+\textbf{Theorem 14.6.} Let $\lambda_{cc'}$ be defined by
+\begin{equation}
+p_{cc'} = \frac{1}{e^{\lambda_{cc'}} + 1},
+\tag{14.5}
+\end{equation}
+and $m_{cc'}$ be the number of edges between or within communities $c$ and $c'$. Then
+\begin{equation}
+P_{S\text{-}SBM}(G) = \prod_{i < j} p_{ij}^{G_{ij}} (1 - p_{ij})^{1 - G_{ij}} = \prod_{c \leq c'} p_{cc'}^{m_{cc'}(G)} (1 - p_{cc'})^{n_{cc'} - m_{cc'}(G)}
+\tag{14.6}
+\end{equation}
+\begin{equation}
+= \frac{1}{Z} \exp\left(-\sum_{c \leq c'} \lambda_{cc'} m_{cc'}(G)\right), \text{ where}
+\tag{14.7}
+\end{equation}
+\begin{equation}
+n_{cc'} = \begin{cases}
+n_c n_{c'} & \text{if } c \neq c', \\
+\binom{n_c}{2} & \text{if } c = c',
+\end{cases}
+\tag{14.8}
+\end{equation}
+so the sufficient statistics in S-SBM are the numbers of edges $\{m_{cc'}\}$ between communities $c, c'$.
+
+\vspace{1em}
+\hfill 80
+
+\newpage
+
+% ===== Page 4 =====
+\textbf{Notes:}
+
+\begin{itemize}
+    \item The S-SBM is the unbiased canonical (ERG) model of random graphs with given expected numbers of edges between/within predefined sets of nodes.
+    \item The space of graphs is the space of labeled and colored graphs: all nodes are labeled by integer IDs and colored by communities that they belong to.
+    \item All colored graphs with the same $\mathbf{c}$ and $\bar{m} = \{m_{cc'}\}$ are equiprobable in the S-SBM.
+\end{itemize}
+
+\subsubsection{Microcanonical SBM (SBM)}
+
+\textbf{Definition 14.7.} The microcanonical $\text{SBM}(n, \mathbf{c}, \bar{m})$ is the uniform distribution over all colored graphs with colors $\mathbf{c} = \{c_i\}_{i=1}^n$ and numbers of edges $\bar{m} = \{m_{cc'}\}_{c,c'=1}^q$.
+
+\textbf{Generation:} place $m_{cc'}$ edges at node pairs selected uniformly at random out of $n_{cc'}$ possibilities.
+
+\subsection{Degree-corrected SBM (DC-SBM)}
+
+\textbf{Notes:}
+
+\begin{itemize}
+    \item The degree distribution in the homogeneous SBM is homogeneous (a sum of binomials).
+    \item The DC-SBM is the unbiased model of random graphs with given $\mathbf{k}$ and $\bar{m}$.
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+ & CM & SBM & DC-SBM = CM+SBM \\
+\hline
+Sufficient statistics & $\{d_i(G)\}$ & $\{m_{cc'}(G)\}$ & $\{d_i(G)\}, \{m_{cc'}(G)\}$ \\
+\hline
+Canonical ensemble & $\frac{1}{Z} \exp(-\sum_i \lambda_i d_i)$ & $\frac{1}{Z} \exp(-\sum_{c\leq c'} \lambda_{cc'} m_{cc'})$ & $\frac{1}{Z} \exp(-\sum_i \lambda_i d_i - \sum_{c\leq c'} \lambda_{cc'} m_{cc'})$ \\
+$P(G)$ & & & \\
+\hline
+Canonical connec- & $\frac{1}{e^{\lambda_i+\lambda_j}+1}$ & $\frac{1}{e^{\lambda_{c_ic_j}}+1}$ & $\frac{1}{e^{\lambda_i+\lambda_j+\lambda_{c_ic_j}}+1}$ \\
+tion probability $p_{ij}$ & & & \\
+\hline
+Hypercanonical & $\frac{1}{e^{\lambda(k)+\lambda(k')}+1} \approx \frac{kk'}{kn}$ & $\frac{1}{e^{\lambda(x,x')}+1} = \text{block } p(x,x')$ & $\frac{1}{e^{\lambda(k)+\lambda(k')+\lambda(x,x')}+1} \approx \frac{kk'}{kbn} p(x,x')$, \\
+graphon $p(\cdot)$ & & & where $b = \int p(x,x') dx' \equiv \text{const.}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Hypercanonical (hypersoft) DC-SBM (HSCM-SBM)}
+
+\textbf{Definition 14.8.} The random colored graph $G \sim \text{HSCM-SBM}(n, \rho, p)$, where $\rho$ is an expected degree distribution, and $p$ is a block graphon, is defined in two steps:
+
+1. $k_i, x_i \stackrel{\text{iid}}{\sim} \rho, x_i \stackrel{\text{iid}}{\sim} U(0,1)$
+
+2. $G_{ij} \stackrel{\text{iid}}{\sim} \text{Be}[p_{ij}]$, where
+\begin{equation}
+p_{ij} = p(k_i, x_i; k_j, x_j) = \frac{k_i k_j}{kbn} p(x_i, x_j) = p_{c_i c_j} \frac{k_i k_j}{kbn}, \text{ where}
+\tag{14.9}
+\end{equation}
+\begin{equation}
+k = \int k\rho(k) dk,
+\tag{14.10}
+\end{equation}
+\begin{equation}
+b = \int p(x, x') dx'.
+\tag{14.11}
+\end{equation}
+
+\textbf{Observe} that the expected degree of a node with hidden variables $(k, c)$ is
+\begin{equation}
+\bar{k}(k, c) = n \int p(k, x \in I_c; k', x') \, p(k') \, dk' \, dx'
+\tag{14.12}
+\end{equation}
+\begin{equation}
+= n \int \frac{kk'}{kbn} p(k') \, dk' \int p(x \in I_c, x') \, dx'
+\tag{14.13}
+\end{equation}
+\begin{equation}
+= \frac{k}{b} \int p(x \in I_c, x') \, dx' = \frac{k}{b} \sum_{c'} s_{c'} p_{cc'},
+\tag{14.14}
+\end{equation}
+
+Therefore, if we want $\bar{k}(k, c)$ to be $k$, then the following self-consistency conditions must hold:
+
+\begin{center}
+81
+\end{center}
+
+\newpage
+
+% ===== Page 5 =====
+\textbf{Definition 14.9.} The DC-SBM self-consistency conditions are $\bar{k}(k,c) = k$ for all $c = 1, 2, ..., q$:
+\begin{equation}
+\sum_{c'=1}^{q} s_{c'} p_{cc'} = \int p(x \in I_c, x') \, dx' = b = const., \quad \forall x, c.
+\tag{14.15}
+\end{equation}
+
+\textbf{Note:} if $\bar{k}(k,c) = k$, then $P(k)$ is the $\rho$-mixed Poisson.
+
+\subsubsection*{14.3.2 \quad Canonical (soft) DC-SBM (SCM-SBM)}
+
+\textbf{Definition 14.10.} Let $\mathbf{k} = \{k_i\}$ be an expected degree sequence, $\mathbf{c} = \{c_i\}$ be a community coloring of nodes, and $\bar{m} = \{m_{cc'}\}$ be the self-consistent expected numbers of $(c,c')$-edges. Then the SCM-SBM$(n, \mathbf{k}, \mathbf{c}, \bar{m})$ is $\mathcal{G}(n, \bar{p})$, where $\bar{p} = \{\bar{p}_{ij}\}$ and
+\begin{equation}
+\bar{p}_{ij} = \frac{1}{e^{\lambda_i + \lambda_j + \lambda_{c_i c_j}} + 1},
+\tag{14.16}
+\end{equation}
+where $\{\lambda_i\}$ and $\{\lambda_{cc'}\}$ are the solutions of the following system of equations:
+\begin{equation}
+\sum_j \bar{p}_{ij} = k_i, \, i = 1, 2, ..., n,
+\tag{14.17}
+\end{equation}
+\begin{equation}
+\sum_{i<j} \bar{p}_{ij} \, \mathbb{1}\, \{i \in c, j \in c'\} = m_{cc'}, \, c \leq c' = 1, 2, ..., q.
+\tag{14.18}
+\end{equation}
+
+\textbf{Definition 14.11.} The classical limit (CL) approximation connection probability in SCM-SBM is
+\begin{equation}
+p_{ij}^{\text{CL}} = e^{-\lambda_i} e^{-\lambda_j} e^{-\lambda_{c_i c_j}} = p_{c_i c_j} \frac{k_i k_j}{\bar{k}bn},
+\tag{14.19}
+\end{equation}
+where $\bar{k}n = \sum k_i$, $p_{cc'} = m_{cc'}/n_{cc'}$, $b = \sum s_{c'} p_{cc'}$, and $s_c = n_c/n$.
+
+\textbf{Generation:} Given $\mathbf{k}, \mathbf{c}, \bar{m}$, either:
+\begin{enumerate}
+\item \textbf{Exact:} first solve (14.17,14.18) for $\lambda$'s, and then let $G_{ij} = \text{Bel}[p_{ij}]$ with $p_{ij}$ in (14.16), or
+\item \textbf{CL approximation:} $G_{ij} \sim \text{Bel}[p_{ij}]$ with $p_{ij}$ in (14.19).
+\end{enumerate}
+
+\subsubsection*{14.3.3 \quad Microcanonical DC-SBM (CM-SBM)}
+
+\textbf{Definition 14.12.} The CM-SBM$(n, \mathbf{k}, \mathbf{c}, \bar{m})$ is the uniform distribution over graphs with given exact $\mathbf{k}, \mathbf{c}, \bar{m}$.
+
+\textbf{Note:} $\mathbf{c}$ can be replaced with $\mathbf{n} = \{n_c\}_{c=1}^q$, a vector of community sizes, in which case node labels and node colors are disentangled\dots
+
+\textbf{Generation:} Ask Tiago! :)
+
+\section*{14.4 \quad Final question}
+
+\textbf{Problem:} please give a concrete example of a DC-SBM that would share all the green check marks with the RHGs in Section 13.4, i.e., that would be ultrasparse, small-world, strongly clustered, heterogeneous, and projective.
+
+\vspace{2em}
+
+\hfill 82
+
+\end{document}

@@ -1,0 +1,107 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 15\_existence\_and\_uniqueness\_of\_the\_solution\_of\_the\_scm\_equations.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\section*{Appendix A}
+
+\section*{Existence and uniqueness of the solution of the SCM equations}
+
+\textit{Luca Santagata}
+
+Here we show that the system of equations (9.7),
+\begin{equation}
+\sum_{j=1}^{n} p_{ij} = k_i \in [0, n-1], \quad i = 1, \ldots, n, \text{ where}
+\tag{A.1}
+\end{equation}
+\begin{equation}
+p_{ij} = \frac{1}{e^{\lambda_i + \lambda_j} + 1} \text{ if } i \neq j, \text{ and}
+\tag{A.2}
+\end{equation}
+\begin{equation}
+p_{ii} = 0,
+\tag{A.3}
+\end{equation}
+admits \textbf{at most one solution} in $\{\lambda_i\}_{i=1}^n$. Note that the convention $p_{ii} = 0$ means the sum over $j = 1, \ldots, n$ is equivalent to the sum over $j \neq i$, since the $j = i$ term vanishes.
+
+\textbf{Potential function.} We define $\mathcal{F} : \mathbb{R}^n \to \mathbb{R}$ as
+\begin{equation}
+\mathcal{F}(\boldsymbol{\lambda}) = \sum_{i<j} \log\left(1 + e^{-(\lambda_i + \lambda_j)}\right) + \sum_{i=1}^{n} k_i \lambda_i.
+\tag{A.4}
+\end{equation}
+
+The sum $\sum_{i<j}$ runs over each unordered pair once, since each edge $(i, j)$ of the graph is the same as edge $(j, i)$. Taking the partial derivative with respect to $\lambda_i$ collects all terms in $\mathcal{F}$ that contain $\lambda_i$, namely those corresponding to all pairs involving node $i$:
+\begin{equation}
+\frac{\partial \mathcal{F}}{\partial \lambda_i} = -\sum_{j \neq i} \frac{e^{-(\lambda_i + \lambda_j)}}{1 + e^{-(\lambda_i + \lambda_j)}} + k_i.
+\tag{A.5}
+\end{equation}
+
+The fraction above is equal to $p_{ij}$, as can be seen by multiplying numerator and denominator by $e^{\lambda_i + \lambda_j}$:
+\begin{equation}
+\frac{e^{-(\lambda_i + \lambda_j)}}{1 + e^{-(\lambda_i + \lambda_j)}} = \frac{1}{e^{\lambda_i + \lambda_j} + 1} = p_{ij}.
+\tag{A.6}
+\end{equation}
+
+Therefore:
+\begin{equation}
+\frac{\partial \mathcal{F}}{\partial \lambda_i} = k_i - \sum_{j \neq i} p_{ij} = 0,
+\tag{A.7}
+\end{equation}
+which is exactly the $i$-th equation of system (A.1). Hence, finding the point where the gradient $\nabla \mathcal{F}$ vanishes is equivalent to solving the system.
+
+\textbf{Strict convexity.} To show that $\mathcal{F}$ has at most one stationary point, we show that it is strictly convex, i.e., that its Hessian $H = \nabla^2 \mathcal{F}$ is positive definite $(H \succ 0)$. Since $p_{ij} = \frac{1}{e^{\lambda_i + \lambda_j} + 1}$ is a
+
+\vspace{1em}
+\hfill 83
+
+\newpage
+
+% ===== Page 2 =====
+sigmoid function, its derivative with respect to $\lambda_i$ is $-p_{ij}(1-p_{ij})$. The entries of $H$ are therefore:
+\begin{equation}
+\frac{\partial^2 \mathcal{F}}{\partial \lambda_i^2} = \sum_{j \neq i} p_{ij}(1-p_{ij}),
+\tag{A.8}
+\end{equation}
+
+\begin{equation}
+\frac{\partial^2 \mathcal{F}}{\partial \lambda_i \partial \lambda_j} = p_{ij}(1-p_{ij}), \quad i \neq j.
+\tag{A.9}
+\end{equation}
+
+To check whether $H \succ 0$, we evaluate the quadratic form $\mathbf{x}^\top H \mathbf{x}$ for an arbitrary vector $\mathbf{x} \in \mathbb{R}^n$:
+\begin{equation}
+\mathbf{x}^\top H \mathbf{x} = \sum_i \frac{\partial^2 \mathcal{F}}{\partial \lambda_i^2} x_i^2 + \sum_{i \neq j} \frac{\partial^2 \mathcal{F}}{\partial \lambda_i \partial \lambda_j} x_i x_j = \sum_{i,j} p_{ij}(1-p_{ij})(x_i + x_j)^2.
+\tag{A.10}
+\end{equation}
+
+The last equality follows by grouping the diagonal terms $x_i^2 + x_j^2$ and the cross terms $2x_i x_j$ for each pair $(i,j)$ into a perfect square $(x_i + x_j)^2$. This expression is always non-negative, since $p_{ij} \in (0,1)$ implies $p_{ij}(1-p_{ij}) > 0$, and $(x_i + x_j)^2 \geq 0$.
+
+For strict convexity we need $\mathbf{x}^\top H \mathbf{x} = 0$ to imply $\mathbf{x} = \mathbf{0}$. The sum is zero only if $(x_i + x_j)^2 = 0$, i.e., $x_i = -x_j$, for every pair $(i,j)$. Note that $p_{ij}(1-p_{ij})$ cannot be zero: since $p_{ij} = \frac{e^{\lambda_i}}{e^{\lambda_i} + e^{\lambda_j} + 1}$ is strictly between 0 and 1 for any finite $\lambda_i, \lambda_j$, both $p_{ij}$ and $(1-p_{ij})$ are strictly positive. Hence the only way the sum can vanish is through $(x_i + x_j)^2 = 0$.
+
+In the SCM, $p_{ij} > 0$ for every pair of nodes, so the constraint $x_i = -x_j$ must hold for \emph{every} pair. To see why this forces $\mathbf{x} = \mathbf{0}$, fix any node $i$ and let $x_i = c$. Then $x_j = -c$ for every other node $j$. But now consider any two nodes $j$ and $k$, both different from $i$: the constraint on the pair $(j,k)$ requires $x_j = -x_k$, yet both equal $-c$, so $-c = c$, which implies $c = 0$. Therefore $\mathbf{x} = \mathbf{0}$ is the only consistent solution, $H \succ 0$, and $\mathcal{F}$ is \textbf{strictly convex}.
+
+\textbf{Conclusion.} A strictly convex function admits \textbf{at most one stationary point}, which is necessarily its global minimum. Therefore, system (A.1) has at most one solution $\{\lambda_i^*\}_{i=1}^n$.
+
+\textbf{Remark.} Existence of the solution is guaranteed by the condition $k_i \in (0, n-1)$ for all $i$, which ensures that the equations are non-degenerate (i.e., $p_{ij} \in (0,1)$).
+
+\vspace{1em}
+\hfill 84
+
+\end{document}

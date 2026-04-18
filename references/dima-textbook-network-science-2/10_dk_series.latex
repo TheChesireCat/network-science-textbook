@@ -1,0 +1,364 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 10\_dk\_series.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\section*{Chapter 10}
+
+\section*{$dk$-series}
+
+\textbf{Note:} all models covered in this chapter are \textit{microcanonical}.
+
+\section*{10.1 Motivation}
+
+\begin{itemize}
+\item ER vs. CM:
+
+\begin{center}
+\begin{tabular}{c|c|c}
+& ``reproduces'' $\approx$ & \\
+ER & ``models well'' $\approx$ & the average degree $k$ \\
+& ``is a good model of'' $=$ & \\
+& is the correct null model of & \\
+\hline
+CM & $\dots$ // $\dots$ & the degree distribution $P(k)$
+\end{tabular}
+\end{center}
+
+\item The degree distribution ``defines, fixes'' the average degree; it provides more detailed information about the network structure:
+\[
+\bar{k} = \sum_k k P(k) \iff 2m = \sum_{i=1}^n k_i.
+\]
+
+\item The CM$(n, \mathbf{k})$ graphs form a subset of $\mathcal{G}(n, m)$ graph with $m = \frac{1}{2} \sum k_i$:
+
+\begin{figure}[h]
+\centering
+\textit{[A hand-drawn diagram showing nested regions. The outermost region is labeled $\mathcal{G}_{n,m}$. Inside it are two smaller, disjoint regions labeled $CM(n, \mathbf{k}^1)$ and $CM(n, \mathbf{k}^2)$. At the bottom of the diagram is the equation $\sum k_1 = \sum k^1 = 2m$.]}
+\end{figure}
+
+\item ER is not a ``bad model'' of the degree distribution; it simply has a specific ``maximally random'' value (binomial).
+\end{itemize}
+
+\textbf{Theorem 10.1.} \textit{The binomial distribution} $\text{Bin}[n-1, p](k)$ \textit{is the maximum-entropy distribution across all the distributions that are sums of $n-1$ independent Bernoullis (of different success rates, in general) under the constrain $\bar{k} = (n-1)p$. (P. Harremos, 2001)}
+
+\textbf{Remember:} Any network property has some specific value or distribution in any network model, including ER and CM.
+
+\vfill
+
+\begin{center}
+51
+\end{center}
+
+\newpage
+
+% ===== Page 2 =====
+\section*{Brief History of the Early Days of Network Science:}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, auto]
+\node[draw, rectangle, rounded corners, minimum width=3cm, minimum height=1cm] (start) {$s=1$};
+\node[draw, rectangle, rounded corners, below of=start, minimum width=8cm, minimum height=1cm, node distance=2cm] (property) {Network property $f_s$ is important and ubiquitous};
+\node[draw, rectangle, rounded corners, below of=property, minimum width=10cm, minimum height=1cm, node distance=2cm] (model) {But the currently best model $M_{s-1}$ is not a good model of $\mathcal{F}_s = \{f_i\}_{i=1}^s$};
+\node[draw, rectangle, rounded corners, below of=model, minimum width=8cm, minimum height=1cm, node distance=2cm] (develop) {Develop a new ``best model $M_s$'' that does reproduce $\mathcal{F}_s$};
+\node[draw, rectangle, rounded corners, below of=develop, minimum width=3cm, minimum height=1cm, node distance=2cm] (increment) {$s = s+1$};
+\draw[->] (start) -- (property);
+\draw[->] (property) -- (model);
+\draw[->] (model) -- (develop);
+\draw[->] (develop) -- (increment);
+\draw[->] (increment) -| ([xshift=3cm]property.east) -- (property.east);
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+\item \textbf{Note:} sometimes by modelling $\mathcal{F}_s$ in $M_s$, we also ``unintentionally'' model $g \notin \mathcal{F}_s$ because $g$ is a ``consequence'' of $\mathcal{F}_s$ + randomness.
+
+\item \textbf{Examples:}
+\begin{enumerate}
+\item ER ``reproduces'' binomial $P(k)$: this $P(k)$ is a consequence of maximal randomness.
+\item ER graphs are small worlds: small worldness is a consequence of even ``minimal randomness.''
+\item Dense ER graphs are ultrasmall worlds and have strong clustering: both properties are consequences of high density.
+\item Scale-free (SF) CM graphs are ultrasmall worlds: ultrasmallworldness is a consequence of SF+randomness.
+\item The ``rich club'' property is a consequence of degree correlations in many networks.
+\end{enumerate}
+
+\item \textbf{Goals:}
+\begin{enumerate}
+\item To break the ``vicious modelling loop'' (which in principle can continue forever!).
+\item To introduce some order into the complex network of network properties $\mathcal{F}_s$, associated models $M_s$, and their interdependencies.
+\item To be able to tell which properties are independent, and which ones are consequences of other properties.
+\end{enumerate}
+
+\item \textbf{Methods:} Develop a \textit{systematic hierarchical sequence} of network properties $f_d$, $d = 0, 1, 2, ...,$ and associated models $M_d$ satisfying the following two requirements:
+\begin{enumerate}
+\item \textbf{Monotonicity:} $f_d$ ``defines, fixes'' $f_{d'}$ for all $d' < d$, so that the higher the $d$:
+\begin{enumerate}
+\item[(a)] the more details about network structure the $M_d$ ``conveys, reproduces,''
+\item[(b)] the smaller the space of graphs in $M_d$.
+\end{enumerate}
+\item \textbf{Convergence:} for any finite graph $G_0$, there exists finite $\mathcal{D}_{G_0}$ such that the space of graphs in $M_{\mathcal{D}_{G_0}}$ consists of only one graph, $G_0$self, so that in the ``limit'' of high $d$ (i.e., at $d = \mathcal{D}_{G_0}$) \textit{any} property of $G_0$ is reproduced.
+\end{enumerate}
+
+\item \textbf{Note:} As a result, to ``explain'' any property $g$, it suffices to find the minimal value $d_g$ such that $M_{d_g}$ reproduces $g$:
+\end{itemize}
+
+\vspace{1em}
+\begin{center}
+52
+\end{center}
+
+\newpage
+
+% ===== Page 3 =====
+\begin{enumerate}
+\item convergence ensures that $d_g$ exists,
+\item monotonicity ensures that $M_d$ reproduce $g$ for all $d \geq d_g$, so that $g$ is a consequence of $\overline{J}_{d_g}$ + randomness.
+\end{enumerate}
+
+\subsection{Definitions}
+
+\textbf{Definition 10.2.} The $dk$-\textit{distribution} in a given graph $G_0$ of size $n$ is the empirical `d'egree (`k')
+distribution within $G_0$'s connected subgraphs of size $d = 0, 1, 2, ..., n$.
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+$dk$ & subgraphs & $dk$-distribution \\
+\hline
+$0k$ & $\varnothing$ & $k$ \\
+\hline
+$1k$ & \raisebox{-0.5\height}{\begin{minipage}{2in}\centering [A diagram showing a single node with degree $k$] \end{minipage}} & $P(k)$ \\
+\hline
+$2k$ & \raisebox{-0.5\height}{\begin{minipage}{2in}\centering [A diagram showing two connected nodes with degrees $k_1$ and $k_2$] \end{minipage}} & $P(k_1, k_2)$ \\
+\hline
+$3k$ & \raisebox{-0.5\height}{\begin{minipage}{2in}\centering [A diagram showing two triangular subgraphs with nodes labeled with degrees $k_1, k_2, k_3$] \end{minipage}} & $\{P_\Delta(k_1, k_2, k_3), P_\wedge(k_1, k_2, k_3)\}$ \\
+\hline
+$4k$ & \raisebox{-0.5\height}{\begin{minipage}{2in}\centering [A diagram showing six different 4-node connected subgraphs labeled 1 through 6, including paths, stars, cycles, and other configurations] \end{minipage}} & $\{P_i(k_1, ..., k_4)\}_{i=1}^6$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item The $2k$-distribution, i.e., the joint degree distribution, describes the degree correlations in $G_0$ (the assortativity coefficient is the correlation coefficient of the $2k$-distribution).
+
+\item At higher $d > 2$, the $dk$-distributions describe `d'egree `k'orrelations within the subgraphs. (Many reasons for `$dk$'$\ldots$:)
+
+\item The $3k$-distribution defines clustering:
+\begin{equation}
+\bar{c}(k) = \frac{3t}{n} \frac{\sum_{k', k''} P_\Delta(k, k', k'')}{\binom{k}{2} P(k)},
+\tag{10.1}
+\end{equation}
+where $t$ is the total number of triangles in $G_0$.
+\end{itemize}
+
+\textbf{Definition 10.3.} The $dk$-\textit{sequences} $(\underbrace{n, m}_{\text{0k}}, \underbrace{n(k)}_{\text{1k}}, \underbrace{n(k_1, k_2)}_{\text{2k}}, \underbrace{n_\Delta(k_1, k_2, k_3), n_\wedge(k_1, k_2, k_3)}_{\text{3k}})$ are the degree sequences corresponding to the $dk$-distributions.
+
+\textbf{Example:}
+
+\begin{center}
+\fbox{\begin{minipage}{5in}
+\centering
+[A sequence of diagrams showing: (1) Original graph with a simple connected structure, (2) 4k decomposition shown in pink, (3) 3k decomposition shown in purple, (4) 2k decomposition shown in brown, (5) 1k decomposition shown in yellow, (6) 0k decomposition shown in green. Each stage shows the graph broken down into smaller subgraph components.]
+\end{minipage}}
+\end{center}
+
+\textbf{Definition 10.4.} The $dk$-\textit{graphs} are all the graphs with a given $dk$-sequence.
+
+\vspace{1em}
+\begin{center}
+53
+\end{center}
+
+\newpage
+
+% ===== Page 4 =====
+\textbf{Definition 10.5.} The $dk$-random graphs are the microcanonical random graphs with a given $dk$-sequence.
+
+\textbf{Examples:}
+
+\begin{center}
+\begin{tabular}{|c|l|}
+\hline
+$dk$ & $dk$-random graphs \\
+\hline
+$0k$ & $\mathcal{G}(n,m)$ \\
+\hline
+$1k$ & $\mathrm{CM}(n,\mathbf{k})$ \\
+\hline
+$2k$ & maximum-entropy random graphs with \\
+& a given joint degree sequence $n(\mathbf{k}_1, \mathbf{k}_2)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Definition 10.6.} The $dk$-series of $G_0$ is its $dk$-distributions (or $dk$-sequences) $f_d$ and $dk$-random graphs $M_d$.
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item The $dk$-series are convergent: the $nk$-sequence specifies $G_0$!
+
+\item The $dk$-series are monotonic:
+
+\begin{center}
+\begin{tabular}{|c|l|}
+\hline
+$dk$ & $dk$-distribution defines $(d-1)k$-distribution \\
+\hline
+$1k$ & $k = \sum_{k'} kP(k)$ \\
+\hline
+$2k$ & $P(k) = (k/\bar{k}) \sum_{k'} P(k, k')$ \\
+\hline
+$3k$ & $P(k, k') = \frac{1}{k+k'-2} \sum_{k''} \left(\frac{w}{m} P_\Delta(k, k', k'') + \frac{w}{m} (P_\wedge(k, k', k'') + P_\wedge(k', k, k''))\right)$, \\
+& where $m, w, t$ are the numbers of edges, wedges, and triangles in $G_0$. \\
+\hline
+\end{tabular}
+\end{center}
+
+\item The space of $dk$-graphs is smaller than the space of $(d-1)k$-graphs:
+
+\begin{figure}[h]
+\centering
+\textit{[The figure shows a nested Venn diagram-like illustration with concentric regions labeled from outermost to innermost as $Dk=G$, $3\,k$, $2\,k$, $1\,k$, and $0\,k$. Each region contains multiple circular clusters representing different types of graphs. The clusters contain networks of nodes (vertices) and edges depicted as dots connected by lines. The nodes are shown in different colors (red and blue/cyan). The outer regions ($0k$) show regular lattice-like structures with uniform spacing. Moving inward through $1k$, $2k$, and $3k$, the graph structures become increasingly irregular and diverse. The $3k$ region at the center contains the most varied and complex-looking network structures. This diagram illustrates how the space of possible graphs becomes more constrained (smaller) as the $dk$ parameter increases, with higher $dk$ values corresponding to more specific structural constraints.]}
+\end{figure}
+
+\item The entropy of $(d-1)k$-random graphs is larger than the entropy of $dk$-random graphs.
+
+\item The higher the $d$, the ``less random'' the $dk$-random graphs are.
+
+\item \textbf{The $dk$-series is thus a method to ``measure randomness'' of any network property.}
+
+\item The $d$-series ($dk$-series with degree-$k$ information ignored) are not monotonic and converge much more slowly that the $dk$-series:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+$d$ & $dk$-sequence & $d$-sequence \\
+\hline
+$0$ & $n, m$ & $-$ \\
+\hline
+$1$ & $n(k)$ & $n$ \\
+\hline
+$2$ & $n(k_1, k_2)$ & $m$ \\
+\hline
+$3$ & $n_\Delta(k_1, k_2, k_3)$ & $t$ \\
+& $n_\wedge(k_1, k_2, k_3)$ & $w$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\end{itemize}
+
+\vspace{1em}
+\hfill 54
+
+\newpage
+
+% ===== Page 5 =====
+\begin{itemize}
+    \item Non-monotonic: the $n$ and $m$ are independent, modulo $m \le n' = \binom{n}{2}$.
+    \item Slow convergence: the $3$-sequence does not fix either the $n$-chain or $n$-star (in the $n$-chain, $m = n-1$, $w = n-2$, $t = 0$; while in the $n$-star, $m = n-1$, $w = \binom{n-1}{2}$), $t = 0$), but the $3k$-sequence does, i.e., $\mathcal{D}_{G_0} = 3$ for these two graphs of any size $n$—the $dk$-series converge very fast!
+\end{itemize}
+
+\subsection*{10.3 \quad Generation}
+
+\textbf{Primary method:} $dk$-swaps:
+
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\textit{[Figure: Three rows of graph transformations showing $dk$-swaps. Each row shows a ``before'' graph on the left and an ``after'' graph on the right, connected by a blue arrow labeled with probability $P$ and a swap type.
+
+Row 1: Two disconnected edges $(k_1, k_2)$ and $(k_3, k_4)$ transform into two disconnected edges $(k_1, k_2)$ and $(k_3, k_4)$ (no change). Arrow labeled ``$P=1$'' and ``$0k$''.
+
+Row 2: Two disconnected edges $(k_1, k_2)$ and $(k_3, k_4)$ transform into a configuration where edges $(k_1, k_2)$ and $(k_3, k_4)$ are rewired to form edges $(k_1, k_4)$ and $(k_3, k_2)$ (crossing pattern). Arrow labeled ``$P=1$'' and ``$1k$''.
+
+Row 3: Two disconnected edges $(k_1, k_2)$ and $(k_1, k_3)$ transform into a configuration where edges are rewired to form edges $(k_1, k_2)$ and $(k_1, k_3)$ with a crossing pattern. Arrow labeled ``$P=1$'' and ``$2k$''.
+
+All vertices are shown as red circles labeled $k_1, k_2, k_3, k_4$ (or $k_1, k_2, k_3$ in the third row), and edges are shown as thick blue lines.]}
+\end{minipage}
+\end{center}
+
+\textbf{Theorem 10.7.} \textit{The $2k$-swapping is ergodic, and the Markov chain mixes in $O(m)$-time. (P. Erdős, Z. Toroczkai, K. Bassler, A. Coolen.)}
+
+\textbf{Notes:}
+\begin{itemize}
+    \item The properties of $3k$-swapping are unknown; most likely it is not even ergodic.
+    \item In practice, it is nearly impossible to find any $3k$-swap, so ``constraining'' it is!
+\end{itemize}
+
+$2.1k$- and $2.5k$- swapping:
+
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\textit{[Figure: A graph transformation showing a generalized swap. On the left: two disconnected edges $(k_1, k_2)$ and $(k_1, k_3)$. On the right: the edges are rewired into a crossing configuration with edges $(k_1, k_2)$ and $(k_1, k_3)$ forming an X-pattern. The arrow connecting them is labeled ``$P = e^{-\beta \Delta H}$'' and ``$2.1k - 2.5k$''. Vertices are shown as red circles labeled $k_1, k_2, k_3$, and edges are thick blue lines.]}
+\end{minipage}
+\end{center}
+
+where $P$ is the probability of accepting the swap,
+\begin{equation}
+P = \min\left(1, e^{-\beta \Delta H}\right)\,,
+\tag{10.2}
+\end{equation}
+
+\vspace{1em}
+\hfill 55
+
+\newpage
+
+% ===== Page 6 =====
+$\beta$ is the inverse temperature of this simulated annealing (Metropolis-Hastings) process, and
+\begin{equation}
+\Delta H = H_a - H_b,
+\tag{10.3}
+\end{equation}
+where $H_a, H_b$ are the ``energies,'' after and before a swap, respectively, defined as
+\begin{equation}
+H_{2.1\text{k}} = |\bar{c}_G - \bar{c}_{G_0}|,
+\tag{10.4}
+\end{equation}
+\begin{equation}
+H_{2.5\text{k}} = \sum_{i=1}^{n} |\bar{c}_G(k_i) - \bar{c}_{G_0}(k_i)|,
+\tag{10.5}
+\end{equation}
+where $\bar{c}$ ($\bar{c}(k)$) is the average clustering (of $k$-degree nodes).
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item The $2.1k$- ($2.5k$-) random graphs are the maximally random graphs with a given joint degree distributions and clustering $\bar{c}$ ($\bar{c}(k)$).
+
+\item \textbf{A vast majority of real-world networks are ``modelled well'' by their $2.5k$- and even $2.1k$-random graphs:}
+\end{itemize}
+
+\begin{center}
+\begin{minipage}{0.6\textwidth}
+\textit{[Figure: A vertical sequence of six network visualizations showing the evolution of graph structure at different stages, labeled from top to bottom as: 0k, 1k, 2k, 2.1k, 2.5k, and PGP. Each visualization shows a circular network layout with nodes and edges. The top graph (0k) shows a simple structure with a dense red core surrounded by a green ring and sparse outer nodes. As the label increases (1k, 2k, 2.1k, 2.5k), the networks become progressively more complex and dense, with multiple colored layers (red, green, blue, purple) forming concentric or intermingled structures. The nodes appear more uniformly distributed and the edge density increases. The bottom graph (PGP) shows the most complex structure with high edge density and intricate multi-colored node arrangements throughout the circular layout. This sequence illustrates the increasing structural complexity and randomization as higher-order degree and clustering constraints are imposed on the random graph models.]}
+\end{minipage}
+\end{center}
+
+\vspace{1em}
+
+\begin{center}
+56
+\end{center}
+
+\end{document}

@@ -1,0 +1,489 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 12\_graphons.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\section*{Chapter 12}
+
+\section*{Graphons, exchangeability, and projectivity}
+
+\subsection*{12.1 Definitions}
+
+Consider an HVNM (Chapter 11) in which $\rho = U(0,1)$ and $p(x,y)$ is integrable, symmetric and does not depend on $n$.
+
+\textbf{Definition 12.1.} Such a $p$ is a \emph{graphon}.
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item Graphons are actually equivalence classes of such functions: $p \simeq p'$ if there exists $\sigma$ such that $p(x,y) = p'(\sigma(x), \sigma(y))$, where $\sigma : [0,1] \to [0,1]$ is a measure-preserving map of $[0,1]$ (one can make precise the intuition that it is the $n \to \infty$ limit of permutations of integer labels $\{1, 2, ..., n\}$).
+
+\item If neither $p$ nor $\rho$ depend on $n$, then the HVNM graphs are dense because of Eqs. (11.1) and (11.1.1) in Chapter 11.
+\end{itemize}
+
+\textbf{Definition 12.2.} Such HVNMs are \emph{$p$-random graphs} (a.k.a. $W$-random graphs since $p \equiv W$ in graph theory).
+
+\textbf{Note:} we often call ``graphons'' the connection probability functions in other HVNMs as well!
+
+\textbf{The simplest example:}
+
+$p(x,y) = p$ ($p$-random graphs): $G(n,p)$.
+
+\textbf{Key points:}
+
+\begin{itemize}
+\item Graphons are limits of dense graphs.
+
+\item Any graph property can be ``read off'' from such a limit.
+
+\item Graphons are the ``best thing'' that happened in network science/random graphs thus far (at least, it is most prestigiously awarded).
+\end{itemize}
+
+\subsection*{12.2 Convergence of dense graphs}
+
+This section is about notions of graph$\to$graphon convergence: in what sense graphons are graph limits.
+
+\subsubsection*{12.2.1 Adjacency matrix convergence}
+
+Graphs can be mapped to graphons via chessboards.
+
+\textbf{Definition 12.3.} The chessboard graphon $p_G$ of graph $G$:
+
+\vspace{1em}
+\hfill 59
+
+\newpage
+
+% ===== Page 2 =====
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+$G_i$ & $\{G_{ij}\}$ & \multicolumn{2}{c|}{$p_G(x,y)$} \\
+\hline
+& & \multicolumn{2}{c|}{
+\begin{minipage}{0.35\textwidth}
+\centering
+% \includegraphics[width=\textwidth]{chessboard}
+\textit{[Image file reference removed; semantic figure meaning is preserved in text description.]}
+\end{minipage}
+} \\
+\begin{minipage}{0.2\textwidth}
+\centering
+\vspace{1cm}
+Graph with 4 vertices labeled 1,2,3,4 forming a square with edges connecting vertices in a cycle.
+\end{minipage}
+& 
+\begin{minipage}{0.2\textwidth}
+\centering
+\begin{tabular}{c|cccc}
+$N$ & 1 & 2 & 3 & 4 \\
+\hline
+1 & 0 & 1 & 0 & 0 \\
+2 & 1 & 0 & 1 & 1 \\
+3 & 0 & 1 & 0 & 1 \\
+4 & 0 & 1 & 0 & 0 \\
+\end{tabular}
+\end{minipage}
+& \multicolumn{2}{c|}{
+\begin{minipage}{0.35\textwidth}
+A coordinate system with $x$ and $y$ axes. The unit square $[0,1] \times [0,1]$ is divided into a $4 \times 4$ grid. The grid is labeled with $i=1, i=2, i=3, i=4$ along the $x$-axis and $j=1, j=2, j=3, j=4$ along the $y$-axis. Certain cells are shaded with diagonal hatching, forming a chessboard-like pattern corresponding to the adjacency structure.
+\end{minipage}
+} \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Note:} the larger the $n$, the more ``fine-grained'' the chessboard representation, converging to a smooth function in the limit:
+
+\begin{center}
+\begin{minipage}{0.8\textwidth}
+A sequence of four images showing the progression from graphs to graphons. The first image shows a small graph with black and white squares in a coarse pattern. The second and third images show increasingly dense random-looking patterns of black dots on white backgrounds, representing larger graphs. An arrow points to the fourth image showing a smooth grayscale gradient square, representing the limiting graphon. Below the sequence is labeled: ``Graphs'' on the left with the notation $i/n \in \{1/2i-1, i\}/\{1/n\}$, an arrow pointing right to ``Graphon'' with notation $x \in [0,1]$.
+\end{minipage}
+\end{center}
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item This notion of convergence is awkward to make precise.
+\item It is not terribly useful (other than for visualization purposes).
+\end{itemize}
+
+\subsubsection{12.2.2 Subgraph density convergence}
+
+\textbf{Main idea:} a sequence of (random) graphs $G_n$ converge to $p(x,y)$ if the properly renormalized counts (densities) of all their subgraphs converge, because:
+
+\begin{itemize}
+\item subgraphs (motifs, ``$d$-series'') form a basis for graph decomposition/similarity analysis, so
+\item the closer the densities of all subgraphs of two graphs, the more similar they are.
+\end{itemize}
+
+It is much easier to deal not with the subgraph densities, but, equivalently, with homomorphism densities.
+
+\textbf{Definition 12.4.} A map $V(H) \to V(G)$ between vertices of two graphs $H,G$ is a homomorphism from $H$ to $G$ if edges of $H$ are mapped to edges of $G$.
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item We do not care about non-edges at all.
+\item Different $H$-vertices can map to the same $G$-vertex).
+\end{itemize}
+
+\textbf{Example:}
+
+\begin{center}
+\begin{minipage}{0.8\textwidth}
+Two graphs are shown side by side. On the left is graph $H$ with two vertices labeled 1 and 2, connected by two edges (a multi-edge). On the right is graph $G$ with four vertices labeled 1, 2, 3, 4 arranged in a square, with edges forming a square and additional edges. Orange arrows show a mapping from vertices of $H$ to vertices of $G$, illustrating a homomorphism.
+\end{minipage}
+\end{center}
+
+\vspace{1cm}
+
+60
+
+\newpage
+
+% ===== Page 3 =====
+\textbf{Notes:}
+
+\begin{itemize}
+\item Let
+\begin{equation}
+h(H,G) = \frac{|\text{Hom}(H,G)|}{|V(G)|^{|V(H)|}}
+\tag{12.1}
+\end{equation}
+be the probability that a random map from $V(H)$ to $V(G)$ is a homomorphism from $H$ to $G$.
+
+\item Let
+\begin{equation}
+h(H,p) = \int_{[0,1]^{|V(H)|}} \prod_{(i,j)\in E(H)} p(x_i,x_j) dx_1 \ldots dx_{|V(H)|}
+\tag{12.2}
+\end{equation}
+be the probability that graphon $p$ ``generates'' all edges of $H$.
+
+\item If $\{G_n\}_{n=1}^{\infty}$ are graphon $p$-random graphs, then $h(H,G_n) \to h(H,p)$ for any finite simplest $H$.
+
+\item This observation is trivial, as opposed to the other way around:
+\end{itemize}
+
+\textbf{Theorem 12.5.} \textit{Let $\{G_n\}_{n=1}^{\infty}$ be a sequence of (random) graphs. If $h(H,G_n) \to f(H) \in [0,1]$ for any finite simplest $H$, then there exists a unique graphon $p$ such that $f(H) = h(H,p)$ in Eq. (12.2).}
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item This is a very strong result, a representation theorem for $f$.
+
+\item Converging sequences of dense graphs $\approx$ $p$-random graphs.
+
+\item The homomorphism or subgraph frequencies can be shown to form sets of sufficient statistics in these graphs.
+
+\item Converging sequences of dense graphs are (hypercanonical mixtures of) ERGMs in which sufficient statistics are densities of all finite subgraphs.
+\end{itemize}
+
+\subsubsection*{12.2.3 Model convergence}
+
+\textbf{Main idea:} $G_n$ converge if so do the models $P_n$ that they define.
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item But what are those models $P_n$? And how to relate them for different $n$'s?
+
+\item Let $G$ be a finite simplest graph, $p_G$ its chessboard graphon, $P(H|p_G)$ be the model of $p_G$-random graphs $H$ of any fixed size (finite or infinite!).
+
+\item If $p$ is a graphon and $\{G_n\}_{n=1}^{\infty}$ is the sequence of $p$-random graphs of size $n$, then $P(H|p_{G_n}) \to P(H|p)$.
+
+\item This observation is trivial, as opposed to the other way around:
+\end{itemize}
+
+\textbf{Theorem 12.6.} \textit{Let $\{G_n\}_{n=1}^{\infty}$ be a sequence of (random) graphs of size $n$. If $P(H|P_{G_n}) \to Q(H)$, then there exists a unique graphon $p$ such that $Q(H) = P(H|p)$.}
+
+\textbf{Note:} this is my favorite notion of graph$\to$graphons convergence, because it avoids this scary ``for any finite simplest $H$'' requirement.
+
+\subsubsection*{12.2.4 Other notions of convergence}
+
+There are too many, many of which are useful.
+
+\textbf{Mega-theorem:} pretty much all of them are equivalent.
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item In all the notions of graph$\to$graphon convergence, the graphon $p$ can be random!
+\end{itemize}
+
+\vspace{1em}
+\hfill 61
+
+\newpage
+
+% ===== Page 4 =====
+\begin{itemize}
+\item This means that ``there exists a unique graphon $p$'' is actually ``there exists a unique (random) graphon $p$'', which is equivalent to saying that ``there exists a unique probability distribution $\mu$ on the space of all graphons (this space is compact!) such that $p \sim \mu$ (this is what can call an \emph{ultracanonical ensemble}).
+
+\item In the model convergence, for example:
+\[
+Q(H) = \int_{\text{all graphons}} P(H|p) d\mu(p).
+\]
+
+\item A fixed (nonrandom) $p$ corresponds to an extreme point $\mu = \delta_p$.
+
+\item \textbf{In sparse graphs:}
+\begin{itemize}
+\item The adjacency matrix and subgraph densities converge to zero.
+\item The model convergence is unexplored.
+\item There are many notions of convergence, most of which are not useful for real networks because
+\item Only two are applicable to ultrasparse graphs (local weak convergence and projective limits).
+\item No pair of convergence notions are known to be equivalent.
+\end{itemize}
+\end{itemize}
+
+\subsection{Exchangeability}
+
+Exchangeability is the simplest form of probabilistic symmetry. It is the symmetry w.r.t. permutations of indices of random variables (r.v.s).
+
+\textbf{Definition 12.7.} Two r.v.s $X_1$ and $X_2$ are exchangeable if $P(X_1, X_2) = P(X_2, X_1)$.
+
+\textbf{Examples:}
+
+\begin{itemize}
+\item $X_1, X_2 \stackrel{\text{iid}}{\sim} \text{Be}[p]$ are exchangeable.
+
+\item $X_1 \sim \text{Be}[p_1], X_2 \sim \text{Be}[p_2]$, where $p_1 \neq p_2$, are not exchangeable.
+\end{itemize}
+
+\textbf{Definition 12.8.} An infinite sequence of r.v.s $\{X_i\}_{i=1}^\infty$ is exchangeable if $P(\{X_i\}) = P(\{X_{\sigma(i)}\})$ for any permutation $\sigma$ of indices $\{i\}$.
+
+\textbf{Note:} above, it is either \emph{any} $\sigma$ of \emph{any} finite size $n$, or, equivalently, \emph{any} $\sigma$ of $\mathbb{N}$.
+
+\textbf{Examples:}
+
+\begin{enumerate}
+\item $X_i \stackrel{\text{iid}}{\sim} \text{Be}[p]$.
+
+\item (a) $p \sim \rho$, where $\rho$ is a probability distribution on $[0,1]$, and then
+
+(b) $X_i \stackrel{\text{iid}}{\sim} \text{Be}[p]$.
+\end{enumerate}
+
+\textbf{Theorem 12.9 (De Finetti).} \emph{If $X_i$'s are Bernoullis, and $\{X_i\}_{i=1}^\infty$ is exchangeable, then it's (2) in the last example.}
+
+\textbf{Note:} it is a strong result, a representation theorem!
+
+\textbf{Definition 12.10.} An (infinite) array of r.v.s $\{X_{ij}\}_{i,j=1}^{n(\infty)}$ is jointly exchangeable if $P(\{X_{ij}\}) = P(\{X_{\delta(i),\delta(j)}\})$ for any permutation $\delta$ of indices $\{i\}$.
+
+\textbf{Example:} $\{G_{ij}\}$ the adjacency matrix of $G$, a $p$-random graph with any (random) graphon.
+
+\textbf{Definition 12.11.} A network model is finitely (infinitely) exchangeable if $P(\{G_{ij}\})$ is exchangeable for any finite (infinite) network size $n$.
+
+\newpage
+
+% ===== Page 5 =====
+\textbf{Notes:}
+
+\begin{itemize}
+\item Permutations of indices in a network model are relabelings of nodes by meaningless integers $1, 2, \ldots$.
+
+\item Such relabelings can either leave a graph $G$ the same labelled graph, if the relabeling is an automorphism, e.g.:
+
+\begin{center}
+\begin{minipage}{0.8\textwidth}
+\textit{[Figure: Two identical triangular graphs side by side with an arrow between them. The left graph shows a triangle with vertices labeled 1 (top), 2 (left), 3 (bottom left), and 4 (bottom right). The right graph shows the same triangle structure with vertices labeled 1 (top), 2 (left), 4 (bottom left), and 3 (bottom right). This illustrates an automorphism where vertices 3 and 4 are swapped.]}
+\end{minipage}
+\end{center}
+
+\item Or, if not, they change the $G$ to another labelled graph $G'$, isomorphic to $G$ ($G$ and $G'$ are the same unlabeled graph), e.g.:
+
+\begin{center}
+\begin{minipage}{0.8\textwidth}
+\textit{[Figure: Two identical triangular graphs side by side with an arrow between them. The left graph shows a triangle with vertices labeled 1 (top), 2 (left), 3 (bottom left), and 4 (bottom right). The right graph shows the same triangle structure with vertices labeled 2 (top right), 1 (left), 3 (bottom left), and 4 (bottom right). This illustrates an isomorphism where vertices 1 and 2 are swapped.]}
+\end{minipage}
+\end{center}
+
+\item But since these node labels are meaningless and ``do not matter'', the probability of any two isomorphic graphs in the model is the same!
+
+\item \textbf{Exchangeability is thus:}
+\begin{enumerate}
+\item A simple formalization of the meaninglessness of integer node labels.
+\item A required property of any network model in which integer node labels ``do not matter''.
+\end{enumerate}
+
+\item Another way to look at it:
+
+If the network structure (an unlabeled graph) is a sufficient statistics, then the probability of a labeled graph $G$ in the model depends only on the unlabeled graph to which $G$ corresponds.
+\end{itemize}
+
+\textbf{Extremely bad news (Godel's Theorem of Network Science):}
+
+\textbf{Theorem 12.12 (Aldous-Hoover).} \textit{If $X_{ij}$'s are Bernoullis, and $\{X_{ij}\}_{i=1}^{\infty}$ is jointly exchangeable, then it's the last example, i.e., $\{X_{ij}\}$ is the adjacency matrix of a p-random graph, where p is a (random) graphon.}
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item Historically, this theorem was proven in 1979-1981, i.e., way before the development of the graphon theory ever started ($\sim$ 2003), therefore neither Aldous nor Hoover did call $p$ a graphon.
+
+\item Since $p$-random graphs are dense, the Aldous-Hoover theorem implies that \textit{sparse exchangeable network models are impossible}.
+
+\item Wow, no way!!! What about $\mathcal{G}(n, p)$ with $p = k/n$ or HSCM with $p(k, k') \approx \frac{kk'}{n}$?
+
+\item In the two ``counter-examples'' above, $p \to 0$, so \textit{the graphs are empty in the limit!}
+
+\item \textbf{In summary,} the exchangeability dilemma is:
+\begin{itemize}
+\item[--] on the one hand, it is a required property of any network model in which integer node labels do not matter,
+\item[--] while on the other hand, exchangeable models of sparse networks simply cannot exist.
+\end{itemize}
+
+\item Limits of sparse unlabeled graphs are entirely unexplored since it is extremely unclear how to even begin to reason about them.
+\end{itemize}
+
+\vspace{1em}
+\begin{center}
+63
+\end{center}
+
+\newpage
+
+% ===== Page 6 =====
+\section*{12.4 Projectivity}
+
+\textbf{Definition 12.13.} A network model is \textit{projective} if there exists a map (called a \textit{projective map}) $\pi_{nn'}$ from graphs of size $n$ to graphs of size $n' < n$, such that:
+
+\begin{enumerate}
+    \item $\pi_{nn'}$ followed by $\pi_{n'n''}$, where $n'' < n' < n$, is $\pi_{nn''}$.
+    \item $P_{n'}(G_{n'}) = \pi_{nn'}^{\sharp}[P_n(G_n)]$, where $\pi^{\sharp}$ is the push-forward of $\pi$:
+    \begin{enumerate}
+        \item[(a)] generate $G_n \sim P_n$,
+        \item[(b)] apply $\pi_{nn'}$ to $G_n$,
+        \item[(c)] the resulting $G_{n'}$ generated this way is generated with the same probability as if it was generated directly $G_{n'} \sim P_{n'}$.
+    \end{enumerate}
+\end{enumerate}
+
+\textbf{Notes:}
+
+\begin{itemize}
+    \item If a model is projective, then there exists a formulation of the model as a growing network model, in which the existing network structure is not altered upon the addition of new nodes ($\pi_{nn'}^{-1}$ are node additions).
+    
+    \item If a model is not projective, then such a formulation does \textit{not} exist.
+    
+    \item Any growing network model pretending to be realistic must be \textit{local}: the addition of new nodes and links cannot have an immediate global effect affecting the whole structure of the existing network.
+    
+    \item Projectivity is exactly the property that captures this locality requirement.
+    
+    \item Therefore, \textbf{any realistic growing network model must be projective}.
+    
+    \item Examples of projective models:
+    
+    \begin{tabular}{|l|l|l|}
+    \hline
+    Model & Growing formulation & Projective map $\pi_{nn'}$ \\
+    \hline
+    Preferential attachment & Original & Remove nodes $n' + 1, n' + 2, ..., n$ \\
+    \hline
+    $p$-random graphs & for $n = 1, 2, ...$ & Remove any set of $n - n'$ nodes \\
+    & 1) sample $X_n \sim U(0, 1)$ & \\
+    & 2) for $i = 1, 2, ..., n - 1$ & \\
+    & connect $n$ to $i$ with $P_{\text{ni}} = P(x_n, x_i)$ & \\
+    \hline
+    \end{tabular}
+    
+    \item Examples of non-projective models:
+    \begin{enumerate}
+        \item $\mathcal{G}(n, p)$ with $p = k/n$.
+        \item HSCM with $P(k, k') = \frac{kk'}{kn}$.
+    \end{enumerate}
+    
+    \item In a projective HVNM, the connection probability cannot depend on $n$.
+    
+    \item Aren't we missing anything here? Related to HSCM? Yes, we do!
+    
+    \item Recall the original $\lambda$-formulation of the HSCM with $p(\lambda, \lambda') = \frac{1}{e^{\lambda + \lambda'} + 1}$, which does not depend on $n$!
+    
+    \item Is the model projective then?
+    
+    \item Yes, but only if $\gamma = 3$, because only in this case the density and distribution of $\lambda$-points on $[-\infty, R_n]$ does not depend on $n$.
+    
+    \item The last point becomes obvious in the $x$-representation:
+    \begin{equation}
+    p_c^{CL}(x, x') = c(xx')^{-1/\alpha} n^{\frac{2}{\alpha} - 1}, \tag{12.3}
+    \end{equation}
+    where $c = k\left(\frac{\gamma - 2}{\gamma - 1}\right)^2$, $\alpha = \gamma - 1$, and $x \sim U(0, n)$.
+\end{itemize}
+
+\vspace{1em}
+\hfill 64
+
+\newpage
+
+% ===== Page 7 =====
+\begin{itemize}
+\item If $\alpha = 2$ ($\gamma = 3$), then $\mu_x$ does not depend on $n$, while $x \sim U(0, n)$ is projective by ``space expansion'':
+
+\begin{center}
+\begin{tabular}{ccc}
+\begin{tabular}{|c|}
+\hline
+\begin{minipage}{0.35\textwidth}
+\centering
+\vspace{0.3cm}
+$\bullet$ \hspace{2cm} $\bullet$ \hspace{2cm} $\bullet$ \\
+$x_{(1)} \leqslant x_{(n)}$ \hspace{1cm} $\leqslant$ \hspace{1cm} $x_{(n)}$ \\
+$\geqslant 0$ \hspace{3cm} $\geqslant A$
+\vspace{0.3cm}
+\end{minipage} \\
+\hline
+$0$ \hspace{5.5cm} $n$
+\end{tabular}
+&
+$\longrightarrow$
+&
+\begin{tabular}{|c|}
+\hline
+\begin{minipage}{0.45\textwidth}
+\centering
+\vspace{0.3cm}
+$\bullet$ \hspace{1cm} $\bullet$ \hspace{1cm} $\bullet$ \hspace{1cm} $\bullet$ \hspace{1cm} $\bullet$ \hspace{0.5cm} $\longrightarrow$ \\
+$x_{(1)} \leqslant x_{(n)}$ \hspace{1cm} $\leqslant$ \hspace{1cm} $x_{(n)}$ \hspace{0.5cm} $x_{n+1}$ \\
+$\geqslant 0$ \hspace{3cm} $\geqslant A$ \hspace{0.5cm} $\geqslant n+1$
+\vspace{0.3cm}
+\end{minipage} \\
+\hline
+$0$ \hspace{6.5cm} $n'$ \hspace{0.5cm} $n+1$
+\end{tabular}
+\end{tabular}
+\end{center}
+
+\item The growing model formulation of the HSCM($\gamma = 3$)=SPA: for $n = 1, 2, ...$, sample $x_{(n)}$ as the next point in the rate-1 Poisson point process on $\mathbb{R}_+$, and connect node $n$ to existing nodes $i < n$ with $p_{n,i}^{CL} = c/\sqrt{x_{(n)}x_{(i)}}$.
+
+\item It turns out that $k(x) \sim \sqrt{n/x}$, so $k(x_{(n)}) \sim 1$ and $p_{n,i}^{CL} \sim k_i$, so that we are dealing with soft preferential attachment (SPA).
+
+\item The projective map $\pi_{nn'}$ removes $n - n'$ nodes with largest $x$'s (smallest $k$'s).
+
+\item This example illustrates that the projectivity of an HVNM can be very hidden!
+
+\item \textbf{Meta-observation:} hidden variable space expansion, coupled with $n$-independent connection probability functions, is the primary mechanism behind projectivity in sparse HVNMs.
+
+\item We will see it is often realized in latent space models discussed in the next chapter.
+
+\item \textbf{Meta-theorem:} any projective model has a projective limit.
+
+\item A path towards understanding the limits of ultrasparse networks, explored at the DK-Lab.
+\end{itemize}
+
+\end{document}

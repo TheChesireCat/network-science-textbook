@@ -1,0 +1,357 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 07\_network\_typicality.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\section*{Chapter 7}
+
+\section*{Network typicality}
+
+\section*{7.1 Problem formulation}
+
+\textbf{Meta-problem:}
+
+Given:
+
+\begin{enumerate}
+    \item Network/graph $G_0$, and
+    \item Network/graph model $P(G)$.
+\end{enumerate}
+
+Find: whether $G_0$ is typical in $P(G)$.
+
+\textbf{Real problem:}
+
+What is a useful definition of \textit{typicality}?
+
+\textbf{Real answer:}
+
+A definition of typicality is useful if it allows one to state anything formal concerning any properties of $G_0$ that make no formal sense for any given $G_0$ (e.g., sparsity, small-worldness, strong clustering, scale-freeness) based on the corresponding properties of the model $P(G)$, where they do make perfect formal sense. Informally, in short, we would like to ``link'' $G_0$ to $P(G)$ (by saying that $\sim$``$G_0$ comes from $P(G)$''), and switch our attention to $P(G)$.
+
+\textbf{Disclaimers:}
+
+\begin{enumerate}
+    \item One of the most confusing points in network science:
+    \begin{itemize}
+        \item With high probability, a typical network scientist believes they know a simple solution to this problem;
+        \item With high probability, they don't!
+    \end{itemize}
+    \item The underlying assumption is that $P(G)$ is known, but in most cases $P(G)$ is intractable (e.g., in preferential attachment).
+    \item $n$ is fixed! (since $G_0$ is fixed)
+\end{enumerate}
+
+\vfill
+
+\begin{center}
+26
+\end{center}
+
+\newpage
+
+% ===== Page 2 =====
+\subsection{Maximum likelihood}
+
+\textbf{Definition 7.1.} (bad) \fbox{$G_0$ is typical if $G_0 = \arg\max_{G} P(G)$.}
+
+Def 7.1 is bad because, for instance:
+
+\begin{itemize}
+\item Any $G \in \mathcal{G}_{n,m}$ is typical. $(P(G) = \mathbb{1}\{m(G) = m\} / \binom{\binom{n}{2}}{m})$.)
+\item The empty graph is typical in $\mathcal{G}_{n,p}$ with any $p < 1/2$.
+\end{itemize}
+
+\subsection{Graph distances}
+
+\textbf{Definition 7.2.} (bad)
+
+\begin{quote}
+Let:
+\begin{enumerate}
+\item $d : \mathcal{G}^2 \to \mathbb{R}_+$ be a graph distance,
+\item $\bar{d} = \mathbb{E}\{d(G, G_0)\}$, where $G \sim P(G)$.
+\end{enumerate}
+
+Then $G_0$ is $(d, \varepsilon)$-typical if $\bar{d} < \varepsilon$.
+\end{quote}
+
+Definition 7.2 is bad because, for instance:
+
+\begin{itemize}
+\item It depends on $d$.
+\item The number of different $d$'s is uncountably infinite.
+\item The number of ``bad'' (``adversarial'') $d$'s is uncountably infinite (e.g., $d(G_1, G_2) = \pi \mathbb{1}\{G_1 \neq G_2\}$).
+\item Even if $d$ is ``good'':
+\begin{itemize}
+\item It may not concentrate, e.g., $d(G_1, G_2) > \varepsilon_0, \forall G_1, G_2$.
+\item It may be difficult to relate $d(G_1, G_2) < \varepsilon$ to the bounds on the difference of a given network property of $G_1$ and $G_2$.
+\item The distributions of $d(G, G_0)$ tend to be way more intractable than $P(G)$, so that $\bar{d}$ may be impossible to obtain even empirically.
+\end{itemize}
+\end{itemize}
+
+\subsection{Graph properties}
+
+\textbf{Definition 7.3.} (bad)
+
+\begin{quote}
+Let:
+\begin{enumerate}
+\item $f : \mathcal{G} \to \mathbb{R}^D$ be a network property,
+\item $\bar{f} = \mathbb{E}\{f(G)\}$, where $G \sim P(G)$,
+\item $d_f = \|f(G_0) - \bar{f}\|_{\mathbb{R}^D}$.
+\end{enumerate}
+
+Then $G_0$ is $(f, \varepsilon)$-typical if $d_f < \varepsilon$.
+\end{quote}
+
+Definition 7.3 is bad because, for instance:
+
+\begin{itemize}
+\item It depends on $f$.
+\item The number of different $f$'s is uncountably infinite.
+\item The number of ``bad'' (``adversarial'') $f$'s is uncountably infinite (e.g., $f_{G_0}(G) = \pi \mathbb{1}\{G = G_0\}$).
+\end{itemize}
+
+\vspace{1em}
+\hfill 27
+
+\newpage
+
+% ===== Page 3 =====
+\begin{itemize}
+\item Even if $f$ is ``good'', it may not concentrate at $\bar{f}$, e.g., as in the Strauss model (random graphs with given expected numbers of edges $m$ and triangles $t$), where the distribution of the number of triangles is double-peaked:
+
+\begin{center}
+\begin{tikzpicture}
+\draw[->] (0,0) -- (6,0) node[right] {$t$};
+\draw[->] (0,0) -- (0,3.5) node[above] {$\mathcal{P}(t)$};
+\draw[thick, cyan] (0.3,0.1) .. controls (1,0.3) and (1.3,1.2) .. (1.8,1.5) 
+    .. controls (2.1,1.7) and (2.3,1.7) .. (2.5,1.5)
+    .. controls (2.7,1.2) and (2.8,0.5) .. (3,0.3)
+    .. controls (3.2,0.5) and (3.5,1.5) .. (4,2.3)
+    .. controls (4.3,2.7) and (4.5,2.7) .. (4.8,2.3)
+    .. controls (5.1,1.8) and (5.3,1) .. (5.5,0.1);
+\draw[dashed] (1.8,0) node[below] {$t_1$} -- (1.8,1.5);
+\draw[dashed] (2.5,0) node[below] {$\bar{t}$} -- (2.5,1.5);
+\draw[dashed] (4,0) node[below] {$t_2$} -- (4,2.3);
+\end{tikzpicture}
+\end{center}
+
+so the probability of a graph with the typical number of triangles $t \approx \bar{t}$ is $P(\bar{t}) \approx 0$, and most graphs have either $t \approx t_1 < \bar{t}$ or $t \approx t_2 > \bar{t}$.
+
+\item What if we are interested not in one property $f$, but in two $f_1, f_2$?
+\begin{itemize}
+\item[--] What if they are not independent (as $m,t$ in the Strauss model)?
+\end{itemize}
+
+\item $f_1, f_2, f_3, ...??$
+
+\item All properties $\{f\}!???$
+\end{itemize}
+
+\subsection*{7.5 \quad All graph properties}
+
+\textbf{Definition 7.4.} (worst)
+
+\[
+\boxed{G_0 \text{ is } \varepsilon_f\text{-typical in } P(G) \text{ if } d_f < \varepsilon_f \text{ for all } f : \mathcal{G} \to \mathbb{R}^D.}
+\]
+
+Definition 7.4 is the worst one because no graph is typical in any model because of the ``worst'' property $f(G) = \infty$.
+
+\textbf{Switching to good things\dots}
+
+\vspace{3cm}
+
+\begin{center}
+28
+\end{center}
+
+\newpage
+
+% ===== Page 4 =====
+\section*{7.6 Typical property}
+
+Let:
+\begin{itemize}
+    \item $f : \mathcal{G} \to \mathbb{R}^D$ be fixed (one property),
+    \item $P(G)$ is such that $f$ concentrates, i.e., $f$ is sharply peaked at $\bar{f}$. \hfill (A.1)
+\end{itemize}
+
+\textbf{Example:} $m$ in $\mathcal{G}(n,p)$:
+
+\begin{center}
+\begin{tikzpicture}
+% Vertical axis
+\draw[->] (0,0) -- (0,5) node[above] {$P(m)$};
+% Horizontal axis
+\draw[->] (0,0) -- (8,0) node[right] {$m/n^2$ -- graph density};
+% Bell curve
+\draw[thick, cyan] (1,0.5) .. controls (2,1) and (3,3.5) .. (4,4) 
+    .. controls (5,3.5) and (6,1) .. (7,0.5);
+% Shaded region
+\fill[cyan!20] (3.5,0) -- (3.5,3.8) .. controls (4,4) and (4.5,3.8) .. (4.5,3.8) -- (4.5,0) -- cycle;
+% Dashed line at peak
+\draw[dashed] (4,0) -- (4,4);
+% Peak point
+\fill[cyan] (4,4) circle (2pt);
+% Labels
+\node[cyan] at (2,1) {$\bar{m} - \varepsilon$};
+\node[cyan] at (6,1) {$\bar{m} + \varepsilon$};
+\node[cyan] at (4,-0.3) {$\bar{m} \approx pn^2$};
+\node[cyan, align=left] at (5.5,3.5) {most graphs\\have $m \approx \bar{m}$};
+\end{tikzpicture}
+\end{center}
+
+\begin{equation}
+P(m) = \binom{n'}{m} p^m (1-p)^{n'-m} = \text{Bin}[n', p](m), \quad n' = \binom{n}{2}
+\tag{7.1}
+\end{equation}
+
+\vspace{1em}
+
+\noindent\textbf{Definition 7.5.} (not bad)
+
+\begin{quote}
+\fbox{\parbox{\textwidth}{
+If A.1 holds, and $G_0$ is $(f,\varepsilon)$-typical according to Definition 7.3, then $G_0$ has an $\varepsilon$-typical value of property $f$.
+}}
+\end{quote}
+
+\noindent\textbf{Note:} we do not say that $G_0$ is typical (Definition 7.3), because it may have atypical values of some properties other than $f$, but we say that it has a typical value of property $f$.
+
+\noindent\textbf{Examples:}
+
+\begin{itemize}
+    \item Any $G_0$ with $m \in [\bar{m} - \varepsilon, \bar{m} + \varepsilon]$, $\bar{m} = pn'$, has an $\varepsilon$-typical number of edges in $\mathcal{G}(n,p)$.
+    
+    \item Any $G_0$ with $P(k) : \|P(k) - \text{Bin}[n-1, p](k)\| < \varepsilon$ has an $\varepsilon$-typical degree distribution in $\mathcal{G}(n,p)$.
+    
+    \item Any $G_0$ with $P(k) : \|P(k) - P_{\text{PA}}(k)\| < \varepsilon$, where $P_{\text{PA}}(k)$ is the degree distribution in the limit of the preferential attachment model (PA), has an $\varepsilon$-typical value of the degree distribution in PA.
+\end{itemize}
+
+\vfill
+
+\begin{center}
+29
+\end{center}
+
+\newpage
+
+% ===== Page 5 =====
+\section*{7.7 Typical graph}
+
+Let $P(G) = P[f(G)]$. \hfill (A.2)
+
+\textbf{Example:} in $\mathcal{G}(n,p)$, $P(G) = p^{m(G)}(1-p)^{\alpha' - m(G)} = \tilde{P}[m(G)]$.
+
+Observe that if A.2 holds, then $P(G_1) = P(G_2)$ if $f(G_1) = f(G_2)$.
+\textbf{Definition:} If A.2 holds, then $f$ is called a \emph{sufficient statistics}.
+(To know $P(G)$, it suffices to know $f(G)$.)
+
+\textbf{Definition 7.6.} (not bad at all)
+
+\fbox{If A.1 and A.2 hold, then $G_0$ is $\varepsilon$-typical in $P(G)$ if it is $(f,\varepsilon)$-typical according to Definition 7.3.}
+
+Definition 7.6 is not bad at all, because:
+\begin{itemize}
+\item since we know that $f$ concentrates (A.1) and that $P(G) = \tilde{P}[f(G)]$ (A.2), we also know that a bulk of the $P(G)$ probability mass is concentrated on graphs that have values of property $f$ close to $\bar{f}$;
+\item if $f(G_0)$ is not close to $\bar{f}$, then such $G_0$ is far away from the peak, so it is an atypical outlier.
+\end{itemize}
+
+\textbf{Examples:}
+\begin{itemize}
+\item Any $G_0$ with $2m/n = \bar{k} \in [\mathbb{E}\{\bar{k}\} - \varepsilon, \mathbb{E}\{\bar{k}\} + \varepsilon]$, where $\bar{k} = p(n-1)$, is typical in $\mathcal{G}(n,p)$.
+\item In particular, any such $G_0$ with a scale-free degree distribution is still a typical ER graph.
+\item Its degree distribution is atypical, but this does not matter in $\mathcal{G}(n,p)$!
+\end{itemize}
+
+\subsection*{Meditation exercise:}
+\begin{itemize}
+\item Generate a PA graph with $\gamma = 3$, average degree $\bar{k} = 10$, and size $n = 10^6$.
+\item Meditate that:
+\begin{itemize}
+\item You \emph{cannot} be sure that the generated graph is a typical PA graph.
+\item You \emph{can} be sure that the generated graph is a typical ER graph in $\mathcal{G}(n,p)$ with $n = 10^6$ and $p \approx \bar{k}/n = 10^{-5}$.
+\end{itemize}
+\end{itemize}
+
+\textbf{This is because:}
+\begin{itemize}
+\item All graphs with $\bar{k} = 10$ are equally likely and comprise a bulk of the probability mass in this $\mathcal{G}(n,p)$.
+\item The number of graphs with the binomial degree distribution in this typical set is much larger than the number of graphs with other degree distributions, including power-law distributions.
+\item This entropic domination makes the binomial distribution to be a typical value of the degree distribution property in $G(n,p)$.
+\item But $P(G)$ in $\mathcal{G}(n,p)$ ``does not care'' about the degree distribution; it ``cares'' only about the average degree.
+\end{itemize}
+
+\fbox{Typical network $\neq$ typical value of a network property!}
+
+\vspace{1em}
+
+If A.2 does not hold (e.g., in PA), then there is no good definition of a typical network :(
+
+But there is always a good definition of a typical sequence of networks! :)
+
+\vspace{2em}
+
+\begin{center}
+30
+\end{center}
+
+\newpage
+
+% ===== Page 6 =====
+\section{7.8 Typical sequence}
+
+\noindent\textbf{Definition:} Shannon entropy of distribution $P(x)$: $S[P] = -\sum_x P(x) \log P(x)$.
+
+\noindent\textbf{Theorem:} Let $x_i \stackrel{\text{iid}}{\sim} P(x)$, $i = 1, 2, ..., n$, and $\mathbf{P}(\{x_i\}_{i=1}^n)$ be the probability of the sequence $x_1, x_2, ..., x_n$. Then,
+\[
+-\frac{1}{n} \log \mathbf{P}(\{x_i\}) \to S[P]
+\]
+
+\noindent\textbf{Definition:} A sequence $x_1, x_2, ..., x_n$ is $\varepsilon$-typical w.r.t. $P(x)$ if $\mathbf{P}(\{x_i\}) \in [e^{-n(S(x)+\varepsilon)}, e^{-n(S(x)-\varepsilon)}]$.
+
+\subsection*{Definition 7.7. (good)}
+
+\begin{center}
+\fbox{\parbox{0.9\textwidth}{
+A sequence of graphs $G_1, G_2, ..., G_n$ is $\varepsilon$-typical in a model $P(G)$ if it is an $\varepsilon$-typical sequence w.r.t. $P(G)$.
+}}
+\end{center}
+
+\noindent\textbf{Common confusion:} $G_i \stackrel{\text{iid}}{\sim} P(G)$ vs. $a_{ij} \stackrel{\text{iid}}{\sim}$ Bernoulli[$p$] in $\mathcal{G}(n, p)$.
+
+\noindent\textbf{In HW2:} Show that Definition 7.7 applied to edges in $\mathcal{G}(n, p)$ is equivalent to Definition 7.6 of a typical graph in $\mathcal{G}(n, p)$.
+
+\section{7.9 Summary}
+
+\begin{itemize}
+\item No network is typical in PA!
+\item Any PA network with any average degree $\bar{k}$ is a typical ER network with $p = \bar{k}/n$.
+\item The typical \textit{degree distribution} in ER is binomial, and in PA it is a power law.
+\end{itemize}
+
+\vfill
+
+\begin{center}
+31
+\end{center}
+
+\end{document}

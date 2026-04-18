@@ -1,0 +1,166 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 03\_clustering.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\chapter*{Chapter 3}
+
+\section*{Clustering}
+
+\subsection*{3.1 Real networks}
+
+\begin{table}[h]
+\centering
+\caption{Average path length and clustering coefficient of various network examples. The networks are the same as in Table 1.1, their numbers of nodes and links are listed as well. Link weights are ignored. The average path length is measured only on the giant component; for directed networks we consider directed paths in the giant strongly connected component. To measure the clustering coefficient in directed networks, we ignore link directions.}
+\begin{tabular}{lcccc}
+\hline
+Network & Nodes $(N)$ & Links $(L)$ & Average path length $\langle \ell(i) \rangle$ & Clustering coefficient $(C)$ \\
+\hline
+Facebook Northwestern Univ. & 10,567 & 488,337 & 2.7 & 0.24 \\
+IMDB movies and stars & 565,443 & 921,160 & 12.1 & 0 \\
+IMDB co-stars & 252,999 & 1,015,187 & 6.8 & 0.67 \\
+Twitter US politics & 18,470 & 48,365 & 5.6 & 0.03 \\
+Enron email & 87,273 & 321,918 & 3.6 & 0.12 \\
+Wikipedia math & 15,220 & 194,103 & 3.9 & 0.31 \\
+Internet routers & 190,914 & 607,610 & 7.0 & 0.16 \\
+US air transportation & 546 & 2,781 & 3.2 & 0.49 \\
+World air transportation & 3,179 & 18,617 & 4.0 & 0.49 \\
+Yeast protein interactions & 1,870 & 2,277 & 6.8 & 0.07 \\
+\textit{C. elegans} brain & 297 & 2,345 & 4.0 & 0.29 \\
+Everglades ecological food web & 69 & 916 & 2.2 & 0.55 \\
+\hline
+\end{tabular}
+\label{table:2.1}
+\end{table}
+
+\begin{itemize}
+\item Similar considerations as in the sparsity and small worldness sections regarding fixed $n$ vs. $n \to \infty$.
+\end{itemize}
+
+\vfill
+
+\begin{center}
+10
+\end{center}
+
+\newpage
+
+% ===== Page 2 =====
+\subsection{Notations}
+
+Let:
+
+\begin{itemize}
+\item $n(k)$ --- number of nodes of degree $k$ in a simplest network $G$,
+\item $k_i$ --- the degree of node $i$ in $G$,
+\item $w_i = \binom{k_i}{2}$ --- number of pairs of $i$'s neighbors,
+\item $t_i$ --- number of connected pairs among those,
+\item $w = \sum_i w_i$ --- total number of \textit{wedges} (paths of length 2) in $G$,
+\item $t = \sum_i t_i$ --- $3\times$ total number of triangles in $G$.
+\end{itemize}
+
+\subsection{Definitions}
+
+\begin{itemize}
+\item \textit{The global clustering (coefficient)} of graph $G$:
+\begin{equation}
+c = \frac{t}{w}.
+\tag{3.1}
+\end{equation}
+
+\item \textit{The (local) clustering (coefficient)} of node $i$ in $G$:
+\begin{equation}
+c_i = \frac{t_i}{w_i}.
+\tag{3.2}
+\end{equation}
+
+Observe: $c_i$ is undefined if $w_i = 0 \iff k_i = 0$ or $k_i = 1$,
+
+\item \textit{The average clustering of nodes of degree} $k$ or \textit{degree-dependent clustering}:
+\begin{equation}
+c(k) = \frac{1}{n(k)} \sum_i c_i \mathbb{1}\{k_i = k\},
+\tag{3.3}
+\end{equation}
+
+Observe: $c(k)$ is undefined if $k = 0$ or $k = 1$,
+
+\item \textit{The average (local) clustering (coefficient)}:
+\begin{equation}
+\bar{c} = \langle c \rangle = \frac{1}{n_{>1}} \sum_i c_i \mathbb{1}\{k_i > 1\} = \sum_{k>1} c(k) P_{>1}(k),
+\tag{3.4}
+\end{equation}
+
+where $n_{>1} = n - n(0) - n(1)$, $P_{>1}(k) = n(k)/n_{>1}$, $k > 1$.
+\end{itemize}
+
+\textbf{Note:}
+
+\begin{itemize}
+\item $c, \bar{c} \in [0,1]$,
+\item $c, \bar{c} = 0$ in a triangle-free graph,
+\item $c, \bar{c} = 1$ in a complete graph,
+\item $c = \text{Prob}(\text{a random wedge is a part of a triangle})$; it puts more `weight' on high-degree nodes,
+\item $\bar{c} = \text{Prob}(\text{two random neighbors of a random node are connected})$; it puts more `weight' on low-degree nodes.
+\end{itemize}
+
+\textbf{Definition 3.1.} We say that a network model/random graph sequence $G_n$ with $n \to \infty$ has \textit{strong clustering} or \textit{high clustering} or \textit{non-vanishing clustering} if $\liminf_{n\to\infty} \bar{c}_n \neq 0$ (the limit may not exist!)
+
+$\star$) Enforcing $c_i = 0$ for $k_i = 0$ or $k_i = 1$ cannot be rigorously justified.
+
+$\star$) The simplest ``mechanism'' that can ``explain'' clustering is geometry.
+
+\vspace{1em}
+\hfill 11
+
+\newpage
+
+% ===== Page 3 =====
+\subsection{Mini-summary of sparsity, small worldness, and strong clustering}
+
+\begin{itemize}
+\item Nothing formal can be stated about sparsity, small worldness, or strong clustering in any given (real) network --- all such statements are purely informal and colloquial since they are based on intuition.
+
+\item Yet such statements make perfect formal sense for (random) graph sequences/network models with $n \to \infty$.
+
+\item The causes and effects of these features in real networks are as follows:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Feature & Sparsity & Small worldness & Clustering \\
+\hline
+Cause & Cost & Randomness & Geometry \\
+\hline
+Effect & Cost & Communication & Robustness \\
+\hline
+\end{tabular}
+\end{center}
+
+\item The Watts-Strogatz model was the first model that captured all of these three features along with the causes of the last two!
+
+\end{itemize}
+
+\vspace{10cm}
+
+\begin{center}
+12
+\end{center}
+
+\end{document}

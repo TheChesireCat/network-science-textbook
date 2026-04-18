@@ -1,0 +1,405 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 09\_configuration\_model.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\chapter*{Chapter 9}
+
+\section*{Configuration model}
+
+\textbf{Definition 9.1.} The configuration model (CM) is the maximum-entropy model of random graphs with a given degree sequence or degree sequence distribution.
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Ensemble type & \multicolumn{2}{|c|}{Property/sufficient statistic $f_s$} \\
+\cline{2-3}
+& Average degree $\bar{k}$ & Degree sequence $\mathbf{k} = \{k_i\}_{i=1}^n$ \\
+\hline
+Mic & $G(n,m)$, $m = \frac{1}{2}\bar{k}n$ & $\text{CM}(n,\mathbf{k})$ \\
+Can & $G(n,p)$, $p = \frac{\bar{k}}{n-1}$ & $\text{SCM}(n,\mathbf{k})$ \\
+Hyp & $G(n,\rho)$, $\mathbf{k} \sim \rho$ & $\text{HSCM}(n,\rho)$, $\mathbf{k} \sim \rho$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{9.1 Configuration model $\text{CM}(n,\mathbf{k})$}
+
+\subsection*{9.1.1 Definition}
+
+\textbf{Definition 9.2.} The $\text{CM}(n,\mathbf{k})$ is
+\begin{equation}
+P_{\text{CM}}(G|n,\mathbf{k}) = \frac{\mathbb{1}\{G \in \mathcal{G}(n,\mathbf{k})\}}{N(n,\mathbf{k})},
+\tag{9.1}
+\end{equation}
+where $\mathcal{G}(n,\mathbf{k})$ is the set of graphs whose degree sequences is $\mathbf{k}$, $N(n,\mathbf{k}) = |\mathcal{G}(n,\mathbf{k})|$, and $\mathbf{k}$ is graphical.
+
+\textbf{Definition 9.3.} A degree sequence $\mathbf{k}$ is \textit{graphical} if $N(n,\mathbf{k}) > 0$.
+
+\textbf{Theorem 9.4 (Erdős-Gallai theorem).} \textit{A degree sequence $\mathbf{k}$ is graphical iff:}
+
+\textit{1.} $\sum_{i=1}^n k_i$ \textit{is even, and}
+
+\textit{2.} $\sum_{i=1}^j k_i \leq j(j-1) + \sum_{i=j+1}^n \min(k_i, j)$ \textit{for all} $j = 1, 2, ..., n$, \textit{where} $k_1 \geq k_2 \geq ... \geq k_n$.
+
+\vfill
+
+\begin{center}
+44
+\end{center}
+
+\newpage
+
+% ===== Page 2 =====
+Suppose $\mathbf{k}$ is graphical. What is $N(n,\mathbf{k})$? It is a difficult counting problem (1958 - ...); a nice review of its history/progress can be found in N. Wormald, ``\emph{Asymptotic enumeration of graphs with a given degree sequence}'', Proc. ICM, 2018.
+
+Why the problem is hard? Observe:
+\begin{equation}
+N(n,\mathbf{k}) = \frac{N_p}{N_s}\mathcal{P}, \text{ where}
+\tag{9.2}
+\end{equation}
+
+\begin{itemize}
+\item $N_p = \frac{(2m)!}{m!2^m} = (2m-1)!! \, (n!! = n(n-2)(n-4)\ldots 2(1))$ is the number of pairings of $2m$ stubs (half-edges), indeed:
+
+\begin{itemize}
+\item $2m!$ the number of permutations of $2m$ elements,
+\item $m!$ the number of orderings of pairs in the row,
+\item $2^m$ is the number of orderings of the elements in the pairs;
+\end{itemize}
+
+\item $N_s = \prod_{i=1}^n k_i!$ is the number of different pairings that lead to the same graph;
+
+\item $\mathcal{P}$ is the probability that a random pairing leads to a simple graph.
+\end{itemize}
+
+Note:
+
+\begin{itemize}
+\item Estimating $\mathcal{P}$ is the main difficulty.
+
+\item Results are only of asymptotic nature under different assumptions.
+
+\item For power-law sequences, rigorous results are available only for $\gamma > \frac{5}{2}$ (Gao, Wormald, 2016).
+
+\item Non-rigorous arguments suggest they hold for smaller $\gamma$ as well (Bianconi et al, 2008).
+
+\item Bender, Canfield, 1978:
+\begin{equation}
+\mathcal{P} \approx \exp\left[-\frac{1}{4}\left(\left(\frac{\langle k^2\rangle}{\langle k\rangle}\right)^2 - 1\right)\right],
+\tag{9.3}
+\end{equation}
+
+where $\langle k^2\rangle = \sum k_i^2/n$, $\langle k\rangle = \sum k_i/n$.
+\end{itemize}
+
+Test question: how are you supposed to interpret the `$\approx$' sign in the last equation?
+
+\newpage
+
+% ===== Page 3 =====
+\subsubsection*{9.1.2 \quad Generation}
+
+The graph generation is also difficult. Test question: why?
+
+\textbf{Classes of approaches to graph generation in CM:}
+
+\begin{enumerate}
+    \item \textbf{Random stub pairing and rejection if a multigraph is formed}
+    \begin{itemize}
+        \item No rejection if it is a CM of multigraphs.
+        \item Prob[simple graph]$\to 0$ if $\langle k^2 \rangle \to \infty$ (Janson, 2009).
+        \item The fraction of multiedges and self-loops is negligible (even if $\langle k^2 \rangle \to \infty$) ``for many purposes'' (van der Hofstad et al) $\Rightarrow$
+    \end{itemize}
+    
+    \item \textbf{Random stub pairing and erasure of multiedges and self-loops}
+    \begin{itemize}
+        \item A.k.a. the \textit{erased configuration model} (ECM).
+        \item The resulting degree sequence is different from $\mathbf{k}$, but the difference is negligible ``for many purposes''.
+    \end{itemize}
+    
+    \item \textbf{Start with any graph with the required degree sequence and then swap edges randomly like this:}
+    
+    \begin{center}
+    \begin{tikzpicture}[scale=0.8]
+        % Left graph
+        \node[circle,fill,inner sep=2pt,label=above:$k_1$] (k1) at (0,1) {};
+        \node[circle,fill,inner sep=2pt,label=below:$k_2$] (k2) at (0,-1) {};
+        \node[circle,fill,inner sep=2pt,label=above:$k_3$] (k3) at (2,1) {};
+        \node[circle,fill,inner sep=2pt,label=below:$k_4$] (k4) at (2,-1) {};
+        \draw (k1) -- (k2);
+        \draw (k3) -- (k4);
+        
+        % Arrow
+        \node at (3.5,0) {$\Rightarrow$};
+        
+        % Right graph
+        \node[circle,fill,inner sep=2pt,label=above:$k_1$] (k1r) at (5,1) {};
+        \node[circle,fill,inner sep=2pt,label=below:$k_2$] (k2r) at (5,-1) {};
+        \node[circle,fill,inner sep=2pt,label=above:$k_3$] (k3r) at (7,1) {};
+        \node[circle,fill,inner sep=2pt,label=below:$k_4$] (k4r) at (7,-1) {};
+        \draw (k1r) -- (k4r);
+        \draw (k3r) -- (k2r);
+    \end{tikzpicture}
+    \end{center}
+    
+    \begin{itemize}
+        \item If done properly(!), after $O(m)$ swaps this Markov process is properly mixed (P. Erdős, Z. Toroczkai, K. Bassler, A. Coolen).
+        \item The graph to start with can be generated using the \textit{Havel--Hakimi algorithm}, which iteratively connects the highest-degree node to other nodes with highest-possible degrees:
+        \begin{enumerate}[(a)]
+            \item let a nonincreasing $\mathbf{k} = \{k_i\}_{i=1}^n = \{s, t_1, \ldots, t_s, k_1, \ldots, k_{n-s-1}\}$ be the numbers of unmatched stubs attached to nodes $i = 1, 2, \ldots, n$;
+            \item match the $s$ stubs of node 1 with 1 stub of each of the nodes $2, \ldots, s+1$;
+            \item observe that the sequence of numbers of unmatched stubs becomes $\mathbf{k}' = \{0, t_1 - 1, \ldots, t_s - 1, k_1, \ldots, k_{n-s-1}\}$;
+            \item remove the first element (0) from $\mathbf{k}'$, and rearrange it so that it becomes nonincreasing;
+            \item go to step (a) with $n$ replaced by $n-1$.
+        \end{enumerate}
+    \end{itemize}
+    
+    \item \textbf{Advanced algorithms}
+    \begin{itemize}
+        \item \textit{Del Genio et al, PLOS ONE, 2010}
+        \begin{itemize}
+            \item[--] Does not sample graph uniformly but reports weights; the worst-case running time is $O(nm)$ for any graphical degree sequence.
+        \end{itemize}
+        \item \textit{Arman, Gao, Wormald, FOCS, 2019}
+        \begin{itemize}
+            \item[--] Samples graphs uniformly, but the running time is proven to be:
+            \begin{itemize}
+                \item[*] $O(m)$ if $k_{\max}^4 = O(m)$ \\
+                (for power-law $\mathbf{k}$'s, this means that $\gamma > 5$),
+                \item[*] $O(n)$ if $\mathbf{k}$ is a power law with $\gamma > \frac{21+\sqrt{61}}{10} \approx 2.88$.
+            \end{itemize}
+            \item[--] Random pairing followed by sophisticated corrections.
+            \item[--] This seems to be the state of the art at this moment.
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+\vspace{2em}
+\hfill 46
+
+\newpage
+
+% ===== Page 4 =====
+\section*{9.2 Soft configuration model $\mathrm{SCM}(n, \mathbf{k})$}
+
+\subsection*{9.2.1 Definition}
+
+\textbf{Definition 9.5.} The $\mathrm{SCM}(n, \mathbf{k})$ is
+\begin{equation}
+P_{\mathrm{SCM}}(G|n, \mathbf{k}) = \frac{\exp(-\sum_{i=1}^n \lambda_i d_i(G))}{Z}, \tag{9.4}
+\end{equation}
+where $d_i(G)$ is the degree of node $i$ in graph $G$, $d_i(G) = \sum_{j=1}^n a_{ij}$, where $\{a_{ij}\}$ is the adjacency matrix of $G$, and where $\{\lambda_i\}$ are determined below.
+
+\textbf{Determining $\{\lambda_i\}$:}
+\begin{align*}
+P_{\mathrm{SCM}}(G|n, \mathbf{k}) &= \frac{\exp(-\sum_{i,j=1}^n \lambda_i a_{ij})}{Z} \\
+&\underset{a_{ij}=a_{ji}, a_{ii}=0}{=} \frac{\exp(-\sum_{i<j}^n (\lambda_i + \lambda_j)a_{ij})}{Z} \\
+&\underset{\lambda_i+\lambda_j=\lambda_{ij}}{=} \frac{\exp(-\sum_{i<j}^n \lambda_{ij}a_{ij})}{Z} \\
+&= \frac{\prod_{i<j} \exp(-\lambda_{ij}a_{ij})}{Z} \\
+&\underset{e^{-\lambda_{ij}}=q_{ij}}{=} \frac{\prod_{i<j} q_{ij}^{a_{ij}}}{Z}, \quad \text{where}
+\end{align*}
+\begin{align*}
+Z &= \sum_{G \in \mathcal{G}_n} \prod_{i<j} q_{ij}^{a_{ij}} \\
+&= \prod_{i<j} \sum_{a=0}^1 q_{ij}^a \\
+&= \prod_{i<j} (1 + q_{ij}), \quad \text{so}
+\end{align*}
+\[
+P_{\mathrm{SCM}}(G|n, \mathbf{k}) = \prod_{i<j} \frac{q_{ij}^{a_{ij}}}{1 + q_{ij}}.
+\]
+
+Denote $p_{ij} = \frac{q_{ij}}{1+q_{ij}} \in [0, 1]$, so that $1 - p_{ij} = \frac{1}{1+q_{ij}}$, substituting which in the last equation, we get
+\begin{equation}
+\boxed{P_{\mathrm{SCM}}(G|n, \mathbf{k}) = \prod_{i<j} p_{ij}^{a_{ij}} (1 - p_{ij})^{1-a_{ij}}.} \tag{9.5}
+\end{equation}
+
+\textbf{Note:} the last equation means that edges $a_{ij}$ are independent Bernoullis, albeit with different success rates
+\begin{equation}
+\boxed{p_{ij} = \frac{q_{ij}}{1 + q_{ij}} = \frac{e^{-\lambda_{ij}}}{1 + e^{-\lambda_{ij}}} = \frac{1}{e^{\lambda_{ij}} + 1} = \frac{1}{e^{\lambda_i+\lambda_j} + 1}.} \tag{9.6}
+\end{equation}
+
+That is, as in $\mathcal{G}(n, p)$, we have a Fermi-Dirac equation, but edge energies $\lambda_i + \lambda_j$ are now all different.
+
+Since edges are independent Bernoullis, the expected degree $\langle d_i \rangle$ of node $i$ is $\sum_{j=1}^n p_{ij}$ with $p_{ii} = 0$. Therefore, $\{\lambda_i\}_{i=1}^n$ are the solutions of the following system of $n$ nonlinear equations:
+\begin{equation}
+\boxed{\sum_{j=1}^n p_{ij} = k_i, \quad i = 1, 2, \ldots, n.} \tag{9.7}
+\end{equation}
+
+\textbf{Note:}
+\begin{itemize}
+\item if $k_i \notin [0, n-1]$, then the system does not have a solution, since $p_{ij} \in [0, 1]$ and $p_{ii} = 0$;
+\item graphs with the same degree sequence are equiprobable in the model.
+\end{itemize}
+
+\vspace{1em}
+\hfill 47
+
+\newpage
+
+% ===== Page 5 =====
+\subsubsection{Generation}
+
+Given $\mathbf{k} = \{k_i\}$:
+
+1. solve Eq.~(9.7) for $\{\lambda_i\}_{i=1}^n$,
+
+2. connect nodes $i$ and $j$ with probability $p_{ij}$ in Eq.~(9.6) for $i < j = 1, 2, ..., n$.
+
+\subsubsection{Classical limit approximation (Chung-Lu model)}
+
+Why ``classical'': in statistical physics, Eq.~(9.6) gives the expected number of particles in state $\{i, j\}$ in quantum Fermi gases. The corresponding analogy of this section is the \emph{classical} (vs. quantum) ideal gas.
+
+\paragraph{Definition}
+
+Observe that if $p_{ij} \ll 1 \iff e^{\lambda_i + \lambda_j} \gg 1$ (but also ``in many other cases'' (Janson, 2010)), then
+\begin{align*}
+p_{ij} &= \frac{1}{e^{\lambda_i + \lambda_j} + 1} \approx e^{-\lambda_i} e^{-\lambda_j} \Rightarrow \\
+k_i &= \sum_{j=1}^n p_{ij} = e^{-\lambda_i} \sum_{j=1}^n e^{-\lambda_j} = c e^{-\lambda_i} \Rightarrow \\
+\sum_{i=1}^n k_i &= kn = c^2 \Rightarrow \\
+e^{-\lambda_i} &= \frac{k_i}{\sqrt{kn}} \Rightarrow \\
+p_{ij} &\approx \boxed{p_{ij}^{\text{CL}} = \min\left(1, \frac{k_i k_j}{kn}\right)},
+\end{align*}
+\begin{equation}
+(9.8)
+\end{equation}
+
+where $\bar{k} = \sum_{i=1}^n k_i / n$.
+
+\paragraph{Generation}
+
+Given $\mathbf{k} = \{k_i\}$, connect nodes $i$ and $j$ with probability $p_{ij}^{\text{CL}}$ in Eq.~(9.8) for $i < j = 1, 2, ..., n$.
+
+\newpage
+
+% ===== Page 6 =====
+\section{Hypersoft configuration model $\text{HSCM}(n,\rho)$}
+
+Degree sequences in real networks are rarely fixed since networks are dynamic, but the degree distribution often stays the same for decades (e.g., in the Internet).
+
+\subsection{Definition}
+
+\textbf{Definition 9.6.} The $\text{HSCM}(n,\rho)$ is the $\text{HSCM}(n,\mathbf{k})$, where $\mathbf{k} \sim \rho$, and $\rho$ is a fixed joint distribution.
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item Usually, $\rho(\mathbf{k}) = \prod_i \rho(k_i)$ (i.e., $\rho_{\mathbf{k}} = \rho_k^n$ or $k_i \stackrel{i.i.d.}{\sim} \rho$), which is the settings in this section, i.e.,
+
+\item Henceforth, distribution $\rho$ is $\rho(k_i)$: $\{k_i\}$ are independent samples from a fixed distribution (e.g., Pareto).
+
+\item The proof of unbiasedness of the HSCM in these settings appeared only recently and only for Pareto $\rho$ (van der Hoorn et al., 2018).
+
+\item In the HSCM, both the degree distribution and the degree sequence distribution converge to the $\rho$-mixed Poisson (as opposed to HER $\mathcal{G}(n,\rho)$).
+
+\item If $\rho$ is Pareto, then the $\rho$-mixed Poisson is a power law (HW).
+
+\item If $\rho = \text{Pareto}[k, \gamma = 3]$, then the $\text{HSCM}(n,\rho)$ is equivalent to the soft preferential attachment (SPA) model.
+
+\item In SPA, new nodes connect to existing nodes with probability proportional to their \emph{expected} (vs. actual) degrees.
+
+\item SPA is thus the unbiased model of random graphs with a power-law degree distribution with $\gamma = 3$.
+
+\item But SPA $\neq$ PA.
+\end{itemize}
+
+\subsection{Generation}
+
+\textbf{Option 1}
+
+The basic option is to generate graphs as in $\text{SCM}(n,\mathbf{k})$ with random $\mathbf{k}$:
+
+1. sample $k_i \stackrel{i.i.d.}{\sim} \rho$, and
+
+2. generate $G \sim \text{SCM}(n,\mathbf{k})$.
+
+The main difficulty is that you have to solve (9.7) for each $G$.
+
+\textbf{Option 2}
+
+Observe that Eq. (9.7) can be used to derive $\rho(\boldsymbol{\lambda})$ from $\rho(\mathbf{k})$, so, as soon as such a derivation is complete,
+
+1. sample $\boldsymbol{\lambda} \sim \rho(\boldsymbol{\lambda})$,
+
+2. connect $i$ and $j$ with probability $p_{ij}$ in Eq. (9.6).
+
+In general, the derivation of $\rho(\boldsymbol{\lambda})$ from $\rho(\mathbf{k})$ may be difficult to carry out. Luckily, if $\{k_i\}$ are independent Paretos, then we have the following results.
+
+\vspace{1em}
+\hfill 49
+
+\newpage
+
+% ===== Page 7 =====
+\section*{Option 3}
+
+\textbf{Theorem 9.7.} \textit{If $\rho(k) = \prod_i \rho(k_i)$, and $\rho = \text{Pareto}(\bar{k}, \gamma)$, where $\bar{k} > 0$ and $\gamma > 2$, then all of the following graph generators are equivalent, and sample properly a random graph in $\text{HSCM}(n, \rho)$ by connecting nodes $i$ and $j$ independently with probabilities $p_{ij}$ given by:}
+
+\subsection*{$\boldsymbol{\lambda}$-generator:}
+
+\begin{align}
+p_\lambda(\lambda_i, \lambda_j) &= \frac{1}{e^{\lambda_i + \lambda_j} + 1}, \quad \text{where} \\
+\lambda_i &\stackrel{i.i.d.}{\sim} \rho(\lambda) = \alpha e^{\alpha(\lambda - R)}, \quad \text{where} \\
+\lambda &\in (-\infty, R], \\
+\alpha &= \gamma - 1, \\
+R &= \frac{1}{2} \log(\nu n), \\
+\nu &= \frac{1}{\bar{k}} \left(\frac{\gamma - 1}{\gamma - 2}\right)^2.
+\end{align}
+
+\subsection*{$\boldsymbol{k}$-generator:}
+
+\begin{align}
+p_k(k_i, k_j) &= \frac{1}{\frac{kn}{k_i k_j} + 1}, \quad \text{where} \\
+k_i &\stackrel{i.i.d.}{\sim} \rho(k) = \text{Pareto}[\bar{k}, \gamma](k) = \alpha k_{\min}^\alpha k^{-\gamma}, \quad \text{where} \\
+k &\in [k_{\min}, \infty), \\
+k_{\min} &= \bar{k} \frac{\gamma - 2}{\gamma - 1}.
+\end{align}
+
+\subsection*{$\boldsymbol{u}$-generator:}
+
+\begin{align}
+p_u(u_i, u_j) &= \frac{1}{\nu n (u_i u_j)^{1/\alpha} + 1}, \quad \text{where} \\
+u_i &\stackrel{i.i.d.}{\sim} \rho(u) = U[0, 1](u), \quad \text{where} \\
+u &\in [0, 1].
+\end{align}
+
+\subsection*{$\boldsymbol{x}$-generator:}
+
+\begin{align}
+p_x(x_i, x_j) &= \frac{1}{\nu n 1^{-2/\alpha} (x_i x_j)^{1/\alpha} + 1}, \quad \text{where} \\
+x_i &\stackrel{i.i.d.}{\sim} \rho(x) = U[0, n](x), \quad \text{where} \\
+x &\in [0, n].
+\end{align}
+
+\subsection*{CL-aproximations:}
+
+\begin{align}
+p_\lambda^{\text{CL}}(\lambda_i, \lambda_j) &= e^{-\lambda_i} e^{-\lambda_j}, \\
+p_k^{\text{CL}}(k_i, k_j) &= \frac{k_i k_j}{kn}, \\
+p_u^{\text{CL}}(u_i, u_j) &= \frac{(u_i u_j)^{-1/\alpha}}{\nu n}, \\
+p_x^{\text{CL}}(x_i, x_j) &= \frac{(x_i x_j)^{-1/\alpha}}{\nu n 1^{-2/\alpha}}.
+\end{align}
+
+\textbf{Note:} $\lim_{n \to \infty} \text{HSCM}\left(n, \text{Pareto}[\bar{k}, \gamma]\right) = \mathcal{G}(n, p)$ with $p = \bar{k}/n$.
+
+\vspace{1em}
+
+\hfill 50
+
+\end{document}

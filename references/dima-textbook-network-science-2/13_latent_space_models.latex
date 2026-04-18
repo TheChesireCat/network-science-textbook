@@ -1,0 +1,816 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 13\_latent\_space\_models.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\section*{Chapter 13}
+
+\section*{Latent space models (LSMs)}
+
+\textbf{Definition 13.1.} Latent Space Models are HVNMs, in which
+\begin{enumerate}
+    \item hidden variables $\mathbf{x} = \{x_i\}$ are (random) coordinates of nodes in a geometric space ($\Rightarrow \rho(\mathbf{x})$);
+    \item connection probability $p(x_i, x_j) = \hat{p}(d(x_i, x_j))$ is a (decreasing) function of the distance $d(x_i, x_j)$ between nodes $i$ and $j$ in the space.
+\end{enumerate}
+
+\textbf{Notes:}
+\begin{itemize}
+    \item Such distances may abstract similarities between people in social networks.
+    \item LSMs have been studied in sociology since the 1920s.
+    \item Geometry is the best studied mechanism behind the emergence of clustering in real networks (cf. the WS model).
+    \item In math, LSMs are known as soft random geometric graphs.
+    \item The simplest example is the standard (sharp) random geometric graphs (RGGs).
+\end{itemize}
+
+\subsection*{13.1 \quad Random geometric graphs (RGGs)}
+
+\subsubsection*{13.1.1 \quad Definition}
+
+\textbf{Definition 13.2.} In one-dimensional RGGs,
+\begin{itemize}
+    \item $\rho(x) = U(0, n)$, $x_i \stackrel{\text{iid}}{\sim} \rho(x)$,
+    \item $p(x_i, x_j) = \mathbb{1}\,\{0 < |x_i - x_j| < r\} \Leftrightarrow \hat{p}(d) = \mathbb{1}\,\{0 < d < r\}$, where $r > 0$:
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\textit{[The figure shows a one-dimensional random geometric graph illustration. On a horizontal axis labeled $x$, there are several points distributed along the interval $[0, n]$. Two points are highlighted with a distance $d$ between them. A connection region of width $2r$ is shown centered at one point. The figure includes labels: $x'$ on the vertical axis, $x$ on the horizontal axis, $\hat{p}(x, x')$ indicating the connection probability function, $b$ showing a vertical extent, $\theta$ marking an angle, $2r$ showing the connection radius, and $v_i$ labeling a specific point. Blue shaded regions indicate the neighborhoods where connections occur.]}
+\end{figure}
+
+\textbf{Notes:}
+\begin{itemize}
+    \item The graphs are homogeneous $\Rightarrow$ the expected value of network properties of all nodes are the same (degree, clustering, etc.).
+    \item Point density $\lambda = \frac{\text{number of points}}{\text{length of }[0, n]} = 1$.
+    \item The expected degree of most $\to$ all nodes is $\bar{k} = \lambda \cdot 2r = 2r$.
+    \item The degree distribution $P(k) \to \text{Poisson}[\bar{k}](k) = e^{-\bar{k}} \frac{(\bar{k})^k}{k!}$.
+    \item The expected clustering of most $\to$ all nodes is $0 \neq \bar{c} =?$ (Final!)
+\end{itemize}
+
+\vspace{1em}
+\hfill 66
+
+\newpage
+
+% ===== Page 2 =====
+\subsubsection*{13.1.2 Generation, projectivity, exchangeability}
+
+\textbf{Option 1}
+
+The most straightforward generation option simply follows Definition 13.2:
+
+\begin{center}
+\textit{[Figure: A diagram showing a one-dimensional line segment from $O$ to $r$ with points labeled $\mathcal{X}_5$, $\mathcal{X}_8$, $\mathcal{X}_9$, $\mathcal{X}_7$, $\mathcal{X}_{13}$ placed along it. Above the points are curved arcs connecting consecutive points, suggesting connections or intervals between them. The diagram is overlaid on a grid background.]}
+\end{center}
+
+This option is fine in practice, but not in theory because:
+
+\begin{enumerate}
+\item[(a)] It is finitely exchangeable, so there is no limit (thanks to the Aldous-Hoover theorem) since graphs are sparse (in practical terms, $U[0,n](x) = 1/n \to 0$ at $n \to \infty$).
+
+\item[(b)] The point process is binomial, so there are dependencies between the numbers of points in non-overlapping intervals.
+\end{enumerate}
+
+The point process in this option is called \textit{binomial} because the number of points in an interval of length $l < n$ is $\text{Bin}[n, p]$ with $p = l/n$.
+
+Solution to problem (b): Adjust the process to be a \textit{Poisson point process (PPP)}.
+
+\textbf{Definition 13.3.} A point process is \textit{Poisson} of rate 1 if:
+
+\begin{enumerate}
+\item[1.] the number of points in any interval of length $l$ is Poisson$[l]$,
+
+\item[2.] the numbers of points in any two non-overlapping intervals are independent.
+\end{enumerate}
+
+\textbf{Option 2}
+
+\begin{enumerate}
+\item[1.] Sample $n \sim \text{Poisson}[\bar{n}]$, where $\bar{n} > 0$,
+
+\item[2.] proceed to option 1.
+\end{enumerate}
+
+\textbf{Theorem 13.4.} \textit{Option 2 implements the Poisson point process of rate 1 on $[0,\bar{n}]$.}
+
+This option solves the second problem with option 1, but it is still not ideal, because:
+
+\begin{enumerate}
+\item[(a)] it does not solve problem (a) of option 1, and
+
+\item[(b)] the graph size $n$ is now random.
+\end{enumerate}
+
+Solution to both problem (a\&b) of option 2:
+Implement the PPP in the projective (growing) manner, option 3.
+
+\textbf{Option 3}
+
+\begin{enumerate}
+\item[1.] Set $x_0 = 0$
+
+\item[2.] For $n = 1, 2, ...$,
+\begin{enumerate}
+\item[(a)] sample $d \sim \exp[1](d) = e^{-d}$, $d \geq 0$,
+\item[(b)] set $x_n = x_{n-1} + d$
+\item[(c)] for $(i = n-1, |x_n - x_i| < r, i--)$
+\begin{enumerate}
+\item[i.] connect $n$ to $i$.
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+
+\textbf{Theorem 13.5.} \textit{Option 3 implements the PPP of rate 1 on $\mathbb{R}^+$ with points labeled in the increasing order of their coordinates:}
+
+\begin{center}
+\textit{[Figure: A diagram showing a one-dimensional line starting from $O$ with points labeled $\mathcal{X}_1$, $\mathcal{X}_2$, and $\mathcal{X}_4$ placed along it. Above the points are curved arcs connecting points within a certain range, suggesting connections based on proximity. Below the line, $\mathcal{X}_6$ is shown. The diagram is overlaid on a grid background.]}
+\end{center}
+
+\vspace{1em}
+
+\begin{center}
+67
+\end{center}
+
+\newpage
+
+% ===== Page 3 =====
+\textbf{Notes:}
+
+\begin{itemize}
+  \item $x_n \neq n$, but $\langle x_n \rangle = n$.
+    \begin{itemize}
+      \item $x_n \sim \text{Gamma}[\text{mean} = n, \text{rate} = 1](x) = \frac{x^{n-1}}{(n-1)!} e^{-x}$ -- the distribution of the sum of $n$ exponentials.
+      \item We can't fix both $n$ and $[0, n]$: either/or, please!
+    \end{itemize}
+  
+  \item Option 3 is an algorithm that, if run to infinity generates an infinite RGG.
+  
+  \item \textit{An algorithmic perspective on projectivity}: a network model is \textit{projective} if there exists an algorithm that
+    \begin{itemize}
+      \item is growing, i.e., builds the graph by adding nodes iteratively, e.g., one at a time;
+      \item does not alter (non)links among already existing nodes;
+      \item if let run to infinity, generates an infinite graph in the model.
+    \end{itemize}
+  
+  \item If the model is not projective, such an algorithm does NOT exist; examples:
+    \begin{itemize}
+      \item $\mathcal{G}(n, p)$ with $p = k/n$, where $k = \text{const}$;
+      \item HSCM with $\gamma \neq 3$;
+      \item RGGs in the exchangeable formulation in options 1 or 2.
+    \end{itemize}
+  
+  \item In the projective option 3 formulation, the RGGs are NOT exchangeable, which is OK because node labels DO matter.
+  
+  \item For any finite $n$, we can easily go from projective to exchangeable formulations and back:
+    \begin{enumerate}
+      \item Projective $\to$ exchangeable: permute node labels randomly: select uniformly at random, with probability $1/n!$, one label permutation out of $n!$ possibilities.
+      \item Exchangeable $\to$ projective: sort the node labels in the increasing order of their coordinates.
+    \end{enumerate}
+  
+  \item If $n = \infty$, then (2) the exchangeable formulation does not exist, and (1) does not work either because the number of permutations $\infty! = \infty$, and so $1/\infty! = 0$: it is impossible to select a random permutation.
+  
+  \item These points are very general and apply to any projective model that expands in space (e.g., SPA=HSCM with $\gamma = 3$); the difference is only in $p(x, x')$.
+  
+  \item The sparse projective RGGs and their derivatives below can be defined in any space of infinite volume (e.g., $\mathbb{R}^d$, $\mathbb{H}^d$, non-compact Riemannian or Lorentzian manifolds), so we can shove an infinite number of nodes at constant density into them.
+  
+  \item In what follows, the space is one-dimensional ($\mathbb{R}^+$) for simplicity.
+\end{itemize}
+
+\vspace{2em}
+
+\hfill 68
+
+\newpage
+
+% ===== Page 4 =====
+\section{13.2 Soft random geometric graphs (SRGGs)}
+
+\subsection{13.2.1 Definition}
+
+\textbf{Definition 13.6.} SRGGs are RGGs, except $p(x, x')$ is any function $\tilde{p}(d)$ of distance $d$ between points:
+
+\begin{center}
+\begin{minipage}{0.5\textwidth}
+\textit{[Figure: A heatmap visualization showing a probability function $\tilde{p}(\mathcal{X}, \mathcal{X}')$ over a 2D space. The plot has axes labeled $\mathcal{X}_1$ (vertical) and $\mathcal{X}_2$ (horizontal). The heatmap displays a diagonal band of high probability (red/white) running from upper-left to lower-right, with lower probabilities (blue) in the off-diagonal regions. This represents the probability of connection as a smooth function of distance between points in the latent space.]}
+\end{minipage}
+\end{center}
+
+\subsection{13.2.2 Sparsity, projectivity, unbiasedness}
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item In what follows, $p(d)$ is $\tilde{p}(d)$.
+
+\item SRGGs are still homogeneous in the limit.
+
+\item Let $n \gg 1$ and shift $[0, n]$ to $[-n/2, n/2]$. Then:
+\begin{equation}
+\bar{k} = \bar{k}(x = 0) \approx 2n \int_0^{n/2} p(d(0, x)) \, \rho(x) dx \xrightarrow{d(0,x) = x, \rho(x) = 1/n} 
+\end{equation}
+\begin{equation}
+2 \int_0^{n/2} p(x) \, dx \to 2 \int_0^\infty p(x) \, dx. \tag{13.1}
+\end{equation}
+
+\item Therefore, if we want (and we do) ultrasparsity ($\bar{k} = \text{const}$) and projectivity ($p(x)$ does not depend on $n$), then $p(x)$ must be integrable, so that the last integral is finite.
+
+\item This implies that $p(x) \ll 1/x$ at $x \to \infty$.
+
+\item Let us satisfy this requirement by setting
+\begin{equation}
+p(x) = cx^{-\beta}, \quad \text{where } \beta > 1, c > 0. \tag{13.2}
+\end{equation}
+
+\item This choice is no good at $x \to 0_+$ since $p \to +\infty$, so let
+\begin{equation}
+p(x) = \min\left(1, \frac{c}{x^\beta}\right). \tag{13.3}
+\end{equation}
+
+\item But this choice is the CL-approximation of
+\begin{equation}
+p(x) = \frac{1}{\frac{x^\beta}{c} + 1} \,; \tag{13.4}
+\end{equation}
+
+\begin{center}
+\begin{minipage}{0.5\textwidth}
+\textit{[Figure: A plot showing two functions overlaid. The vertical axis represents probability $p$ from 0 to 1, and the horizontal axis represents distance $x$. One curve (labeled $\min(1, \frac{1}{x^2})$) shows a sharp transition from 1 to a power-law decay. The other curve (labeled $\frac{1}{x^2+1}$) shows a smooth transition. Both curves converge for large $x$, demonstrating that the min function is a CL-approximation of the smooth rational function.]}
+\end{minipage}
+\end{center}
+
+\item Denote $\mathcal{E}(x) = \ln x$, $\lambda = -\ln c$, $\mu = -\lambda/\beta$. With these notations, Eq.~(13.4) becomes
+\begin{equation}
+p(x) = \frac{1}{e^{\beta \mathcal{E}(x) + \lambda} + 1} = \frac{1}{e^{\beta(\mathcal{E}(x) - \mu)} + 1}. \tag{13.5}
+\end{equation}
+
+\end{itemize}
+
+\vspace{1em}
+\hfill 69
+
+\newpage
+
+% ===== Page 5 =====
+\begin{itemize}
+\item That is, two nodes $i$ and $j$ at coordinates $x_i$ and $x_j$ and distance $d_{ij} \equiv x_{ij} = |x_i - x_j|$ from each other are connected with probability
+\begin{equation}
+p_{ij} = \frac{1}{e^{\beta \mathcal{E}_{ij} + \lambda} + 1} = \frac{1}{e^{\beta(x_{ij} - \mu)} + 1}, \text{ where}
+\tag{13.6}
+\end{equation}
+\begin{equation}
+\mathcal{E}_{ij} = \mathcal{E}(x_{ij}) = \ln |x_i - x_j|.
+\tag{13.7}
+\end{equation}
+
+\item Since the probability in Eq.~(13.6) is Fermi-Dirac, we use the general Theorem 11.2 with $\lambda_{ij} = \beta \mathcal{E}_{ij} + \lambda$ to deduce that SRGGs with fixed $\{x_i\}$ are canonical ensembles (ERGMs),
+\begin{equation}
+P(G|\{x_i\}) = \frac{\exp(-\beta \sum_{i<j} \mathcal{E}_{ij} G_{ij} - \lambda \sum_{i<j} G_{ij})}{Z},
+\tag{13.8}
+\end{equation}
+with the following two sufficient statistics:
+\begin{itemize}
+\item $m(G) = \sum_{i<j} G_{ij}$ -- the number of edges,
+\item $\mathcal{E}(G) = \sum_{i<j} \mathcal{E}_{ij} G_{ij}$ -- the total log-length of all edges.
+\end{itemize}
+
+\item The latter is equivalent to $\prod_{i<j} x_{ij} G_{ij}$ -- product of the lengths of all edges.
+
+\item To know $\mathcal{E}(G)$, we must know $\{x_i\}$, so the graphs $G$ are labeled not only by $\{i\}$, but also by $\{x_i\}$.
+
+\item SRGGs with random $\{x_i\}$ are thus hypercanonical ensembles (probabilistic mixtures of ERGMs) with these sufficient statistics.
+
+\item The corresponding microcanonical ensembles are highly degenerate (consist of $\sim 1$ graph) since $\{x_i\} \Rightarrow \{\mathcal{E}_{ij}\}$ are reals.
+
+\item Eq.~(13.6) is the vanilla Fermi-Dirac distribution function in the \emph{grand canonical} ensemble in statistical physics:
+\begin{itemize}
+\item particles -- edges;
+\item $\mathcal{E}_{ij}$ -- energy of particle $(i, j)$;
+\item $\beta$ -- inverse temperature, the Lagrange multiplier that fixes the average energy (here, $\beta$ controls the average link length $\bar{\mathcal{E}}$);
+\item $\mu$ -- chemical potential, the Lagrange multiplier that fixes the average number of particles (here, $\mu$ controls the average degree $\bar{k}$).
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Small-worldness}
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item Observe that the $\beta \to \infty$ limit of the connection probability in Eq.~(13.6) is
+\begin{equation}
+p_{ij} \xrightarrow{\beta \to \infty} \mathbb{1}\{\mathcal{E}_{ij} < \mu\} = \mathbb{1}\{x_{ij} < e^{\mu} \equiv r\}:
+\tag{13.9}
+\end{equation}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{7}{|c|}{$p(x)$} \\
+\hline
+\multicolumn{7}{|c|}{$\beta = \infty$ (RGG)} \\
+\hline
+1 & \multicolumn{6}{c|}{} \\
+\hline
+\multicolumn{7}{|c|}{$\beta = cp$ (SRGG)} \\
+\hline
+\multicolumn{7}{|c|}{$r$ \hspace{3cm} $\infty$} \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent
+\textit{[The table above represents a hand-drawn sketch showing $p(x)$ as a function of distance. For $\beta = \infty$ (RGG), the probability is a step function: $p(x) = 1$ for $x < r$ and $p(x) = 0$ for $x > r$. For finite $\beta$ (SRGG), the probability smoothly transitions from 1 to 0 around $r$.]}
+
+\item That is, RGGs are the zero-temperature limits of SRGGs:
+\[
+\boxed{\text{SRGG} \xrightarrow{\beta \to \infty} \text{RGG}}
+\]
+
+\item If $\beta = \infty$ and $r = \text{const.}$, then there are no long links (which shortcut to remote places), so RGGs are large worlds.
+\end{itemize}
+
+\vspace{1em}
+\begin{center}
+70
+\end{center}
+
+\newpage
+
+% ===== Page 6 =====
+\begin{itemize}
+\item But if $\beta < \infty$, then shortcuts are there; the more shortcuts and the longer they are, the smaller the $\beta$.
+\item \textbf{Questions:}
+\begin{itemize}
+\item[$-$] Do SRGGs with $\beta < \infty$ remain large worlds, or do they become small worlds?
+\item[$-$] If the latter, are they small worlds for any $\beta < \infty$, or must $\beta$ be sufficiently small for small worldness?
+\item[$-$] If the latter, then how small must $\beta$ be?
+\end{itemize}
+\end{itemize}
+
+\textbf{Theorem 13.7.} \textit{SRGGs are small worlds iff $\beta < 2$.}
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item Intuitively, this is because if $\beta$ is too large, then there are too few sufficiently long links, not enough to cross large distances.
+\item The phase transition from large worldness to small worldness at $\beta = 2$ is very interesting and complex, understood only recently (Tom Hutchcroft, 2025).
+\end{itemize}
+
+\subsubsection{Clustering}
+
+Let us now look at what happens at $\beta < 1$: $\bar{k} \sim \int^{n/2} p(x)\,dx \sim \int^n x^{-\beta}\,dx \sim n^{1-\beta} \to \infty$. Therefore, we have two basic options to extend the model for $\beta < 1$:
+
+\begin{itemize}
+\item Option 1: Preserve projectivity, lose ultrasparseness by keeping the connection probability the same:
+\begin{equation}
+p(x) = \min(1, cx^{-\beta}), \tag{13.10}
+\end{equation}
+\begin{equation}
+\bar{k} \approx 2 \int_0^{n/2} p(x)\,dx \sim n^{1-\beta}. \tag{13.11}
+\end{equation}
+
+\item Option 2: Preserve ultrasparseness, lose projectivity by forcing the connection probability to decay with $n$:
+\begin{equation}
+p(x) \equiv p_n(x) = \min(1, c_n x^{-\beta}), \text{ where } c_n \sim 1/n^{1-\beta} \text{ is such that} \tag{13.12}
+\end{equation}
+\begin{equation}
+\bar{k} \approx 2 \int_0^{n/2} p(x)\,dx = \text{const.} \tag{13.13}
+\end{equation}
+
+\item We assume Option 2 with $\bar{k} = \text{const.}$ for the rest of this section.
+
+\item With this option, if $\beta \to 0$ (infinite temperature), then
+\begin{equation}
+p_n(x) \xrightarrow{\beta \to 0} c_n, \tag{13.14}
+\end{equation}
+\begin{equation}
+c_n \to \frac{\bar{k}}{n}. \tag{13.15}
+\end{equation}
+
+\item That is, ER is the infinite-temperature limit of SRGG:
+
+\[\boxed{\text{SRGG} \xrightarrow{\beta \to 0} \text{ER}}\]
+
+\item If $\beta = 0$, then clustering is 0 in the $n \to \infty$ limit (ER, no geometry).
+
+\item \textbf{Questions:}
+\begin{itemize}
+\item[$-$] Do SRGGs with $\beta > 0$ remain to have zero clustering, or do they acquire nonzero clustering?
+\item[$-$] If the latter, do they have nonzero clustering at any $\beta > 0$, or must $\beta$ be sufficiently large for nonzero clustering?
+\end{itemize}
+\end{itemize}
+
+\vspace{1em}
+\hfill 71
+
+\newpage
+
+% ===== Page 7 =====
+-- If the latter, then how large must $\beta$ be?
+
+\textbf{Theorem 13.8.} \textit{In ultrasparse SRGGs, $\bar{c} > 0$ at $n \to \infty$ iff $\beta > 1$.}
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item Intuitively, this is because if $\beta$ is too small, then all links are too long, thus go anywhere, losing geometricity, loosely defined as a sufficiently strong connection between the triangle inequality in the latent space and triangles in the graph.
+
+\item The phase transition at $\beta = 1$ is well understood recently (Jasper van der Kolk \textit{et al}).
+
+\item The coincidence of the projective and nonzero clustering regimes at $\beta > 1$ is remarkable, but the origin for both is well understood: it is integrability of the connection probability function, so it does not have to depend on $n$ for ultrasparsity.
+
+\item The average clustering $\bar{c}(\beta)$ is a non-decreasing function of $\beta$:
+
+\begin{center}
+\begin{tikzpicture}
+% Description of the plot: A graph showing the relationship between inverse temperature β (x-axis) and average clustering coefficient c̄ (y-axis). The curve starts at a low value near β=1, remains relatively flat or slightly increasing, then rises more steeply before leveling off at a horizontal asymptote labeled c̄_ℓℓℓ. The x-axis is labeled β with an arrow pointing right, and the y-axis is labeled c̄ with an arrow pointing up. A horizontal dashed line indicates the asymptotic value c̄_ℓℓℓ. The curve shows a non-decreasing monotonic behavior.
+\end{tikzpicture}
+
+\textit{[Figure description: The plot shows the average clustering coefficient $\bar{c}$ on the vertical axis versus the inverse temperature parameter $\beta$ on the horizontal axis. The curve begins near $\beta = 1$ at a low clustering value, increases monotonically with $\beta$, and asymptotically approaches a horizontal line labeled $\bar{c}_{\ell\ell\ell}$ as $\beta$ increases. The graph illustrates that clustering is a non-decreasing function of $\beta$.]}
+\end{center}
+
+\end{itemize}
+
+\subsubsection*{13.2.5 \quad Ultrasparse SRGG summary}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Inverse temperature $\beta$ & Strong clustering, projectivity & Small worldness \\
+\hline
+$\beta \to 0$ (ER) & $\times$ & $\checkmark$ \\
+$\beta < 1$ & $\times$ & $\checkmark$ \\
+\hline
+$1 < \beta < 2$ & $\checkmark$ & $\checkmark$ \\
+\hline
+$\beta > 2$ & $\checkmark$ & $\times$ \\
+$\beta \to \infty$ (RGG) & $\checkmark$ & $\times$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\vfill
+
+\begin{center}
+72
+\end{center}
+
+\newpage
+
+% ===== Page 8 =====
+\section*{13.3 Degree-corrected SRGGs (DC-SRGGs)}
+
+\textbf{A.k.a.:} Geometric Inhomogeneous Random Graphs (GIRGs), or Random Hyperbolic Graphs (RHGs) (GIRGs, because (H)SCM is a.k.a. Inhomogeneous Random Graphs (IRGs)).
+
+\textbf{General idea:}
+
+\begin{itemize}
+\item SRGGs are homogeneous (having Poisson degree distributions, if ultrasparse).
+
+\item DC-SRGGs is the maximum-entropy way of making SRGGs inhomogeneous (having any desired degree distribution).
+\end{itemize}
+
+\subsection*{13.3.1 Definition}
+
+\textbf{Recall:}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Model & $p_{ij}$ & $P(G|\{h,v.\})$ \\
+\hline
+ER & $1/(e^\lambda + 1)$ & $\sim \exp(-\lambda m(G))$ \\
+\hline
+SCM & $1/(e^{\lambda_i + \lambda_j} + 1)$ & $\sim \exp(-\sum \lambda_i d_i(G))$ \\
+\hline
+SRGG & $1/(e^{\beta \mathcal{E}_{ij} + \lambda} + 1)$ & $\sim \exp(-\beta \mathcal{E}(G) - \lambda m(G))$ \\
+$(ER + \text{geometry})$ & & \\
+\hline
+\end{tabular}
+\end{center}
+
+where $m(G) = \sum_{i<j} G_{ij}$, $d_i(G) = \sum_j G_{ij}$, $\mathcal{E}(G) = \sum_{i<j} \mathcal{E}_{ij} G_{ij}$, $\mathcal{E}_{ij} = \log |x_i - x_j|$.
+
+\textbf{Question:} what is the maximum-entropy way to combine HSCM and geometry?
+
+\textbf{Definition 13.9.} The canonical DC-SRGG model is defined as follows:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Model & $p_{ij}$ & $P(G|\{h,v.\})$ \\
+\hline
+DC-SRGG & $1/(e^{\beta \mathcal{E}_{ij} + \lambda_i + \lambda_j} + 1)$ & $\sim \exp(-\beta \mathcal{E}(G) - \sum \lambda_i d_i(G))$ \\
+$(SCM + \text{geometry})$ & & \\
+\hline
+\end{tabular}
+\end{center}
+
+In hypercanonical DC-SRGGs, $\{x_i\}$ and $\{\lambda_i\}$ are random.
+
+\textbf{Question:} what is the expected degree $\bar{k}(x, \lambda)$ of a node at $(x, \lambda)$? That is, what is the relation between $\lambda_i$ and $\kappa_i$ analogous to the (H)SCM?
+
+\textbf{Theorem 13.10.} \textit{Let $\rho(\kappa)$ be any distribution with a finite mean $\bar{k}$, and}
+
+\begin{itemize}
+\item $\kappa_i \sim \rho(\kappa)$,
+
+\item $x_i \sim U(0, n)$,
+
+\item $x_{ij} = n/2 - |n/2 - |x_i - x_j||$, \textit{making $[0, n]$ a circle to get rid of boundary effects,}
+
+\item $n \gg 1$ \textit{to neglect finite size effects,}
+
+\item \textit{and denote}
+\begin{align}
+\chi_{ij} &= e^{\beta \mathcal{E}_{ij} + \lambda_i + \lambda_j} = x_{ij}^\beta e^{\lambda_i + \lambda_j}, \quad \text{so} \tag{13.16} \\
+p_{ij} &= \frac{1}{\chi_{ij} + 1} \approx p_{ij}^{\text{CL}} = \min\left(1, \frac{1}{\chi_{ij}}\right), \tag{13.17}
+\end{align}
+\end{itemize}
+
+\textit{then the expected degree of node $i$ at $(x_i, \lambda_i)$ in the hypercanonical DC-SRGG model converges to $\kappa_i$,} $\bar{k}(x_i, \lambda_i) \to \kappa_i$, \textit{if}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+& $\beta > 1$ & $\beta < 1$ \\
+\hline
+$\lambda_i =$ & $-\beta \log \frac{\kappa_i}{\bar{k}n}$ & $-\log \frac{\kappa_i}{\bar{k}n}$ \\
+\hline
+$\chi_{ij} =$ & $\left(\frac{ex_{ij}}{\kappa_i \kappa_j}\right)^\beta$ & $\frac{ex_{ij}}{\kappa_i \kappa_j}$ \\
+\hline
+$c =$ & $\frac{2k \frac{\pi}{\beta} \csc \frac{\pi}{\beta}}{\underset{\beta \to \infty}{\longrightarrow} 2k}$ & $\frac{2^2 k \frac{\pi \beta}{1-\beta}}{\underset{\beta \to 0}{\longrightarrow} \bar{k}n}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{1em}
+\begin{center}
+73
+\end{center}
+
+\newpage
+
+% ===== Page 9 =====
+\noindent \textbf{Note:} as in the (H)SCM, we can map $\kappa_i \sim \rho$ to $u_i \sim U(0,1)$ via $u_i = F(\kappa_i)$, where $F(x) = \int_{-\infty}^{x} p(x') dx'$ is the CDF of $\rho$, in which case the DC-SRGG graphon (connection probability function) $p(u, x; u', x') : ([0,1] \times [0,n])^2 \mapsto [0,1]$ in Theorem 13.10 becomes
+\begin{equation}
+p(u, x; u', x') = \frac{1}{|x - x'|^{\beta} e^{\lambda(u) + \lambda(u')} + 1}, \text{ where}
+\tag{13.18}
+\end{equation}
+\begin{equation}
+\lambda(u) = \begin{cases}
+-\beta \log \frac{F^{-1}(u)}{\sqrt{c}} & \text{if } \beta > 1, \\
+-\log \frac{F^{-1}(u)}{\sqrt{c}} & \text{if } \beta < 1.
+\end{cases}
+\tag{13.19}
+\end{equation}
+
+\subsubsection*{13.3.2 \quad Generation, projectivity, exchangeability}
+
+The DC-SRGG model is projective for any $\rho(\kappa)$ and $\beta > 1$:
+
+\noindent \textbf{Projective generation:} set $x_0 = 0$, and for $n = 1, 2, \ldots$
+\begin{itemize}
+\item $u_n \sim U(0,1)$,
+\item $d \sim \text{Exp}[1]$,
+\item $x_n = x_{n-1} + d$,
+\item connect $n$ to $i = n-1, n-2, \ldots, 1$ with probability $p_{ni} = p(u_n, x_n; u_i, x_i)$ in (13.18):
+\end{itemize}
+
+\begin{center}
+% \includegraphics[width=0.6\textwidth]{diagram}
+\textit{[Image file reference removed; semantic figure meaning is preserved in text description.]}
+\end{center}
+
+\noindent \textit{[The page contains a hand-drawn diagram on grid paper showing a projective generation process. The diagram shows points labeled along a horizontal axis at positions 0, $x_i$, $x_n$, and $x_{n+1}$. Vertical dashed lines are drawn at these positions. Points are marked with dots and labels $u_i$, $u_n$, and $u_{n+1}$ appear to indicate uniform random variables. Arrows or connections between points illustrate the connection probabilities described in the algorithm.]}
+
+\noindent \textbf{Exchangeable generation:}
+\begin{itemize}
+\item sprinkle $n$ points onto $[0,1] \times [0,n]$: for $i = 1, 2, \ldots, n$, $u_i \sim U(0,1)$, $x_i \sim U(0,n)$, and
+\item connect all pairs of nodes $i < j$ with probability $p_{ij} = p(u_i, x_i; u_j, x_j)$.
+\end{itemize}
+
+\subsubsection*{13.3.3 \quad RHG formulation}
+
+\noindent \textbf{Question:} is there anything special about Pareto $\rho(\kappa)$, especially the one with $\gamma = 3$? Recall, only in this case the HSCM is projective.
+
+\noindent \textbf{Theorem 13.11.} \textit{Let}
+\begin{itemize}
+\item $\beta > 1$,
+\item $x_i \sim U(0,n)$, and make $[0,n]$ a circle,
+\item $\theta_i = 2\pi x_i/n \sim U(\mathbb{S}^1)$,
+\item $\theta_{ij} = \pi - |\pi - |\theta_i - \theta_j||$ -- the distance between $i$ and $j$ on $\mathbb{S}^1$,
+\item $R = 2\log(cn/\pi\kappa_0^2)$,
+\item $r_i = R - 2\log(\kappa_i/\kappa_0)$, where $\kappa_i \in [\kappa_0, \infty)$, $\bar{k} = \bar{\kappa} = \kappa_0(\gamma - 1)/(\gamma - 2)$,
+\end{itemize}
+\textit{then,}
+\begin{equation}
+\chi_{ij} = \exp\left[\frac{\beta}{2}(d_{ij} - R)\right], \text{ so}
+\tag{13.20}
+\end{equation}
+\begin{equation}
+p_{ij} = \frac{1}{e^{\frac{\beta}{2}(d_{ij} - R)} + 1}, \text{ where}
+\tag{13.21}
+\end{equation}
+\begin{equation}
+d_{ij} = r_i + r_j + 2\log\frac{\theta_{ij}}{2}
+\tag{13.22}
+\end{equation}
+\textit{is approximately the hyperbolic distance between points $i$ and $j$ on the plane at polar coordinates $(r_i, \theta_i)$ and $(r_j, \theta_j)$.}
+
+\vspace{1em}
+\hfill 74
+
+\newpage
+
+% ===== Page 10 =====
+\textbf{Notes:}
+
+\begin{itemize}
+\item Parameters $\{r_i\}$ (radial coordinates) are similar to $\{\lambda_i\}$: if $\rho(\kappa)$ is Pareto, their distribution is a growing exponential, except not on $(-\infty, R]$, but on $[0, R]$.
+
+\item Hyperbolic space is the space in which space expands exponentially:
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\textit{[Figure: A circular disk representing the Poincaré disk model of hyperbolic space. The disk has a tan/beige background with a darker boundary circle. Multiple small black dots are distributed throughout the disk, with higher density near the boundary. Several nodes (shown as small circles with red/orange centers) are positioned at various locations within the disk. Dashed black lines connect some of these nodes, forming a network structure. The lines appear to curve slightly due to the hyperbolic geometry. The distribution of points illustrates how hyperbolic space expands exponentially toward the boundary, with points becoming increasingly dense near the edge of the disk.]}
+\end{figure}
+
+\textbf{Theorem 13.12.} \textit{If $\rho(\kappa)$ is Pareto$[\gamma = 3]$, then the distribution of radial coordinates is $\rho(r) \sim e^{r-R}$, which is such that the points are distributed uniformly over the hyperbolic disk of radius $R$, according to the hyperbolic metric.}
+
+\textbf{Notes:}
+
+\begin{itemize}
+\item If $\beta \to \infty$, then $p_{ij} \to \mathbb{1}\{d_{ij} < R\}$ in (13.21), so the graph generation algorithm can be formulated as follows:
+\begin{itemize}
+\item sprinkle $n$ points uniformly at random (if $\rho(\kappa) = \text{Pareto}[\gamma = 3]$) over a hyperbolic disk of radius $R$, and
+\item connect all pairs of points that are at hyperbolic distances less than $R$ from each other:
+\end{itemize}
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\textit{[Figure: A circular disk representing a hyperbolic network visualization. The disk shows numerous small black dots distributed throughout, with particularly high density near the boundary. Two prominent nodes are marked with black circles and red centers, one near the top center and one in the lower right quadrant. From these nodes, many edges radiate outward. The edges are colored in different shades: green edges appear to connect nodes in one region (particularly dense in the right half), blue/purple edges connect nodes in another region (particularly in the left half), and pink/light colored edges connect across regions. A vertical red line extends upward from the top node. The visualization demonstrates the connectivity pattern in a hyperbolic random graph where nodes within hyperbolic distance $R$ are connected, showing clear community structure with dense local connections and sparser long-range connections.]}
+\end{figure}
+
+where $\rho(\kappa) \sim \kappa^{-3}$, $\kappa(r) \sim e^{(R-r)/2}$, $\rho(r) \sim e^{r-R}$, and $R \sim \log n$.
+
+\vspace{1em}
+\hfill 75
+
+\newpage
+
+% ===== Page 11 =====
+\begin{itemize}
+\item Since $p_{ij}$ depends on $n$ (via $R$), this formulation is not projective.
+
+\item Since $p_{ij}$ in (13.21) is Fermi-Dirac, it follows from Theorem 11.2 that
+\begin{equation}
+P(G|\{r_i,\theta_i\}) = \exp[-\bar{\beta}\mathcal{E}(G) - \lambda m(G)]/Z,
+\tag{13.23}
+\end{equation}
+where $\bar{\beta} = \beta/2$, $\lambda = -\bar{\beta}R$, and
+\begin{itemize}
+\item $m(G) = \sum_{i<j} G_{ij}$ -- the number of edges in $G$,
+\item $\mathcal{E}(G) = \sum_{i<j} d_{ij}G_{ij}$ -- the sum of the hyperbolic lengths of all links in $G$,
+\end{itemize}
+so the RHG model with frozen coordinates $(r_i,\theta_i)$ is the ERGM with the two sufficient statistics above.
+
+\item This interpretation of the model is purely geometric, not referring to any node degrees.
+
+\item Therefore, hyperbolic geometry is a candidate ``mechanism'' responsible for the emergence of not only clustering ($\Leftarrow$ geometry), but also power laws ($\Leftarrow$ hyperbolicity) in real-world networks.
+
+\item \textbf{The GIRG versus RHG formulations in a nutshell:}
+\begin{itemize}
+\item GIRG: the canonical model has $n+1$ sufficient statistics:
+\begin{itemize}
+\item $\langle d_i \rangle = \kappa_i$, where $d_i(G) = \sum_j G_{ij}$, $i=1,\ldots,n$, and
+\item $\langle \mathcal{E} \rangle = \bar{\mathcal{E}}$, where $\mathcal{E}(G) = \sum_{i<j} \mathcal{E}_{ij}G_{ij}$, $\mathcal{E}_{ij} = \log x_{ij}$, $x_{ij}$ -- distance in $\mathbb{R}$,
+\end{itemize}
+over the space of $n$-sized graphs that are double-labeled: by $\{i\}$ and $\{x_i\}$;
+\item RHG: the canonical model has 2 sufficient statistics:
+\begin{itemize}
+\item $\langle m \rangle = \bar{m}$, where $m(G) = \sum_{i<j} G_{ij}$, and
+\item $\langle \mathcal{E} \rangle = \bar{\mathcal{E}}$, where $\mathcal{E}(G) = \sum_{i<j} \mathcal{E}_{ij}G_{ij}$, $\mathcal{E}_{ij} = d_{ij}$, $d_{ij}$ -- distance in $\mathbb{H}^2$,
+\end{itemize}
+over the space of $n$-sized graphs that are triple-labeled: by $\{i\}$, $\{x_i|\theta_i\}$, and $\{\kappa_i|\lambda_i|u_i|r_i\}$.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Clustering and small-worldness}
+
+\textbf{Theorem 13.13.} \textit{Similar to the homogeneous SRGGs, the average clustering in RHGs at $n \to \infty$ is $\bar{c} = 0$ if $\beta < 1$, and $\bar{c}(\beta)$ is a monotonically increasing function of $\beta$ at $\beta > 1$.}
+
+\textbf{Theorem 13.14.} \textit{Two limits of RHGs:}
+
+\begin{enumerate}
+\item RHG $\xrightarrow{\beta \to 0}$ HSCM for any $\rho(\kappa)$,
+
+\item \textit{If $\rho(\kappa) = \text{Pareto}[\gamma,\kappa](\kappa)$, then} RHG $\xrightarrow{\gamma \to \infty}$ SRGG:
+\end{enumerate}
+
+\[
+\begin{array}{ccc}
+\text{RHG} & \xrightarrow{\gamma \to \infty} & \text{SRGG} \\
+\beta \to 0 \downarrow & & \downarrow \beta \to 0 \\
+\text{HSCM} & \xrightarrow{\gamma \to \infty} & \text{ER}
+\end{array}
+\]
+
+\vspace{2em}
+
+\hfill 76
+
+\newpage
+
+% ===== Page 12 =====
+\textbf{Mega-Theorem:} If $\rho(\kappa) = \text{Pareto}[\gamma, \bar{\kappa}](\kappa)$, then the RHG at $n \to \infty$ has these properties:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Parameters & $2 < \gamma < 3$ & $\gamma > 3, \gamma \to \infty$ \\
+\hline
+$\beta \to 0$ (HSCM) & $\text{USW}(\checkmark)$, $\text{ZC}(\times)$ & $\text{SW}(\checkmark)$, $\text{ZC}(\times)$ \\
+$\beta < 1$ & & \\
+\hline
+$1 < \beta < 2$ & $\text{USW}(\checkmark)$, $\text{PC}(\checkmark)$ & $\text{SW}(\checkmark)$, $\text{PC}(\checkmark)$ \\
+$\beta > 2$ & & \\
+\hline
+$\beta \to \infty$ (sharp geometry) & $\text{USW}(\checkmark)$, $\text{PC}(\checkmark)$ & $\text{LW}(\times)$, $\text{PC}(\checkmark)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+where
+
+\begin{itemize}
+\item (U)SW -- (ultra-)small world,
+\item LW -- large world,
+\item ZC -- zero clustering,
+\item PC -- positive (strong) clustering.
+\end{itemize}
+
+\subsection*{13.4 Key properties of the covered models}
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\multirow{2}{*}{Property} & \multicolumn{4}{c|}{Model} \\
+\cline{2-5}
+& ER & HSCM & SRGG & RHG \\
+\hline
+Conn. prob. $p_{ij}$ & $\sim k/n$ & $\sim k_i k_j/n$ & $\sim 1/x_{ij}^{\beta}$ & $\sim k_i k_j/x_{ij}^{\beta}$ \\
+\hline
+Ultrasparsity & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\hline
+Small worldness & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+& & & $\beta \leq 2$ & $\gamma \leq 3 \mid \beta \leq 2$ \\
+\hline
+Strong clustering & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ \\
+& & & $\beta > 1$ & $\beta > 1$ \\
+\hline
+Heterogeneity & $\times$ & $\checkmark$ & $\times$ & $\checkmark$ \\
+\hline
+Projectivity & $\times$ & $\times$ & $\checkmark$ & $\checkmark$ \\
+& & $\gamma \neq 3$ & $\beta > 1$ & $\beta > 1$ \\
+\hline
+Fin. exchangeability & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+& & & nonproj. & nonproj. \\
+\hline
+Inf. exchangeability & $\times$ & $\times$ & $\times$ & $\times$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Final remarks:}
+
+\begin{itemize}
+\item WS is similar to SRGG, but not projective.
+\item PA is similar to HSCM, but projective.
+\item The only other known unbiased maximum-entropy model that shares the $(\checkmark,\times)$ signature with the RHG model is the degree-corrected stochastic block model.
+\end{itemize}
+
+\vspace{2em}
+
+\begin{center}
+77
+\end{center}
+
+\end{document}

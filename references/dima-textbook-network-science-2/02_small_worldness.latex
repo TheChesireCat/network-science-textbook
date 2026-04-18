@@ -1,0 +1,178 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[draft]{graphicx}
+\usepackage{booktabs,longtable,array}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{hyperref}
+\usepackage[shortlabels]{enumitem}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Transcription of 02\_small\_worldness.pdf}
+\author{Generated via Claude API}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Page 1 =====
+\chapter*{Chapter 2}
+
+\section*{Small worldness}
+
+\subsection*{2.1 Real networks}
+
+\begin{table}[h]
+\centering
+\caption{Average path length and clustering coefficient of various network examples. The networks are the same as in Table T.1, their numbers of nodes and links are listed as well. Link weights are ignored. The average path length is measured only on the giant component; for directed networks we consider directed paths in the giant strongly connected component. To measure the clustering coefficient in directed networks, we ignore link directions}
+\begin{tabular}{lcccc}
+\hline
+Network & Nodes $(N)$ & Links $(L)$ & Average path length $(\ell(G))$ & Clustering coefficient $(C)$ \\
+\hline
+Facebook Northwestern Univ. & 10,567 & 488,337 & 2.7 & 0.24 \\
+IMDB movies and stars & 565,443 & 921,160 & 12.1 & 0 \\
+IMDB co-stars & 252,999 & 1,015,187 & 6.8 & 0.67 \\
+Twitter US politics & 18,470 & 48,365 & 5.6 & 0.03 \\
+Enron email & 87,273 & 321,918 & 3.6 & 0.12 \\
+Wikipedia math & 15,220 & 194,103 & 3.9 & 0.31 \\
+Internet routers & 190,914 & 607,610 & 7.0 & 0.16 \\
+US air transportation & 546 & 2,781 & 3.2 & 0.49 \\
+World air transportation & 3,179 & 18,617 & 4.0 & 0.49 \\
+Yeast protein interactions & 1,870 & 2,277 & 6.8 & 0.07 \\
+C. elegans brain & 297 & 2,345 & 4.0 & 0.29 \\
+Everglades ecological food web & 69 & 916 & 2.2 & 0.55 \\
+\hline
+\end{tabular}
+\label{table:2.1}
+\end{table}
+
+\begin{itemize}
+\item The same points as in the sparsity section regarding fixed $n$ vs. $n \to \infty$.
+\end{itemize}
+
+\vfill
+
+\hfill 7
+
+\newpage
+
+% ===== Page 2 =====
+\section*{2.2 Notations}
+
+The \emph{average} or \emph{typical distance} $\bar{d}_n$ is the mean of the distance $d \in (0, \infty)$ between two random nodes at finite positive distance in a (random) network model $G_n$ with $n \to \infty$:
+\begin{equation}
+\bar{d}_n = \sum_{d=1}^{n-1} d P_n(d) = \sum_{G \in G_n} \bar{d}(G) P_n(G),
+\tag{2.1}
+\end{equation}
+where
+
+\begin{itemize}
+\item $P_n(d)$ is the distance distribution in the model, i.e., the probability that two random nodes at finite positive distance in a random graph of size $n$ in the model are at distance $d$,
+
+\item 
+\begin{equation}
+\bar{d}(G) = \frac{\sum_{i,j=1}^{n} d_{ij}(G) \mathbb{1}\left\{d_{ij}(G) \in (0, \infty)\right\}}{\sum_{i,j=1}^{n} \mathbb{1}\left\{d_{ij}(G) \in (0, \infty)\right\}}
+\tag{2.2}
+\end{equation}
+is the average distance in graph $G$ measured over node pairs at finite positive distance,
+
+\item $d_{ij}(G)$ is the distance (the length of a shortest path) between nodes $i$ and $j$ in graph $G$ ($d_{ii}(G) = 0$ and $d_{ij}(G) = \infty$ if there is no path from $i$ to $j$),
+
+\item
+\begin{equation}
+\mathbb{1}\left\{X\right\} = \begin{cases}
+1, & \text{if } X \text{ is true,} \\
+0, & \text{if } X \text{ is false.}
+\end{cases}
+\tag{2.3}
+\end{equation}
+is the indicator function, and
+
+\item $P_n(G)$ is the probability of graph $G$ in the model.
+\end{itemize}
+
+\section*{2.3 Definitions}
+
+\textbf{Definition 2.1.} We call $G_n$:
+
+\begin{itemize}
+\item a \emph{small world} if $\bar{d}_n \ll n^{\varepsilon}$ for $\forall \, \varepsilon > 0$,
+
+\item a small world and also an \emph{ultrasmall world} if $\bar{d}_n \ll \log^{\varepsilon}(n)$ for $\forall \varepsilon > 0$,
+
+\item a \emph{large world} if it is not a small world.
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\textit{[Figure: A Venn diagram-style illustration showing the classification of network worlds. The diagram consists of a large outer region (shaded light gray) divided by a curved vertical line. The left region is labeled ``LARGE WORLDS'' with the condition $\bar{d}_n \sim n^{\varepsilon}$ displayed below it. The right region is labeled ``SMALL WORLDS'' with the condition $\bar{d}_n \ll n^{\varepsilon}$ displayed below it. Within the small worlds region, there is a smaller nested region (shaded darker gray) labeled ``ultrasmall worlds'' with the condition $\bar{d}_n \ll \log^{\varepsilon} n$ displayed below it. The diagram visually represents the hierarchical relationship between large worlds, small worlds, and ultrasmall worlds based on the asymptotic growth of average distance.]}
+\end{figure}
+
+\vspace{1em}
+
+\hfill 8
+
+\newpage
+
+% ===== Page 3 =====
+\section{Most famous examples}
+
+\subsection{Erdős-Rényi graphs}
+
+Small worlds, and also ultrasmall worlds if $k = (n-1)p \sim n^\varepsilon, \forall \varepsilon > 0$.
+Here is why:
+\begin{equation}
+\bar{d}_n \sim \frac{\log n}{\log k}
+\tag{2.4}
+\end{equation}
+
+from the tree-like approximation, so
+
+\begin{itemize}
+\item if $\bar{k} \to c > 1$, then $d_n/\log n \to 1/\log \bar{k}$ 
+(Theorem 2.36 or Exercise 6.1 in Volume II of the textbook),
+
+\item if $p = \text{const}$, then $\bar{d}_n \sim 1$ (diameter is also bounded).
+\end{itemize}
+
+\subsection{Power-law configuration model \& preferential attachment}
+
+Small worlds for any $\gamma$, and also ultrasmall worlds if $\gamma < 3$:
+
+\begin{itemize}
+\item if $\gamma > 3$, then $d_n/\log n \to 1/\log \nu$, $\nu = \langle k^2 \rangle/\langle k \rangle$,
+
+\item if $\gamma = 3$, then $d_n/\frac{\log n}{\log \log n} \to 1$,
+
+\item if $\gamma \in (2,3)$, then $d_n/\log \log n \to c/|\log(\gamma - 2)|$, where $c = 2$ (CM) and $c = 4$ (PA),
+
+\item if $\gamma < 2$, then $d_n \to$ either 2 or 3.
+\end{itemize}
+
+\section{Comments}
+
+\begin{itemize}
+\item The graph diameter in the ER model is
+\begin{equation}
+\mathcal{D}_n \sim \frac{\log(n)}{\log(np)},
+\tag{2.5}
+\end{equation}
+
+\begin{itemize}
+\item[--] if $np \to \bar{k} > 1$ (thus ultrasparse graphs), then $\mathcal{D}_n/\frac{\log(n)}{\log(np)} \in [1, f(\bar{k})]$ with high probability (w.h.p.), where $f(k) \in [1,\infty)$ (note: $\mathcal{D}_n/\frac{\log(n)}{\log(np)} \sim \mathcal{D}_n/\log(n))$;
+
+\item[--] if $p = \text{const}$, then $\mathcal{D}_n/\frac{\log(n)}{\log(np)}$ is concentrated on at most two values (note: $\mathcal{D}_n/\frac{\log(n)}{\log(np)} \sim \mathcal{D}_n$).
+\end{itemize}
+
+\item In our definition, $\bullet - \bullet$ \quad $\bullet - \bullet$ \quad $\bullet - \bullet$ \ldots is an ultrasmall world, but $\text{Prob}(d = \infty) \to 1$.
+\end{itemize}
+
+\vspace{2em}
+
+\hfill 9
+
+\end{document}
